@@ -1,0 +1,1 @@
+{"virtualbox":{"/var/www/":{"create":true,"guestpath":"/var/www","hostpath":"/home/test/projects/jiggle/www","disabled":false,"__vagrantfile":true}}}
