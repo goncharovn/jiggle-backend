@@ -3,7 +3,7 @@ Vagrant.configure("2") do |config|
   
   config.vm.network "private_network", ip: "192.168.56.0"
   
-  config.vm.synced_folder "www/", "/var/www/", create: true
+  config.vm.synced_folder "www/", "/var/www/"
   
   config.vm.provision "shell", inline: <<-SHELL
     sudo apt-get update
