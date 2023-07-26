@@ -2,15 +2,16 @@
 
 namespace app;
 
-use app\View;
+use database\Db;
 
 abstract class Controller
 {
     public array $route;
-    public $view;
+    public View $view;
 
     public function __construct($route)
     {
+        $db = new Db;
         $this->route = $route;
         $this->view = new View($route);
     }

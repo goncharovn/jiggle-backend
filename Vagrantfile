@@ -20,5 +20,11 @@ Vagrant.configure("2") do |config|
     sudo a2enmod rewrite
     
     sudo systemctl restart apache2
+    
+    sudo mysql -e "CREATE USER 'test'@'localhost' IDENTIFIED BY 'test';"
+    sudo mysql -e "GRANT ALL PRIVILEGES ON *.* TO 'test'@'localhost' WITH GRANT OPTION;"
+    sudo mysql -e "FLUSH PRIVILEGES;"
+    
+    sudo service mysql restart
   SHELL
 end
