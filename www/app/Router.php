@@ -2,6 +2,8 @@
 
 namespace app;
 
+use app\View;
+
 class Router
 {
     protected array $routes = [];
@@ -39,20 +41,22 @@ class Router
     function run(): void
     {
         if ($this->match()) {
-            $controller_path = 'app\Controllers\\' . ucfirst($this->params['controller']) . 'Controller';
+            $controllerPath = 'app\Controllers\\' . ucfirst($this->params['controller']) . 'Controller';
 
-            if (class_exists($controller_path)) {
+            if (class_exists($controllerPath)) {
                 $action = $this->params['action'];
 
-                if (method_exists($controller_path, $action)) {
-                    $controller = new $controller_path($this->params);
+                if (method_exists($controllerPath, $action)) {
+                    $controller = new $controllerPath($this->params);
                     $controller->$action();
+                } else {
+                    View::errorCode(404);
                 }
             } else {
-                echo 'Controller Not Found ' . $controller_path . '</br>';
+                View::errorCode(404);
             }
         } else {
-            echo '404 Not Found';
+            View::errorCode(404);
         };
     }
 }

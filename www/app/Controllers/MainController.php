@@ -8,6 +8,6 @@ class MainController extends Controller
 {
     public function index(): void
     {
-        echo 'Main page';
+        $this->view->render('Get Your Jiggle On | Cycle, Run & Outdoor Shop | Jiggle');
     }
 }

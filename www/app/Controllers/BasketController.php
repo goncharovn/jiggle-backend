@@ -8,6 +8,6 @@ class BasketController extends Controller
 {
     public function index(): void
     {
-        echo 'Basket page';
+        $this->view->render('Jiggle - Basket');
     }
 }

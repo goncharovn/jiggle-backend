@@ -8,18 +8,21 @@ class AccountController extends Controller
 {
     public function index(): void
     {
-        echo 'Account page';
+        $this->view->render('My Account');
     }
 
-    public function login() {
-        echo 'Login page';
+    public function login()
+    {
+        $this->view->render('Log In');
     }
 
-    public function signup() {
-        echo 'Signup page';
+    public function signup()
+    {
+        $this->view->render('Sign Up');
     }
 
-    public function resetPassword() {
-        echo 'Reset password page';
+    public function resetPassword()
+    {
+        $this->view->render('Forgotten Password');
     }
 }
