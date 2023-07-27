@@ -4,6 +4,7 @@ Vagrant.configure("2") do |config|
   config.vm.network "private_network", ip: "192.168.56.0"
   
   config.vm.synced_folder "www/", "/var/www/"
+  config.vm.synced_folder "db/", "/vagrant/db"
   
   config.vm.provision "shell", inline: <<-SHELL
     sudo apt-get update
@@ -24,6 +25,8 @@ Vagrant.configure("2") do |config|
     sudo mysql -e "CREATE USER 'test'@'localhost' IDENTIFIED BY 'test';"
     sudo mysql -e "GRANT ALL PRIVILEGES ON *.* TO 'test'@'localhost' WITH GRANT OPTION;"
     sudo mysql -e "FLUSH PRIVILEGES;"
+    sudo mysql -u root -e "CREATE DATABASE IF NOT EXISTS db"
+    sudo mysql -u root db < /vagrant/db/dump.sql
     
     sudo service mysql restart
   SHELL

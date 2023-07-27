@@ -9,13 +9,10 @@ class MainController extends Controller
 {
     public function index(): void
     {
-        $db = new Db;
-        $params = [
-            'id' => 1,
+        $result = $this->model->getProducts();
+        $vars = [
+            'products' => $result,
         ];
-
-        var_dump($db->column('SELECT name FROM users WHERE id = :id', $params));
-
-        $this->view->render('Get Your Jiggle On | Cycle, Run & Outdoor Shop | Jiggle');
+        $this->view->render('Get Your Jiggle On | Cycle, Run & Outdoor Shop | Jiggle', $vars);
     }
 }
