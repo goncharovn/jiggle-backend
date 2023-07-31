@@ -1,1 +1,0 @@
-{"virtualbox":{"/var/www/":{"guestpath":"/var/www","hostpath":"/home/nikita/projects/jiggle/www","disabled":false,"__vagrantfile":true},"/vagrant/db":{"guestpath":"/vagrant/db","hostpath":"/home/nikita/projects/jiggle/db","disabled":false,"__vagrantfile":true}}}
