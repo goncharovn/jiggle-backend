@@ -9,9 +9,9 @@ class MainController extends Controller
 {
     public function index(): void
     {
-        $result = $this->model->getProducts();
+        $products = $this->model->getProducts();
         $vars = [
-            'products' => $result,
+            'products' => $products,
         ];
         $this->view->render('Get Your Jiggle On | Cycle, Run & Outdoor Shop | Jiggle', $vars);
     }
@@ -19,9 +19,9 @@ class MainController extends Controller
     public function product()
     {
         $id = $this->route['id'];
-        $result = $this->model->getProduct($id);
+        $product = $this->model->getProduct($id);
         $vars = [
-            'product' => $result,
+            'product' => $product,
         ];
         $this->view->render('Product', $vars);
     }

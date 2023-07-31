@@ -9,6 +9,14 @@ return [
       'controller' => 'main',
       'action' => 'product',
     ],
+    'add-to-basket/(?<id>\d+)' => [
+        'controller' => 'basket',
+        'action' => 'addToBasket',
+    ],
+    'remove-from-basket/(?<id>\d+)' => [
+        'controller' => 'basket',
+        'action' => 'removeFromBasket',
+    ],
     'account' => [
         'controller' => 'account',
         'action' => 'index'

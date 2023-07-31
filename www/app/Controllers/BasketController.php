@@ -8,6 +8,50 @@ class BasketController extends Controller
 {
     public function index(): void
     {
-        $this->view->render('Jiggle - Basket');
+        $basketData = $this->model->getBasketData();
+
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        $vars = [
+            'basketData' => $basketData,
+        ];
+
+        $this->view->render('Jiggle - Basket', $vars);
+    }
+
+
+    public function addToBasket()
+    {
+        $id = $_POST['product__id'];
+
+        session_start();
+
+        if (!isset($_SESSION['basket'])) {
+            $_SESSION['basket'] = [];
+        }
+
+        $_SESSION['basket'][] = $id;
+
+        header('Location: /p/' . $id);
+    }
+
+    public function removeFromBasket() {
+        $id = $_POST['product__id'];
+
+        session_start();
+
+        $basketData = $_SESSION['basket'] ?? [];
+
+        $productPosition = array_search($id, $basketData);
+
+        if ($productPosition !== false) {
+            unset($basketData[$productPosition]);
+        }
+
+        $_SESSION['basket'] = $basketData;
+
+        header('Location: /basket');
     }
 }
