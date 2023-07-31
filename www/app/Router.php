@@ -32,6 +32,7 @@ class Router
         foreach ($this->routes as $route => $params) {
             if (preg_match($route, $url, $matches)) {
                 $this->params = $params;
+                $this->params['id'] = $matches['id'];
                 return true;
             }
         }

@@ -15,4 +15,14 @@ class MainController extends Controller
         ];
         $this->view->render('Get Your Jiggle On | Cycle, Run & Outdoor Shop | Jiggle', $vars);
     }
+
+    public function product()
+    {
+        $id = $this->route['id'];
+        $result = $this->model->getProduct($id);
+        $vars = [
+            'product' => $result,
+        ];
+        $this->view->render('Product', $vars);
+    }
 }

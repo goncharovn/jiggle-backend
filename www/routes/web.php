@@ -5,6 +5,10 @@ return [
         'controller' => 'main',
         'action' => 'index'
     ],
+    'p/(?<id>\d+)' => [
+      'controller' => 'main',
+      'action' => 'product',
+    ],
     'account' => [
         'controller' => 'account',
         'action' => 'index'
