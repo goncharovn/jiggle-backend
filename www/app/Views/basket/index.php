@@ -41,7 +41,7 @@
 
             <div class="basket__order-total">
                 <span>Order total</span>
-                <span>£10</span>
+                <span>£<?php echo $totalBasketCost; ?></span>
             </div>
         </div>
     </div>

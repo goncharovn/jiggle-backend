@@ -9,18 +9,17 @@ class BasketController extends Controller
     public function index(): void
     {
         $basketData = $this->model->getBasketData();
+        $totalBasketCost = $this->model->getTotalBasketCost();
 
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
+        session_start();
 
         $vars = [
             'basketData' => $basketData,
+            'totalBasketCost' => $totalBasketCost,
         ];
 
         $this->view->render('Jiggle - Basket', $vars);
     }
-
 
     public function addToBasket()
     {
@@ -37,7 +36,8 @@ class BasketController extends Controller
         header('Location: /p/' . $id);
     }
 
-    public function removeFromBasket() {
+    public function removeFromBasket()
+    {
         $id = $_POST['product__id'];
 
         session_start();
