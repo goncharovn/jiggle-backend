@@ -33,6 +33,12 @@ button {
     cursor: pointer;
 }
 
+.text {
+    font-size: 18px;
+    line-height: 1.5;
+    color: #282830;
+}
+
 .container {
     max-width: 1280px;
     width: 100%;
@@ -162,14 +168,14 @@ button {
 /* PRODUCT */
 
 .product {
-    display: flex;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
     gap: 30px;
 
     max-width: 1280px;
 }
 
 .product__img-wrapper {
-    flex: 2 1 0;
 }
 
 .product__img-wrapper > img {
@@ -179,7 +185,9 @@ button {
 .product__details {
     display: flex;
     flex-direction: column;
-    flex: 1 1 0;
+}
+
+.product__features {
 }
 
 .product__title {
@@ -299,7 +307,7 @@ button {
 
 @media (max-width: 991px) {
     .product {
-        flex-direction: column;
+        grid-template-columns: 1fr;
     }
 
     .basket__list {
