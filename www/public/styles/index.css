@@ -1,7 +1,12 @@
-body {
-    font-family: Sora, sans-serif;
+html {
+    height: 100%;
+}
 
+body {
+    height: 100%;
     margin: 0;
+
+    font-family: Sora, sans-serif;
 
     color: #282830;
 }
@@ -72,6 +77,16 @@ button {
     justify-content: space-between;
 
     height: 100px;
+}
+
+.header__buttons {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.header__signin {
+    color: #003349;
 }
 
 .logo {
@@ -305,6 +320,106 @@ button {
     color: #424242;
 }
 
+/* AUTH */
+.auth {
+    background-color: #003349;
+}
+
+.auth__main {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    height: 100%;
+
+    min-height: 700px;
+}
+
+.auth__form-wrapper {
+    display: flex;
+    flex-direction: column;
+
+    box-sizing: border-box;
+    padding: 40px;
+
+    border-radius: 5px;
+
+    width: 400px;
+    height: 500px;
+
+    background-color: #fff;
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+
+    width: 100%;
+
+    margin-bottom: 20px;
+}
+
+.input {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0 16px;
+
+    height: 52px;
+
+    font-family: inherit;
+
+    font-size: 16px;
+}
+
+.auth-form__button {
+    background-color: #003349;
+    color: #fff;
+
+    box-sizing: border-box;
+    padding: 16px;
+
+    font-size: 16px;
+
+    border-radius: 3px;
+}
+
+.auth__link {
+    font-weight: 700;
+    font-size: 14px;
+    color: rgb(0, 123, 173);
+}
+
+.auth__header {
+    text-align: center;
+
+    margin-bottom: 20px;
+}
+
+.auth__subheading {
+    font-weight: 400;
+}
+
+.auth__message {
+    font-size: 14px;
+
+    margin-bottom: 0;
+}
+
+.auth__back {
+    text-align: center;
+}
+
+.auth__heading {
+    text-align: center;
+}
+
+.auth__alternate-action {
+    font-size: 14px;
+
+    margin-bottom: 0;
+}
+
 @media (max-width: 991px) {
     .product {
         grid-template-columns: 1fr;
@@ -327,5 +442,20 @@ button {
 @media (max-width: 768px) {
     .basket {
         flex-direction: column;
+    }
+}
+
+@media (max-width: 600px) {
+    .auth__form-wrapper {
+        width: 100%;
+        height: 100%;
+
+        padding: 20px;
+
+        border-radius: 0;
+    }
+
+    .auth__main {
+        padding: 0;
     }
 }

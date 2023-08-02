@@ -6,8 +6,8 @@ return [
         'action' => 'index'
     ],
     'p/(?<id>\d+)' => [
-      'controller' => 'main',
-      'action' => 'product',
+        'controller' => 'main',
+        'action' => 'product',
     ],
     'add-to-basket/(?<id>\d+)' => [
         'controller' => 'basket',
