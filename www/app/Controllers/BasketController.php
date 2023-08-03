@@ -3,55 +3,56 @@
 namespace app\Controllers;
 
 use app\Controller;
+use app\Model;
+use app\Models\BasketModel;
 
 class BasketController extends Controller
 {
+    public Model $model;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->model = new BasketModel();
+    }
+
     public function index(): void
     {
-        $basketData = $this->model->getBasketData();
-        $totalBasketCost = $this->model->getTotalBasketCost();
+        $productsIdsInBasket = $this->getProductsIdsInBasket();
 
-        session_start();
+        $basketData = $this->model->getBasketData($productsIdsInBasket);
+        $totalBasketCost = $this->model->getTotalBasketCost($productsIdsInBasket);
 
         $vars = [
             'basketData' => $basketData,
             'totalBasketCost' => $totalBasketCost,
         ];
 
-        $this->view->render('basket/index','Jiggle - BasketModel', $vars);
+        $this->view->render('basket/index', 'Jiggle - BasketModel', $vars);
     }
 
-    public function addToBasket()
+    public function removeProductIdFromBasket(): void
     {
-        $id = $_POST['product__id'];
+        $id = $_POST['product_id'];
 
         session_start();
 
-        if (!isset($_SESSION['basket'])) {
-            $_SESSION['basket'] = [];
-        }
+        $productsInBasket = $_SESSION['basket'] ?? [];
 
-        $_SESSION['basket'][] = $id;
-
-        header('Location: /p/' . $id);
-    }
-
-    public function removeFromBasket()
-    {
-        $id = $_POST['product__id'];
-
-        session_start();
-
-        $basketData = $_SESSION['basket'] ?? [];
-
-        $productPosition = array_search($id, $basketData);
+        $productPosition = array_search($id, $productsInBasket);
 
         if ($productPosition !== false) {
-            unset($basketData[$productPosition]);
+            unset($productsInBasket[$productPosition]);
         }
 
-        $_SESSION['basket'] = $basketData;
+        $_SESSION['basket'] = $productsInBasket;
 
         header('Location: /basket');
+    }
+
+    private function getProductsIdsInBasket(): string
+    {
+        session_start();
+        return implode(',', $_SESSION['basket'] ?? []);
     }
 }

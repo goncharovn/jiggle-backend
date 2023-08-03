@@ -3,9 +3,19 @@
 namespace app\Controllers;
 
 use app\Controller;
+use app\Model;
+use app\Models\AccountModel;
 
 class AccountController extends Controller
 {
+    public Model $model;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->model = new AccountModel();
+    }
+
     public function index(): void
     {
         $this->view->render('account/index', 'My Account');
@@ -20,13 +30,13 @@ class AccountController extends Controller
     public function login()
     {
         $this->view->layout = 'auth';
-        $this->view->render('account/login','Log In');
+        $this->view->render('account/login', 'Log In');
     }
 
     public function resetPassword()
     {
         $this->view->layout = 'auth';
-        $this->view->render('account/reset-password','Forgotten Password');
+        $this->view->render('account/resetPassword', 'Forgotten Password');
     }
 
     public function handleSignup()

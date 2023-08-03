@@ -2,28 +2,16 @@
 
 namespace app;
 
-use database\Db;
-
 use app\Models;
 
 abstract class Controller
 {
-    public array $route;
+    public array $requestParams;
     public View $view;
-    public Model $model;
 
-    public function __construct($route)
+    public function __construct($requestParams = [])
     {
-        $this->route = $route;
-        $this->view = new View($route);
-        $this->model = $this->loadModel($route['controller']);
-    }
-
-    public function loadModel($name)
-    {
-        $path = 'app\Models\\' . ucfirst($name) . 'Model';
-        if (class_exists($path)) {
-            return new $path();
-        }
+        $this->requestParams = $requestParams;
+        $this->view = new View();
     }
 }

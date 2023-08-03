@@ -6,32 +6,25 @@ use app\Model;
 
 class BasketModel extends Model
 {
-    public function getBasketData()
+    public function getBasketData($productsIdsInBasket)
     {
-        session_start();
-
-        if (!empty($_SESSION['basket'])) {
-            $productIds = implode(',', array_map('intval', $_SESSION['basket']));
-            return $this->db->row("SELECT products.*, img.img_name FROM products LEFT JOIN img ON products.id = img.product_id WHERE products.id IN ($productIds)");
+        if (!empty($productsIdsInBasket)) {
+            return $this->db->fetchAll("
+                SELECT products.*, img.img_name 
+                FROM products LEFT JOIN img ON products.id = img.product_id 
+                WHERE products.id IN ($productsIdsInBasket)
+            ");
         }
-
-        return [];
     }
 
-    public function getTotalBasketCost()
+    public function getTotalBasketCost($productsIdsInBasket)
     {
-        session_start();
-
-        $basketData = $_SESSION['basket'] ?? [];
-
-        if (!empty($basketData)) {
-            $productIdsString = implode(',', $basketData);
-
-            $result = $this->db->row("SELECT SUM(price) AS total_cost FROM products WHERE id IN ($productIdsString)");
-
-            return $result[0]['total_cost'];
+        if (!empty($productsIdsInBasket)) {
+            return $this->db->fetchAll("
+                SELECT SUM(price) AS total_cost 
+                FROM products 
+                WHERE id IN ($productsIdsInBasket)
+            ")[0]['total_cost'];
         }
-
-        return 0;
     }
 }

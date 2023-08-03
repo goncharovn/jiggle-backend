@@ -2,20 +2,20 @@
 
 return [
     '' => [
-        'controller' => 'main',
+        'controller' => 'mainPage',
         'action' => 'index'
     ],
     'p/(?<id>\d+)' => [
-        'controller' => 'main',
-        'action' => 'product',
+        'controller' => 'product',
+        'action' => 'index',
     ],
     'add-to-basket/(?<id>\d+)' => [
-        'controller' => 'basket',
-        'action' => 'addToBasket',
+        'controller' => 'product',
+        'action' => 'addProductIdToBasket',
     ],
     'remove-from-basket/(?<id>\d+)' => [
         'controller' => 'basket',
-        'action' => 'removeFromBasket',
+        'action' => 'removeProductIdFromBasket',
     ],
     'account' => [
         'controller' => 'account',

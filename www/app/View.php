@@ -4,13 +4,7 @@ namespace app;
 
 class View
 {
-    public array $route;
     public string $layout = 'default';
-
-    public function __construct($route)
-    {
-        $this->route = $route;
-    }
 
     public function render($template, $title, $vars = []): void
     {

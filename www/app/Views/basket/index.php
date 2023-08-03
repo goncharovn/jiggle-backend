@@ -27,7 +27,7 @@
 
                         <form class="basket__remove-form" method="post"
                               action="/remove-from-basket/<?php echo $val['id']; ?>">
-                            <input type="hidden" name="product__id" value="<?php echo $val['id']; ?>">
+                            <input type="hidden" name="product_id" value="<?php echo $val['id']; ?>">
                             <button class="basket__remove" type="submit">Remove</button>
                         </form>
                     </div>
