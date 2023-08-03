@@ -21,17 +21,25 @@ return [
         'controller' => 'account',
         'action' => 'index'
     ],
-    'login' => [
-        'controller' => 'account',
-        'action' => 'login'
-    ],
     'signup' => [
         'controller' => 'account',
         'action' => 'signup'
     ],
+    'login' => [
+        'controller' => 'account',
+        'action' => 'login'
+    ],
     'reset-password' => [
         'controller' => 'account',
         'action' => 'resetPassword'
+    ],
+    'handle-signup' => [
+        'controller' => 'account',
+        'action' => 'handleSignup'
+    ],
+    'handle-login' => [
+        'controller' => 'account',
+        'action' => 'handleLogin'
     ],
     'basket' => [
         'controller' => 'basket',

@@ -14,7 +14,7 @@ class MainController extends Controller
             'products' => $products,
         ];
 
-        $this->view->render('Get Your Jiggle On | Cycle, Run & Outdoor Shop | Jiggle', $vars);
+        $this->view->render('main/index','Get Your Jiggle On | Cycle, Run & Outdoor Shop | Jiggle', $vars);
     }
 
     public function product()
@@ -27,6 +27,6 @@ class MainController extends Controller
             'product' => $product,
         ];
 
-        $this->view->render('Product', $vars);
+        $this->view->render('main/product', 'Product', $vars);
     }
 }

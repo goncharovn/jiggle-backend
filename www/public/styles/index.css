@@ -420,6 +420,11 @@ button {
     margin-bottom: 0;
 }
 
+.error-message {
+    text-align: center;
+    color: red;
+}
+
 @media (max-width: 991px) {
     .product {
         grid-template-columns: 1fr;

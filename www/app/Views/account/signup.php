@@ -4,9 +4,11 @@
     <p class="auth__message">Create your account to continue</p>
 </header>
 
-<form class="auth-form login-form" action="">
-    <input class="input" type="email" placeholder="Email address">
-    <input class="input" type="password" placeholder="Enter password">
+<p class="error-message"><?php echo $errorMessage; ?></p>
+
+<form class="auth-form login-form" action="/handle-signup" method="post">
+    <input class="input" type="email" name="email" placeholder="Email address" required>
+    <input class="input" type="password" name="password" placeholder="Enter password" required>
 
     <button class="auth-form__button" type="submit">Continue</button>
 </form>

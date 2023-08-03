@@ -10,7 +10,6 @@ abstract class Controller
 {
     public array $route;
     public View $view;
-
     public Model $model;
 
     public function __construct($route)
@@ -22,7 +21,7 @@ abstract class Controller
 
     public function loadModel($name)
     {
-        $path = 'app\Models\\' . ucfirst($name);
+        $path = 'app\Models\\' . ucfirst($name) . 'Model';
         if (class_exists($path)) {
             return new $path();
         }

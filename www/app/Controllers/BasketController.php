@@ -18,7 +18,7 @@ class BasketController extends Controller
             'totalBasketCost' => $totalBasketCost,
         ];
 
-        $this->view->render('Jiggle - Basket', $vars);
+        $this->view->render('basket/index','Jiggle - BasketModel', $vars);
     }
 
     public function addToBasket()

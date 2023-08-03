@@ -4,21 +4,19 @@ namespace app;
 
 class View
 {
-    public string $path;
     public array $route;
     public string $layout = 'default';
 
     public function __construct($route)
     {
         $this->route = $route;
-        $this->path = $route['controller'] . '/' . $route['action'];
     }
 
-    public function render($title, $vars = []): void
+    public function render($template, $title, $vars = []): void
     {
         extract($vars);
 
-        $viewPath = '../app/Views/' . $this->path . '.php';
+        $viewPath = '../app/Views/' . $template . '.php';
 
         if (file_exists($viewPath)) {
             ob_start();
@@ -37,6 +35,5 @@ class View
         if (file_exists($errorViewPath)) {
             require $errorViewPath;
         }
-        exit;
     }
 }

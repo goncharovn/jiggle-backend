@@ -2,7 +2,7 @@
     <div class="empty-basket">
         <h2 class="empty-basket__title">Your shopping basket is empty.</h2>
         <p class="empty-basket__subtitle">Looks like you haven't added anything yet.</p>
-<!--        <p class="empty-basket__subtitle">If you are a registered user sign in to retrieve any saved items.</p>-->
+        <!--        <p class="empty-basket__subtitle">If you are a registered user sign in to retrieve any saved items.</p>-->
         <a class="button" href="/">Shop now</a>
     </div>
 <?php else : ?>
@@ -25,7 +25,8 @@
                             <p class="basket__price">£<?php echo $val['price']; ?></p>
                         </div>
 
-                        <form class="basket__remove-form" method="post" action="/remove-from-basket/<?php echo $val['id']; ?>">
+                        <form class="basket__remove-form" method="post"
+                              action="/remove-from-basket/<?php echo $val['id']; ?>">
                             <input type="hidden" name="product__id" value="<?php echo $val['id']; ?>">
                             <button class="basket__remove" type="submit">Remove</button>
                         </form>

@@ -4,7 +4,7 @@ namespace app\Models;
 
 use app\Model;
 
-class Basket extends Model
+class BasketModel extends Model
 {
     public function getBasketData()
     {

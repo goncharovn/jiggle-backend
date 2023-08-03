@@ -4,7 +4,7 @@
     <p class="auth__message">Please log in to Jiggle to continue</p>
 </header>
 
-<form class="auth-form login-form" action="">
+<form class="auth-form login-form" action="/handle-login">
     <input class="input" type="email" placeholder="Email address">
     <input class="input" type="password" placeholder="Enter password">
 
