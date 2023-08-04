@@ -37,6 +37,10 @@ return [
         'controller' => 'account',
         'action' => 'handleSignup'
     ],
+    'confirm-signup' => [
+        'controller' => 'account',
+        'action' => 'confirmSignup'
+    ],
     'handle-login' => [
         'controller' => 'account',
         'action' => 'handleLogin'

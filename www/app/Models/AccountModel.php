@@ -22,4 +22,22 @@ class AccountModel extends Model
             WHERE email = '$email'
         ") !== false;
     }
+
+    public function getUserByEmail($email)
+    {
+        return $this->db->fetchAll("
+            SELECT id, name 
+            FROM users 
+            WHERE email = '$email'
+        ")[0];
+    }
+
+    public function getUserByHash($hash)
+    {
+        return ($this->db->fetchAll("
+            SELECT id, email_confirmed
+            FROM users
+            WHERE hash = '$hash'
+        ")[0]);
+    }
 }

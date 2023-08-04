@@ -12,6 +12,8 @@ Vagrant.configure("2") do |config|
     sudo apt-get install -y mysql-server
     sudo apt-get install -y php libapache2-mod-php php-mysql
     sudo apt-get install -y php-xdebug
+
+    sudo apt-get install -y ssmtp
     
     sudo cp /var/www/config/tools/xdebug.ini /etc/php/8.1/cli/conf.d/20-xdebug.ini
     

@@ -27,8 +27,10 @@ class Router
     {
         $url = trim($_SERVER['REQUEST_URI'], '/');
 
+        $urlWithoutQueryString = preg_replace('/\?.*/', '', $url);
+
         foreach ($this->routes as $route => $params) {
-            if (preg_match($route, $url, $matches)) {
+            if (preg_match($route, $urlWithoutQueryString, $matches)) {
                 $this->requestParams = $params;
                 $this->requestParams['id'] = $matches['id'];
 
