@@ -4,9 +4,11 @@
     <p class="auth__message">Please log in to Jiggle to continue</p>
 </header>
 
-<form class="auth-form login-form" action="/handle-login">
-    <input class="input" type="email" placeholder="Email address">
-    <input class="input" type="password" placeholder="Enter password">
+<p class="error-message"><?php echo $errorMessage; ?></p>
+
+<form class="auth-form login-form" action="/handle-login" method="post">
+    <input class="input" type="email" name="email" placeholder="Email address">
+    <input class="input" type="password" name="password" placeholder="Enter password">
 
     <a class="auth__link" href="/reset-password">Forgot password?</a>
 

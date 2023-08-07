@@ -26,7 +26,7 @@ class AccountModel extends Model
     public function getUserByEmail($email)
     {
         return $this->db->fetchAll("
-            SELECT id, name 
+            SELECT id, name, password 
             FROM users 
             WHERE email = '$email'
         ")[0];

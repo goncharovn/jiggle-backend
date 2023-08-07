@@ -17,7 +17,7 @@ return [
         'controller' => 'basket',
         'action' => 'removeProductIdFromBasket',
     ],
-    'account' => [
+    'my-account' => [
         'controller' => 'account',
         'action' => 'index'
     ],

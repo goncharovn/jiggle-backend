@@ -118,8 +118,25 @@ class AccountController extends Controller
         }
     }
 
-    public function handleLogin()
+    public function handleLogin(): void
     {
+        $email = $_POST['email'] ?? '';
+        $user = $this->model->getUserByEmail($email);
 
+        if (password_verify($_POST['password'], $user['password'])) {
+            session_start();
+            $_SESSION['user_id'] = $user['id'];
+
+            header('Location: /');
+        } else {
+            $errorMessage = 'Invalid email or password';
+
+            $vars = [
+                'errorMessage' => $errorMessage,
+            ];
+
+            $this->view->layout = 'auth';
+            $this->view->render('account/login', 'Sign In', $vars);
+        }
     }
 }

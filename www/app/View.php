@@ -2,6 +2,8 @@
 
 namespace app;
 
+use app\AccessManager;
+
 class View
 {
     public string $layout = 'default';
@@ -9,6 +11,8 @@ class View
     public function render($template, $title, $vars = []): void
     {
         extract($vars);
+
+        $isUserLoggedIn = AccessManager::isUserLoggedIn();
 
         $viewPath = '../app/Views/' . $template . '.php';
 

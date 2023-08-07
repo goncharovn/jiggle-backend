@@ -21,10 +21,13 @@
         <a href="/"><h1 class="logo">Jiggle</h1></a>
 
         <div class="header__buttons">
-            <a class="header__signin" href="/login">Sign In</a>
+            <?php if ($isUserLoggedIn): ?>
+                <a class="header__signin" href="/my-account">My Account</a>
+            <?php else: ?>
+                <a class="header__signin" href="/login">Sign In</a>
+            <?php endif; ?>
 
             <a class="basket-notification" href="/basket">
-                <!--            <span class="basket-notification__price"></span>-->
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
                      aria-hidden="true" class="icon" focusable="false">
                     <path fill-rule="evenodd" clip-rule="evenodd"
