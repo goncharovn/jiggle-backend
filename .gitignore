@@ -3,3 +3,4 @@
 www/html
 www/config/app/db_config.php
 www/db/entire_dump.sql
+/db/entire_dump.sql

@@ -40,4 +40,39 @@ class AccountModel extends Model
             WHERE hash = '$hash'
         ")[0]);
     }
+
+    public function getUserByResetKey($resetKey)
+    {
+        return ($this->db->fetchAll("
+            SELECT id
+            FROM users
+            WHERE reset_key = '$resetKey'
+        ")[0]);
+    }
+
+    public function addResetKey($email, $resetKey): void
+    {
+        $this->db->executeQuery("
+            UPDATE users 
+            SET reset_key = '$resetKey' 
+            WHERE email = '$email'
+        ");
+    }
+
+    public function changePassword($resetKey, $password): void
+    {
+        $this->db->executeQuery("
+            UPDATE users 
+            SET password = '$password' 
+            WHERE reset_key = '$resetKey'
+        ");
+    }
+    public function deleteResetKey($resetKey): void
+    {
+        $this->db->executeQuery("
+            UPDATE users 
+            SET reset_key = NULL 
+            WHERE reset_key = '$resetKey'
+        ");
+    }
 }

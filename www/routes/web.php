@@ -33,6 +33,14 @@ return [
         'controller' => 'account',
         'action' => 'resetPassword'
     ],
+    'handle-reset-password' => [
+        'controller' => 'account',
+        'action' => 'handleResetPassword'
+    ],
+    'change-password' => [
+        'controller' => 'account',
+        'action' => 'changePassword'
+    ],
     'handle-signup' => [
         'controller' => 'account',
         'action' => 'handleSignup'
