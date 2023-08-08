@@ -21,6 +21,18 @@ return [
         'controller' => 'accountPages',
         'action' => 'index'
     ],
+    'my-account/order-history' => [
+        'controller' => 'accountPages',
+        'action' => 'orderHistory'
+    ],
+    'my-account/delivery-address' => [
+        'controller' => 'accountPages',
+        'action' => 'deliveryAddress'
+    ],
+    'my-account/my-details' => [
+        'controller' => 'accountPages',
+        'action' => 'myDetails'
+    ],
     'signup' => [
         'controller' => 'signup',
         'action' => 'signup'
@@ -40,6 +52,10 @@ return [
     'change-password' => [
         'controller' => 'resetPassword',
         'action' => 'changePassword'
+    ],
+    'signout' => [
+        'controller' => 'profile',
+        'action' => 'signout'
     ],
     'basket' => [
         'controller' => 'basket',

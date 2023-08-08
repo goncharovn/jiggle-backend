@@ -18,7 +18,7 @@
 <body>
 <header class="header">
     <div class="container header__container">
-        <a href="/"><h1 class="logo">Jiggle</h1></a>
+        <a href="/"><p class="logo">Jiggle</p></a>
 
         <div class="header__buttons">
             <?php if ($isUserLoggedIn): ?>

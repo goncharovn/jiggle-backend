@@ -32,6 +32,15 @@ class UserModel extends Model
         ")[0];
     }
 
+    public function getUserById($id)
+    {
+        return $this->db->fetchAll("
+            SELECT name, email 
+            FROM users 
+            WHERE id = '$id'
+        ")[0];
+    }
+
     public function getUserByHash($hash)
     {
         return ($this->db->fetchAll("

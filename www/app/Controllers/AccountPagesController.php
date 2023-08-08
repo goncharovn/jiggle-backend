@@ -23,6 +23,37 @@ class AccountPagesController extends Controller
 
     public function index(): void
     {
-        $this->view->render('account/index', 'My Account');
+        $user = $this->model->getUserById($_SESSION['user_id']);
+
+        $this->view->render(
+            'account/index',
+            'My Account',
+            [
+                'user' => $user
+            ]
+        );
+    }
+
+    public function orderHistory(): void
+    {
+        $this->view->render('account/orderHistory', 'My Account - Order History');
+    }
+
+    public function deliveryAddress(): void
+    {
+        $this->view->render('account/deliveryAddress', 'My Account - Delivery Addresses');
+    }
+
+    public function myDetails(): void
+    {
+        $user = $this->model->getUserById($_SESSION['user_id']);
+
+        $this->view->render(
+            'account/myDetails',
+            'My Account - My Details',
+            [
+                'user' => $user
+            ]
+        );
     }
 }

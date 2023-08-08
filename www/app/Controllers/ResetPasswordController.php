@@ -34,7 +34,7 @@ class ResetPasswordController extends Controller
                 $this->model->addResetKey($email, $resetKey);
                 $this->sendResetPasswordEmail($email, $resetKey);
                 $this->view->render(
-                    'account/checkEmail',
+                    'checkEmail',
                     'Check your email',
                     [
                         'email' => $email,
@@ -42,7 +42,7 @@ class ResetPasswordController extends Controller
                 );
             } else {
                 $this->view->render(
-                    'account/resetPassword',
+                    'resetPassword',
                     'Forgotten Password',
                     [
                         'errorMessage' => 'User with this email address is not registered.',
@@ -50,7 +50,7 @@ class ResetPasswordController extends Controller
                 );
             }
         } else {
-            $this->view->render('account/resetPassword', 'Forgotten Password');
+            $this->view->render('resetPassword', 'Forgotten Password');
         }
     }
 
@@ -71,14 +71,14 @@ class ResetPasswordController extends Controller
                 $this->model->changePassword($resetKey, $newPassword);
                 $this->model->deleteResetKey($resetKey);
 
-                $this->view->render('account/passwordChanged', 'Password changed');
+                $this->view->render('passwordChanged', 'Password changed');
             } else {
-                $this->view->render('account/changePassword', 'Change Your Password', [
+                $this->view->render('changePassword', 'Change Your Password', [
                     'errorMessage' => 'Password mismatch.',
                 ]);
             }
         } else {
-            $this->view->render('account/changePassword', 'Change Your Password');
+            $this->view->render('changePassword', 'Change Your Password');
         }
     }
 

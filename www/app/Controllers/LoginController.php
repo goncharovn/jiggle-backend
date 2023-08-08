@@ -34,7 +34,7 @@ class LoginController extends Controller
                 header('Location: /');
             } else {
                 $this->view->render(
-                    'account/login',
+                    'login',
                     'Sign In',
                     [
                         'errorMessage' => 'Invalid email or password',
@@ -42,7 +42,7 @@ class LoginController extends Controller
                 );
             }
         } else {
-            $this->view->render('account/login', 'Log In');
+            $this->view->render('login', 'Log In');
         }
     }
 }

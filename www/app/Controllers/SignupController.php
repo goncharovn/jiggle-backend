@@ -31,7 +31,7 @@ class SignupController extends Controller
 
             if ($this->model->isUserRegistered($email)) {
                 $this->view->render(
-                    'account/signup',
+                    'signup',
                     'Sign Up',
                     [
                         'errorMessage' => 'This email is already taken.',
@@ -48,7 +48,7 @@ class SignupController extends Controller
                 header('Location: /');
             }
         } else {
-            $this->view->render('account/signup', 'Sign Up');
+            $this->view->render('signup', 'Sign Up');
         }
     }
 
