@@ -45,6 +45,18 @@ return [
         'controller' => 'login',
         'action' => 'login'
     ],
+    'login/disable-2fa' => [
+        'controller' => 'login',
+        'action' => 'disableMultiFactorAuth'
+    ],
+    'login/enable-2fa' => [
+        'controller' => 'login',
+        'action' => 'enableMultiFactorAuth'
+    ],
+    'login/process-2fa' => [
+        'controller' => 'login',
+        'action' => 'processMultiFactorAuth'
+    ],
     'reset-password' => [
         'controller' => 'resetPassword',
         'action' => 'resetPassword'

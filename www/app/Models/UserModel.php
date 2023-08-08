@@ -26,7 +26,7 @@ class UserModel extends Model
     public function getUserByEmail($email)
     {
         return $this->db->fetchAll("
-            SELECT id, name, password 
+            SELECT id, name, password, 2fa_enabled 
             FROM users 
             WHERE email = '$email'
         ")[0];
@@ -35,7 +35,7 @@ class UserModel extends Model
     public function getUserById($id)
     {
         return $this->db->fetchAll("
-            SELECT name, email 
+            SELECT name, email, 2fa_enabled
             FROM users 
             WHERE id = '$id'
         ")[0];
@@ -76,6 +76,7 @@ class UserModel extends Model
             WHERE reset_key = '$resetKey'
         ");
     }
+
     public function deleteResetKey($resetKey): void
     {
         $this->db->executeQuery("
@@ -83,5 +84,41 @@ class UserModel extends Model
             SET reset_key = NULL 
             WHERE reset_key = '$resetKey'
         ");
+    }
+
+    public function disableMultifactorAuth($email): void
+    {
+        $this->db->executeQuery("
+            UPDATE users 
+            SET 2fa_enabled = false 
+            WHERE email = '$email'
+        ");
+    }
+
+    public function enableMultifactorAuth($email): void
+    {
+        $this->db->executeQuery("
+            UPDATE users 
+            SET 2fa_enabled = true
+            WHERE email = '$email'
+        ");
+    }
+
+    public function setMFACode($code, $email)
+    {
+        $this->db->executeQuery("
+            UPDATE users 
+            SET 2fa_code = '$code'
+            WHERE email = '$email'
+        ");
+    }
+
+    public function getMFACode($email)
+    {
+        return ($this->db->fetchAll("
+            SELECT 2fa_code 
+            FROM users
+            WHERE email = '$email'
+        ")[0]['2fa_code']);
     }
 }

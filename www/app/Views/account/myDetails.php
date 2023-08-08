@@ -24,7 +24,7 @@
             <div class="account-details__container">
                 <div class="account-details__detail-section">
                     <p class="account-details__label">Email</p>
-                    <p><?= $user['email']?></p>
+                    <p><?= $user['email'] ?></p>
                 </div>
 
                 <div class="account-details__detail-section">
@@ -35,10 +35,18 @@
 
                 <div class="account-details__detail-section">
                     <p class="account-details__label">Multi-factor authentication</p>
-                    <p>Require a secondary password to sign into your account</p>
-                    <form method="post" action="/2fa">
-                        <button class="button_secondary" type="submit">Setup</button>
-                    </form>
+
+                    <?php if ($user['2fa_enabled']): ?>
+                        <form method="post" action="/login/disable-2fa">
+                            <button class="button_secondary" type="submit">Disable</button>
+                        </form>
+                    <?php else: ?>
+                        <p>Require a secondary password to sign in to your account</p>
+
+                        <form method="post" action="/login/enable-2fa">
+                            <button class="button_secondary" type="submit">Enable</button>
+                        </form>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
