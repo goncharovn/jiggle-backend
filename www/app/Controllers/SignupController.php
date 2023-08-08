@@ -40,12 +40,13 @@ class SignupController extends Controller
             } else {
                 $this->model->addUser($email, $password, $hash);
                 $this->sendConfirmationEmail($email, $hash);
-                $user = $this->model->getUserByEmail($email);
-
-                session_start();
-                $_SESSION['user_id'] = $user['id'];
-                $_SESSION['email_confirmed'] = false;
-                header('Location: /');
+                $this->view->render(
+                    'checkEmailSignup',
+                    'Check email',
+                    [
+                        'email' => $email,
+                    ]
+                );
             }
         } else {
             $this->view->render('signup', 'Sign Up');
