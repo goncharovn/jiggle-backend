@@ -6,7 +6,7 @@
 
 <p class="error-message"><?= $errorMessage ?></p>
 
-<form class="auth-form" method="post" action="/handle-reset-password">
+<form class="auth-form" method="post" action="">
     <input class="input" type="email" name="email" placeholder="Email address">
     <button class="auth-form__button" type="submit">Continue</button>
 </form>

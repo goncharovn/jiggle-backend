@@ -4,7 +4,7 @@ namespace app\Models;
 
 use app\Model;
 
-class AccountModel extends Model
+class UserModel extends Model
 {
     public function addUser($email, $password, $hash): void
     {

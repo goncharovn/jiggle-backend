@@ -18,40 +18,28 @@ return [
         'action' => 'removeProductIdFromBasket',
     ],
     'my-account' => [
-        'controller' => 'account',
+        'controller' => 'accountPages',
         'action' => 'index'
     ],
     'signup' => [
-        'controller' => 'account',
+        'controller' => 'signup',
         'action' => 'signup'
     ],
+    'confirm-signup' => [
+        'controller' => 'signup',
+        'action' => 'confirmSignup'
+    ],
     'login' => [
-        'controller' => 'account',
+        'controller' => 'login',
         'action' => 'login'
     ],
     'reset-password' => [
-        'controller' => 'account',
+        'controller' => 'resetPassword',
         'action' => 'resetPassword'
     ],
-    'handle-reset-password' => [
-        'controller' => 'account',
-        'action' => 'handleResetPassword'
-    ],
     'change-password' => [
-        'controller' => 'account',
+        'controller' => 'resetPassword',
         'action' => 'changePassword'
-    ],
-    'handle-signup' => [
-        'controller' => 'account',
-        'action' => 'handleSignup'
-    ],
-    'confirm-signup' => [
-        'controller' => 'account',
-        'action' => 'confirmSignup'
-    ],
-    'handle-login' => [
-        'controller' => 'account',
-        'action' => 'handleLogin'
     ],
     'basket' => [
         'controller' => 'basket',

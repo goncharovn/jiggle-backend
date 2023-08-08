@@ -55,7 +55,7 @@ class Router
                 }
             }
         } else {
-            View::errorCode(404);
+            View::showErrorPage(404);
         }
     }
 }

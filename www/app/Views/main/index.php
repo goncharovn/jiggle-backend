@@ -1,20 +1,20 @@
 <ul class="products-list">
-    <?php foreach ($products as $val): ?>
+    <?php foreach ($products as $product): ?>
         <li>
             <div class="products-list__product">
-                <a class="products-list__img-link" href="p/<?php echo $val['id']; ?>">
+                <a class="products-list__img-link" href="p/<?= $product['id']; ?>">
                     <img class="products-list__img"
-                         src="/img/<?php echo $val['img_name']; ?>"
+                         src="/img/<?= $product['img_name']; ?>"
                          alt="">
                 </a>
 
-                <a class="products-list__title-link" href="p/<?php echo $val['id']; ?>">
+                <a class="products-list__title-link" href="p/<?= $product['id']; ?>">
                     <h2 class="products-list__product-title">
-                        <?php echo $val['title']; ?>
+                        <?= $product['title']; ?>
                     </h2>
                 </a>
 
-                <p class="products-list__product-price">£<?php echo $val['price']; ?></p>
+                <p class="products-list__product-price">£<?= $product['price']; ?></p>
             </div>
         </li>
     <?php endforeach; ?>

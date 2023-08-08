@@ -25,7 +25,7 @@ class View
         }
     }
 
-    public static function errorCode($code): void
+    public static function showErrorPage($code): void
     {
         http_response_code($code);
 
