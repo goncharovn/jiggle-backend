@@ -19,11 +19,15 @@ class ProductsModel extends Model
     public function getProduct($id): bool|array
     {
         return $this->db->fetchAll("
-            SELECT products.title, products.price, products.id, products.description, img.img_name 
+            SELECT products.id, products.title, products.price,  products.description, products.quantity, img.img_name 
             FROM products 
             INNER JOIN img 
             ON products.id = img.product_id 
             WHERE products.id = :id
-            ", ['id' => $id])[0];
+            ",
+            [
+                'id' => $id
+            ]
+        )[0];
     }
 }

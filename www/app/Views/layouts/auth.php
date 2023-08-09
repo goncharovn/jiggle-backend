@@ -13,13 +13,13 @@
 
     <link rel="stylesheet" href="/styles/index.css">
 
-    <title><?php echo $title; ?></title>
+    <title><?= $title; ?></title>
 </head>
 <body class="auth">
 <main class="auth__main container">
     <div class="auth__form-wrapper">
         <h1 class="auth__heading">Jiggle</h1>
-        <?php echo $content; ?>
+        <?= $content; ?>
     </div>
 </main>
 </body>

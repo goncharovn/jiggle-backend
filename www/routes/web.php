@@ -9,13 +9,9 @@ return [
         'controller' => 'product',
         'action' => 'index',
     ],
-    'add-to-basket/(?<id>\d+)' => [
+    'remove-from-basket' => [
         'controller' => 'product',
-        'action' => 'addProductToBasket',
-    ],
-    'remove-from-basket/(?<id>\d+)' => [
-        'controller' => 'product',
-        'action' => 'removeProductFromBasket',
+        'action' => 'removeEntireProductFromBasket',
     ],
     'my-account' => [
         'controller' => 'accountPages',

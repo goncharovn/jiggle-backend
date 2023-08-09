@@ -17,7 +17,7 @@ class BasketModel extends Model
         }
     }
 
-    public function getTotalBasketCost($productsIdsInBasket)
+    public function getOrderTotal($productsIdsInBasket)
     {
         if (!empty($productsIdsInBasket)) {
             return $this->db->fetchAll("

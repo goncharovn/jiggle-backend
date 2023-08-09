@@ -13,7 +13,7 @@
 
     <link rel="stylesheet" href="/styles/index.css">
 
-    <title><?php echo $title; ?></title>
+    <title><?= $title; ?></title>
 </head>
 <body>
 <header class="header">
@@ -38,7 +38,7 @@
     </div>
 </header>
 <main class="main container">
-    <?php echo $content; ?>
+    <?= $content; ?>
 </main>
 </body>
 </html>

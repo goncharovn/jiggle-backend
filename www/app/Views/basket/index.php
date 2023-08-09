@@ -1,33 +1,34 @@
-<?php if (empty($basketData)) : ?>
+<?php if (empty($productsInBasket)) : ?>
     <div class="empty-basket">
         <h2 class="empty-basket__title">Your shopping basket is empty.</h2>
         <p class="empty-basket__subtitle">Looks like you haven't added anything yet.</p>
-        <!--        <p class="empty-basket__subtitle">If you are a registered user sign in to retrieve any saved items.</p>-->
         <a class="button" href="/">Shop now</a>
     </div>
 <?php else : ?>
     <div class="basket">
         <ul class="basket__list">
-            <?php foreach ($basketData as $val): ?>
+            <?php foreach ($productsInBasket as $product): ?>
                 <li>
                     <div class="basket__product">
-                        <a class="basket__img-link" href="p/<?php echo $val['id']; ?>">
+                        <a class="basket__img-link" href="p/<?= $product['id']; ?>">
                             <img class="basket__img"
-                                 src="/img/<?php echo $val['img_name']; ?>"
-                                 alt="">
+                                 src="/img/<?= $product['img_name']; ?>"
+                                 alt=""
+                            >
                         </a>
 
                         <div>
-                            <a class="basket__title-link" href="p/<?php echo $val['id']; ?>">
-                                <h2 class="basket__title"><?php echo $val['title']; ?></h2>
+                            <a class="basket__title-link" href="p/<?= $product['id']; ?>">
+                                <h2 class="basket__title"><?= $product['title']; ?></h2>
                             </a>
 
-                            <p class="basket__price">£<?php echo $val['price']; ?></p>
+                            <p class="basket__price">£<?= $product['price']; ?></p>
                         </div>
 
                         <form class="basket__remove-form" method="post"
-                              action="/remove-from-basket/<?php echo $val['id']; ?>">
-                            <input type="hidden" name="product_id" value="<?php echo $val['id']; ?>">
+                              action="/remove-from-basket"
+                        >
+                            <input type="hidden" name="product_id" value="<?= $product['id']; ?>">
                             <button class="basket__remove" type="submit">Remove</button>
                         </form>
                     </div>
@@ -42,7 +43,7 @@
 
             <div class="basket__order-total">
                 <span>Order total</span>
-                <span>£<?php echo $totalBasketCost; ?></span>
+                <span>£<?= $orderTotal; ?></span>
             </div>
         </div>
     </div>

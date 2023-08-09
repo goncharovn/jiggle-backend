@@ -19,21 +19,21 @@ class BasketController extends Controller
     public function index(): void
     {
         $productsIdsInBasket = $this->getProductsIdsInBasket();
-
-        $basketData = $this->model->getBasketData($productsIdsInBasket);
-        $totalBasketCost = $this->model->getTotalBasketCost($productsIdsInBasket);
-
-        $vars = [
-            'basketData' => $basketData,
-            'totalBasketCost' => $totalBasketCost,
-        ];
-
-        $this->view->render('basket/index', 'Jiggle - BasketModel', $vars);
+        $productsInBasket = $this->model->getBasketData($productsIdsInBasket);
+        $orderTotal = $this->model->getOrderTotal($productsIdsInBasket);
+        $this->view->render(
+            'basket/index',
+            'Jiggle - Basket',
+            [
+                'productsInBasket' => $productsInBasket,
+                'orderTotal' => $orderTotal,
+            ],
+        );
     }
 
     private function getProductsIdsInBasket(): string
     {
         session_start();
-        return implode(',', $_SESSION['basket'] ?? []);
+        return implode(',', array_keys($_SESSION['basket'] ?? []));
     }
 }
