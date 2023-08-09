@@ -31,25 +31,6 @@ class BasketController extends Controller
         $this->view->render('basket/index', 'Jiggle - BasketModel', $vars);
     }
 
-    public function removeProductIdFromBasket(): void
-    {
-        $id = $_POST['product_id'];
-
-        session_start();
-
-        $productsInBasket = $_SESSION['basket'] ?? [];
-
-        $productPosition = array_search($id, $productsInBasket);
-
-        if ($productPosition !== false) {
-            unset($productsInBasket[$productPosition]);
-        }
-
-        $_SESSION['basket'] = $productsInBasket;
-
-        header('Location: /basket');
-    }
-
     private function getProductsIdsInBasket(): string
     {
         session_start();

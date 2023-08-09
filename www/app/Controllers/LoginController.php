@@ -4,16 +4,16 @@ namespace app\Controllers;
 
 use app\AccessManager;
 use app\Controller;
-use app\Models\UserModel;
+use app\Models\UsersModel;
 
 class LoginController extends Controller
 {
-    public UserModel $model;
+    public UsersModel $model;
 
     public function __construct()
     {
         parent::__construct();
-        $this->model = new UserModel();
+        $this->model = new UsersModel();
         $this->view->layout = 'auth';
     }
 
@@ -30,10 +30,9 @@ class LoginController extends Controller
 
             if (password_verify($_POST['password'], $user['password'])) {
                 session_start();
-                if ($user['2fa_enabled']) {
 
+                if ($user['2fa_enabled']) {
                     $_SESSION['email'] = $email;
-                    var_dump(3333);
                     header('Location: login/process-2fa');
                 } else {
                     $_SESSION['user_id'] = $user['id'];

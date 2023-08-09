@@ -8,7 +8,7 @@ use app\Models\ProductsModel;
 
 class ProductController extends Controller
 {
-    public Model $model;
+    public ProductsModel $model;
 
     public function __construct($requestParams)
     {
@@ -18,37 +18,38 @@ class ProductController extends Controller
 
     public function index(): void
     {
-        $id = $this->requestParams['id'];
-
-        $product = $this->model->getProduct($id);
-        $isProductInBasket = $this->isProductInBasket($id);
-
-        $vars = [
-            'product' => $product,
-            'isProductInBasket' => $isProductInBasket,
-        ];
-
-        $this->view->render('main/product', 'Product', $vars);
+        $productId = $this->requestParams['product_id'];
+        $product = $this->model->getProduct($productId);
+        $isProductInBasket = $this->isProductInBasket($productId);
+        $this->view->render(
+            'main/product',
+            'Product',
+            [
+                'product' => $product,
+                'isProductInBasket' => $isProductInBasket,
+            ]
+        );
     }
 
-    public function addProductIdToBasket(): void
+    public function addProductToBasket(): void
     {
         $id = $_POST['product_id'];
-
         session_start();
-
-        if (!isset($_SESSION['basket'])) {
-            $_SESSION['basket'] = [];
-        }
-
-        $_SESSION['basket'][] = $id;
-
-        header('Location: /p/' . $id);
+        $_SESSION['basket'][$id] = $id;
+        header("Location: /p/$id");
     }
 
-    public function isProductInBasket($productId): bool
+    public function removeProductFromBasket(): void
+    {
+        $id = $_POST['product_id'];
+        session_start();
+        unset($_SESSION['basket'][$id]);
+        header('Location: /basket');
+    }
+
+    private function isProductInBasket($productId): bool
     {
         session_start();
-        return in_array($productId, $_SESSION['basket'] ?? []);
+        return isset($_SESSION['basket'][$productId]);
     }
 }

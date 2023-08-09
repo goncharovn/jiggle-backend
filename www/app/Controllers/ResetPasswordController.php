@@ -4,12 +4,12 @@ namespace app\Controllers;
 
 use app\AccessManager;
 use app\Controller;
-use app\Models\UserModel;
+use app\Models\UsersModel;
 use app\View;
 
 class ResetPasswordController extends Controller
 {
-    public UserModel $model;
+    public UsersModel $model;
 
     public function __construct()
     {
@@ -19,7 +19,7 @@ class ResetPasswordController extends Controller
         }
 
         parent::__construct();
-        $this->model = new UserModel();
+        $this->model = new UsersModel();
         $this->view->layout = 'auth';
     }
 

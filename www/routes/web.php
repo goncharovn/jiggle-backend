@@ -11,11 +11,11 @@ return [
     ],
     'add-to-basket/(?<id>\d+)' => [
         'controller' => 'product',
-        'action' => 'addProductIdToBasket',
+        'action' => 'addProductToBasket',
     ],
     'remove-from-basket/(?<id>\d+)' => [
-        'controller' => 'basket',
-        'action' => 'removeProductIdFromBasket',
+        'controller' => 'product',
+        'action' => 'removeProductFromBasket',
     ],
     'my-account' => [
         'controller' => 'accountPages',

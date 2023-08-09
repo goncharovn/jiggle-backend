@@ -23,6 +23,10 @@
 
             <div class="account-details__container">
                 <div class="account-details__detail-section">
+                    <p class="account-details__label">Name</p>
+                </div>
+
+                <div class="account-details__detail-section">
                     <p class="account-details__label">Email</p>
                     <p><?= $user['email'] ?></p>
                 </div>
