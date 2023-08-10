@@ -7,7 +7,11 @@ return [
     ],
     'p/(?<id>\d+)' => [
         'controller' => 'product',
-        'action' => 'index',
+        'action' => 'showProductPage',
+    ],
+    'p/change-quantity' => [
+        'controller' => 'product',
+        'action' => 'changeProductQuantityInBasket',
     ],
     'remove-from-basket' => [
         'controller' => 'product',

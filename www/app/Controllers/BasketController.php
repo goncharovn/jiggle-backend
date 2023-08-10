@@ -18,9 +18,12 @@ class BasketController extends Controller
 
     public function index(): void
     {
+        session_start();
+
         $productsIdsInBasket = $this->getProductsIdsInBasket();
-        $productsInBasket = $this->model->getBasketData($productsIdsInBasket);
         $orderTotal = $this->model->getOrderTotal($productsIdsInBasket);
+        $productsInBasket = $this->getProductsInBasket($productsIdsInBasket);
+
         $this->view->render(
             'basket/index',
             'Jiggle - Basket',
@@ -34,6 +37,22 @@ class BasketController extends Controller
     private function getProductsIdsInBasket(): string
     {
         session_start();
+
         return implode(',', array_keys($_SESSION['basket'] ?? []));
+    }
+
+    private function getProductsInBasket($productsIdsInBasket): array|null
+    {
+        $productsInBasket = $this->model->getBasketData($productsIdsInBasket);
+
+        foreach ($productsInBasket as &$product) {
+            $productId = $product['id'];
+
+            if (isset($_SESSION['basket'][$productId]['quantity'])) {
+                $product['quantity'] = $_SESSION['basket'][$productId]['quantity'];
+            }
+        }
+
+        return $productsInBasket;
     }
 }

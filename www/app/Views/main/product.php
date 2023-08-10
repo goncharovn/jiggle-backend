@@ -9,8 +9,10 @@
 
         <?php if ($quantityOfProductInStock > 0) : ?>
             <?php if ($isProductInBasket) : ?>
-                <form method="post" action="">
+                <form method="post" action="/p/change-quantity">
+                    <input type="hidden" name="product_id" value="<?= $product['id'] ?>">
                     <button type="submit" name="action" value="increase">+</button>
+                    <span><?= $quantityOfProductInBasket; ?></span>
                     <button type="submit" name="action" value="decrease">-</button>
                 </form>
 
@@ -18,7 +20,8 @@
 
                 <p><?= $errorMessage ?></p>
             <?php else : ?>
-                <form method="post" action="">
+                <form method="post" action="/p/change-quantity">
+                    <input type="hidden" name="product_id" value="<?= $product['id'] ?>">
                     <button class="button product__add-button" type="submit" name="action" value="increase">
                         Add to basket
                     </button>

@@ -31,6 +31,13 @@
                             <input type="hidden" name="product_id" value="<?= $product['id']; ?>">
                             <button class="basket__remove" type="submit">Remove</button>
                         </form>
+
+                        <form method="post" action="/p/change-quantity">
+                            <input type="hidden" name="product_id" value="<?= $product['id'] ?>">
+                            <button type="submit" name="action" value="increase">+</button>
+                            <span><?= $product['quantity']; ?></span>
+                            <button type="submit" name="action" value="decrease">-</button>
+                        </form>
                     </div>
                 </li>
             <?php endforeach; ?>
