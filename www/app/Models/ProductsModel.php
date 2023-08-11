@@ -30,4 +30,15 @@ class ProductsModel extends Model
             ]
         )[0];
     }
+
+    public function getProductsInBasket($productsIdsInBasket)
+    {
+        if (!empty($productsIdsInBasket)) {
+            return $this->db->fetchAll("
+                SELECT products.*, img.img_name 
+                FROM products LEFT JOIN img ON products.id = img.product_id 
+                WHERE products.id IN ($productsIdsInBasket)
+            ");
+        }
+    }
 }

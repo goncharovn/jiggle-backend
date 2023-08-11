@@ -3,26 +3,24 @@
 namespace app\Controllers;
 
 use app\Controller;
-use app\Model;
-use app\Models\BasketModel;
+use app\Models\ProductsModel;
 
 class BasketController extends Controller
 {
-    public Model $model;
+    public ProductsModel $model;
 
     public function __construct()
     {
         parent::__construct();
-        $this->model = new BasketModel();
+        $this->model = new ProductsModel();
     }
 
-    public function index(): void
+    public function showBasketPage(): void
     {
         session_start();
 
-        $productsIdsInBasket = $this->getProductsIdsInBasket();
-        $orderTotal = $this->model->getOrderTotal($productsIdsInBasket);
-        $productsInBasket = $this->getProductsInBasket($productsIdsInBasket);
+        $productsInBasket = $this->getProductsInBasket();
+        $orderTotal = $this->getOrderTotal($productsInBasket);
 
         $this->view->render(
             'basket/index',
@@ -36,14 +34,13 @@ class BasketController extends Controller
 
     private function getProductsIdsInBasket(): string
     {
-        session_start();
-
         return implode(',', array_keys($_SESSION['basket'] ?? []));
     }
 
-    private function getProductsInBasket($productsIdsInBasket): array|null
+    private function getProductsInBasket(): array|null
     {
-        $productsInBasket = $this->model->getBasketData($productsIdsInBasket);
+        $productsIdsInBasket = $this->getProductsIdsInBasket();
+        $productsInBasket = $this->model->getProductsInBasket($productsIdsInBasket);
 
         foreach ($productsInBasket as &$product) {
             $productId = $product['id'];
@@ -54,5 +51,17 @@ class BasketController extends Controller
         }
 
         return $productsInBasket;
+    }
+
+    private function getOrderTotal($productsInBasket): float|int
+    {
+        $orderTotal = 0;
+        foreach ($productsInBasket as $product) {
+            $price = $product['price'];
+            $quantityOfProductInBasket = $_SESSION['basket'][$product['id']]['quantity'];
+            $orderTotal += $price * $quantityOfProductInBasket;
+        }
+
+        return $orderTotal;
     }
 }

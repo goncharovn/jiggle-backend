@@ -71,6 +71,6 @@ return [
     ],
     'basket' => [
         'controller' => 'basket',
-        'action' => 'index'
+        'action' => 'showBasketPage'
     ],
 ];
