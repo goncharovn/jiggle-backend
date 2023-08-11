@@ -25,18 +25,22 @@
                             <p class="basket__price">£<?= $product['price']; ?></p>
                         </div>
 
+                        <form class="change-quantity" method="post" action="/p/change-quantity">
+                            <input type="hidden" name="product_id" value="<?= $product['id'] ?>">
+                            <button class="change-quantity__button" type="submit" name="action" value="increase">
+                                +
+                            </button>
+                            <span class="change-quantity__value"><?= $product['quantity']; ?></span>
+                            <button class="change-quantity__button" type="submit" name="action" value="decrease">
+                                -
+                            </button>
+                        </form>
+
                         <form class="basket__remove-form" method="post"
                               action="/remove-from-basket"
                         >
                             <input type="hidden" name="product_id" value="<?= $product['id']; ?>">
                             <button class="basket__remove" type="submit">Remove</button>
-                        </form>
-
-                        <form method="post" action="/p/change-quantity">
-                            <input type="hidden" name="product_id" value="<?= $product['id'] ?>">
-                            <button type="submit" name="action" value="increase">+</button>
-                            <span><?= $product['quantity']; ?></span>
-                            <button type="submit" name="action" value="decrease">-</button>
                         </form>
                     </div>
                 </li>

@@ -9,11 +9,15 @@
 
         <?php if ($quantityOfProductInStock > 0) : ?>
             <?php if ($isProductInBasket) : ?>
-                <form method="post" action="/p/change-quantity">
+                <form class="change-quantity product__change-quantity" method="post" action="/p/change-quantity">
                     <input type="hidden" name="product_id" value="<?= $product['id'] ?>">
-                    <button type="submit" name="action" value="increase">+</button>
-                    <span><?= $quantityOfProductInBasket; ?></span>
-                    <button type="submit" name="action" value="decrease">-</button>
+                    <button class="change-quantity__button" type="submit" name="action" value="increase">
+                        +
+                    </button>
+                    <span class="change-quantity__value"><?= $quantityOfProductInBasket; ?></span>
+                    <button class="change-quantity__button" type="submit" name="action" value="decrease">
+                        -
+                    </button>
                 </form>
 
                 <p><?= $quantityOfProductInBasket; ?> <?= $message; ?> in your <a href="/basket">basket</a>.</p>
