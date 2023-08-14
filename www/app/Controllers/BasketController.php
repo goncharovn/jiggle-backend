@@ -8,14 +8,25 @@ use app\Models\ProductsModel;
 class BasketController extends Controller
 {
     public ProductsModel $model;
+    private ProductController $productController;
 
-    public function __construct()
+    public function __construct(array $requestParams)
     {
         parent::__construct();
         $this->model = new ProductsModel();
+        $this->productController = new ProductController($requestParams);
     }
 
-    public function showBasketPage(): void
+    public function index(): void
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->productController->changeProductQuantityInBasket();
+        }
+
+        $this->showBasketPage();
+    }
+
+    private function showBasketPage(): void
     {
         session_start();
 
@@ -43,10 +54,10 @@ class BasketController extends Controller
         $productsInBasket = $this->model->getProductsInBasket($productsIdsInBasket);
 
         foreach ($productsInBasket as &$product) {
-            $productId = $product['id'];
+            $variantId = $product['variant_id'];
 
-            if (isset($_SESSION['basket'][$productId]['quantity'])) {
-                $product['quantity'] = $_SESSION['basket'][$productId]['quantity'];
+            if (isset($_SESSION['basket'][$variantId]['quantity'])) {
+                $product['quantity'] = $_SESSION['basket'][$variantId]['quantity'];
             }
         }
 
@@ -58,7 +69,7 @@ class BasketController extends Controller
         $orderTotal = 0;
         foreach ($productsInBasket as $product) {
             $price = $product['price'];
-            $quantityOfProductInBasket = $_SESSION['basket'][$product['id']]['quantity'];
+            $quantityOfProductInBasket = $_SESSION['basket'][$product['variant_id']]['quantity'];
             $orderTotal += $price * $quantityOfProductInBasket;
         }
 

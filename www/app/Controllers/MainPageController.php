@@ -20,10 +20,12 @@ class MainPageController extends Controller
     {
         $products = $this->model->getProducts();
 
-        $vars = [
-            'products' => $products,
-        ];
-
-        $this->view->render('main/index', 'Get Your Jiggle On | Cycle, Run & Outdoor Shop | Jiggle', $vars);
+        $this->view->render(
+            'main/index',
+            'Get Your Jiggle On | Cycle, Run & Outdoor Shop | Jiggle',
+            [
+                'products' => $products,
+            ]
+        );
     }
 }

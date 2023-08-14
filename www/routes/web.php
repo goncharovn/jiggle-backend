@@ -7,15 +7,11 @@ return [
     ],
     'p/(?<id>\d+)' => [
         'controller' => 'product',
-        'action' => 'showProductPage',
+        'action' => 'index',
     ],
-    'p/change-quantity' => [
+    'remove-product' => [
         'controller' => 'product',
-        'action' => 'changeProductQuantityInBasket',
-    ],
-    'remove-from-basket' => [
-        'controller' => 'product',
-        'action' => 'removeEntireProductFromBasket',
+        'action' => 'removeProductFromBasket',
     ],
     'my-account' => [
         'controller' => 'accountPages',
@@ -71,6 +67,6 @@ return [
     ],
     'basket' => [
         'controller' => 'basket',
-        'action' => 'showBasketPage'
+        'action' => 'index'
     ],
 ];

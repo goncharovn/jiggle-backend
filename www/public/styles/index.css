@@ -40,6 +40,46 @@ button {
     cursor: pointer;
 }
 
+.select-color-button {
+    display: block;
+    box-sizing: border-box;
+    padding: 3px;
+    border-radius: 50%;
+}
+
+.select-color-button__color {
+    box-sizing: border-box;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+}
+
+.select-color-button_selected {
+    outline: 2px solid #003349;
+}
+
+.select-color-button:hover {
+    outline: 2px solid #335c6d;
+    border-radius: 50%;
+}
+
+.select-size-button {
+    padding: 10px;
+    border: 2px solid #003349;
+    font: 700 16px Sora, sans-serif;
+}
+
+.select-size-button:hover {
+    border-color: #335c6d;
+    background-color: #335c6d;
+    color: #fff;
+}
+
+.select-size-button_selected {
+    background-color: #003349;
+    color: #ffffff;
+}
+
 .text {
     font-size: 18px;
     line-height: 1.5;
@@ -186,6 +226,23 @@ button {
 
 /* PRODUCT */
 
+.product__color {
+    margin-bottom: 15px;
+}
+
+.product__colors {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.product__sizes {
+    display: flex;
+    padding: 5px;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
 .product {
     display: grid;
     grid-template-columns: 2fr 1fr;
@@ -220,6 +277,11 @@ button {
 
 .product__add-button {
     width: 100%;
+}
+
+.product__size-error {
+    margin-bottom: 15px;
+    color: #df1642;
 }
 
 /*  BASKET */

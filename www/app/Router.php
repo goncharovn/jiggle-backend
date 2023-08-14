@@ -26,7 +26,6 @@ class Router
     public function match(): bool
     {
         $url = trim($_SERVER['REQUEST_URI'], '/');
-
         $urlWithoutQueryString = preg_replace('/\?.*/', '', $url);
 
         foreach ($this->routes as $route => $params) {
