@@ -39,6 +39,8 @@ class LoginController extends Controller
                     header('Location: login/process-2fa');
                 } else {
                     $_SESSION['user_id'] = $user['id'];
+                    $_SESSION['user_email'] = $email;
+
                     header('Location: /');
                 }
             } else {

@@ -567,6 +567,66 @@ button {
     word-break: break-all;
 }
 
+.account-details__label {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.account-details__detail-section {
+    margin-bottom: 40px;
+}
+
+.edit-form {
+    display: none;
+    flex-direction: column;
+    gap: 20px;
+
+    max-width: 50%;
+}
+
+.edit-form__button-container {
+    display: flex;
+    gap: 15px;
+}
+
+.edit-form_active {
+    display: flex;
+}
+
+.edit-button {
+    display: none;
+    text-decoration: underline;
+    font: 700 18px Sora, sans-serif;
+    text-underline-offset: 4px;
+    text-decoration-thickness: 2px;
+}
+
+.edit-button_active {
+    display: block;
+}
+
+.apply-button {
+    background: #003349;
+    color: #86ffa1;
+    border: 2px solid #003349;
+    cursor: pointer;
+    display: inline-block;
+    outline: none;
+    border-radius: 100px;
+    padding: 6px 26px;
+}
+
+.input {
+    background: #fff;
+    border: 2px solid #bdbdbd;
+    color: #757575;
+    display: block;
+    font: 18px Sora, sans-serif;
+    padding: 0 15px;
+    width: 100%;
+}
+
 .account-overview__subheading {
     font: 700 18px Sora, sans-serif;
 }

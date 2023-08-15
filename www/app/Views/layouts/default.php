@@ -40,5 +40,7 @@
 <main class="main container">
     <?= $content; ?>
 </main>
+
+<script src="/scripts/index.js"></script>
 </body>
 </html>

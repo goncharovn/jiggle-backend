@@ -36,6 +36,8 @@
 
                     <p class="account-overview__subheading">Your details</p>
 
+                    <p><?= $user['name'] ?></p>
+
                     <p><?= $user['email'] ?></p>
 
                     <a class="account__view" href="/my-account/my-details">View</a>

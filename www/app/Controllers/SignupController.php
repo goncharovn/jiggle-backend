@@ -53,6 +53,7 @@ class SignupController extends Controller
                 );
             } else {
                 $this->model->addUser($email, $password, $hash);
+                var_dump(1);
                 $this->sendConfirmationEmail($email, $hash);
                 $this->view->render(
                     'checkEmailSignup',
@@ -81,15 +82,13 @@ class SignupController extends Controller
 
     public function confirmSignup(): void
     {
+        session_start();
+
         $hash = $_GET['hash'];
         $user = $this->model->getUserByHash($hash);
-        $isEmailConfirmed = $user['email_confirmed'];
 
-        if ($isEmailConfirmed) {
-            session_start();
-
+        if (!empty($user)) {
             $_SESSION['user_id'] = $user['id'];
-            $_SESSION['email_confirmed'] = true;
 
             header('Location: /');
         }

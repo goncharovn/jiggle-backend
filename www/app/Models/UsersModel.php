@@ -9,8 +9,8 @@ class UsersModel extends Model
     public function addUser($email, $password, $hash): void
     {
         $this->db->fetchAll("
-            INSERT INTO users (email, password, hash, email_confirmed) 
-            VALUES ('$email', '$password', '$hash', 1)
+            INSERT INTO users (email, password, hash) 
+            VALUES ('$email', '$password', '$hash')
         ");
     }
 
@@ -19,8 +19,12 @@ class UsersModel extends Model
         return $this->db->fetchColumn("
             SELECT id 
             FROM users 
-            WHERE email = '$email'
-        ") !== false;
+            WHERE email = :email
+        ",
+                [
+                    'email' => $email
+                ]
+            ) !== false;
     }
 
     public function getUserByEmail($email)
@@ -28,8 +32,12 @@ class UsersModel extends Model
         return $this->db->fetchAll("
             SELECT id, name, password, 2fa_enabled 
             FROM users 
-            WHERE email = '$email'
-        ")[0];
+            WHERE email = :email
+        ",
+            [
+                'email' => $email
+            ]
+        )[0];
     }
 
     public function getUserById($id)
@@ -37,17 +45,25 @@ class UsersModel extends Model
         return $this->db->fetchAll("
             SELECT name, email, 2fa_enabled
             FROM users 
-            WHERE id = '$id'
-        ")[0];
+            WHERE id = :id
+        ",
+            [
+                'id' => $id
+            ]
+        )[0];
     }
 
     public function getUserByHash($hash)
     {
         return ($this->db->fetchAll("
-            SELECT id, email_confirmed
+            SELECT id, new_email
             FROM users
-            WHERE hash = '$hash'
-        ")[0]);
+            WHERE hash = :hash
+        ",
+            [
+                'hash' => $hash
+            ]
+        )[0]);
     }
 
     public function getUserByResetKey($resetKey)
@@ -55,26 +71,40 @@ class UsersModel extends Model
         return ($this->db->fetchAll("
             SELECT id
             FROM users
-            WHERE reset_key = '$resetKey'
-        ")[0]);
+            WHERE reset_key = :reset_key
+        ",
+            [
+                'reset_key' => $resetKey
+            ]
+        )[0]);
     }
 
     public function addResetKey($email, $resetKey): void
     {
         $this->db->executeQuery("
             UPDATE users 
-            SET reset_key = '$resetKey' 
-            WHERE email = '$email'
-        ");
+            SET reset_key = :reset_key 
+            WHERE email = :email
+        ",
+            [
+                'reset_key' => $resetKey,
+                'email' => $email
+            ]
+        );
     }
 
     public function changePassword($resetKey, $password): void
     {
         $this->db->executeQuery("
             UPDATE users 
-            SET password = '$password' 
-            WHERE reset_key = '$resetKey'
-        ");
+            SET password = :password 
+            WHERE reset_key = :reset_key
+        ",
+            [
+                'password' => $password,
+                'reset_key' => $resetKey
+            ]
+        );
     }
 
     public function deleteResetKey($resetKey): void
@@ -82,8 +112,11 @@ class UsersModel extends Model
         $this->db->executeQuery("
             UPDATE users 
             SET reset_key = NULL 
-            WHERE reset_key = '$resetKey'
-        ");
+            WHERE reset_key = :reset_key
+        ",
+            [
+                'reset_key' => $resetKey
+            ]);
     }
 
     public function disableMultifactorAuth($email): void
@@ -91,8 +124,12 @@ class UsersModel extends Model
         $this->db->executeQuery("
             UPDATE users 
             SET 2fa_enabled = false 
-            WHERE email = '$email'
-        ");
+            WHERE email = :email
+        ",
+            [
+                'email' => $email
+            ]
+        );
     }
 
     public function enableMultifactorAuth($email): void
@@ -100,17 +137,26 @@ class UsersModel extends Model
         $this->db->executeQuery("
             UPDATE users 
             SET 2fa_enabled = true
-            WHERE email = '$email'
-        ");
+            WHERE email = :email
+        ",
+            [
+                'email' => $email
+            ]
+        );
     }
 
-    public function setMFACode($code, $email)
+    public function setMFACode($code, $email): void
     {
         $this->db->executeQuery("
             UPDATE users 
-            SET 2fa_code = '$code'
-            WHERE email = '$email'
-        ");
+            SET 2fa_code = :code
+            WHERE email = :email
+        ",
+            [
+                'code' => $code,
+                'email' => $email
+            ]
+        );
     }
 
     public function getMFACode($email)
@@ -118,7 +164,67 @@ class UsersModel extends Model
         return ($this->db->fetchAll("
             SELECT 2fa_code 
             FROM users
-            WHERE email = '$email'
-        ")[0]['2fa_code']);
+            WHERE email = :email
+        ",
+            [
+                'email' => $email
+            ]
+        )[0]['2fa_code']);
+    }
+
+    public function updateUserName($userName, $userId): void
+    {
+        $this->db->executeQuery("
+            UPDATE users
+            SET name = :user_name
+            WHERE id = :user_id
+        ",
+            [
+                'user_name' => $userName,
+                'user_id' => $userId
+            ]
+        );
+    }
+
+    public function updateUserEmail($userEmail, $userId): void
+    {
+        $this->db->executeQuery("
+            UPDATE users
+            SET email = :user_email
+            WHERE id = :user_id
+        ",
+            [
+                'user_email' => $userEmail,
+                'user_id' => $userId
+            ]
+        );
+    }
+
+    public function updateUserNewEmail($userNewEmail, $userId): void
+    {
+        $this->db->executeQuery("
+            UPDATE users
+            SET new_email = :user_new_email
+            WHERE id = :user_id
+        ",
+            [
+                'user_new_email' => $userNewEmail,
+                'user_id' => $userId
+            ]
+        );
+    }
+
+    public function updateUserHash($userHash, $userId): void
+    {
+        $this->db->executeQuery("
+            UPDATE users
+            SET hash = :user_hash
+            WHERE id = :user_id
+        ",
+            [
+                'user_hash' => $userHash,
+                'user_id' => $userId
+            ]
+        );
     }
 }

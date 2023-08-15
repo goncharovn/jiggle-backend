@@ -46,6 +46,8 @@ class AccountPagesController extends Controller
 
     public function myDetails(): void
     {
+        session_start();
+
         $user = $this->model->getUserById($_SESSION['user_id']);
 
         $this->view->render(

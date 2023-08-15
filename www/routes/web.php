@@ -37,6 +37,10 @@ return [
         'controller' => 'signup',
         'action' => 'confirmSignup'
     ],
+    'confirm-email' => [
+        'controller' => 'profile',
+        'action' => 'confirmEmail'
+    ],
     'login' => [
         'controller' => 'login',
         'action' => 'login'
@@ -60,6 +64,14 @@ return [
     'change-password' => [
         'controller' => 'resetPassword',
         'action' => 'changePassword'
+    ],
+    'change-name' => [
+        'controller' => 'profile',
+        'action' => 'changeName'
+    ],
+    'change-email' => [
+        'controller' => 'profile',
+        'action' => 'changeEmail'
     ],
     'signout' => [
         'controller' => 'profile',

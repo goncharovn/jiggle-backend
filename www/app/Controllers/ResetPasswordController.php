@@ -4,6 +4,8 @@ namespace app\Controllers;
 
 use app\AccessManager;
 use app\Controller;
+use app\ErrorMessagesManager;
+use app\FormValidator;
 use app\Models\UsersModel;
 use app\View;
 
@@ -13,11 +15,6 @@ class ResetPasswordController extends Controller
 
     public function __construct()
     {
-        if (AccessManager::isUserLoggedIn()) {
-            header('Location: /');
-            exit();
-        }
-
         parent::__construct();
         $this->model = new UsersModel();
         $this->view->layout = 'auth';
@@ -25,8 +22,10 @@ class ResetPasswordController extends Controller
 
     public function resetPassword(): void
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $email = $_POST['email'];
+        session_start();
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' || AccessManager::isUserLoggedIn()) {
+            $email = $_POST['email'] ?? $_SESSION['user_email'];
 
             if ($this->model->isUserRegistered($email)) {
                 $resetKey = md5($email . time());
@@ -64,6 +63,17 @@ class ResetPasswordController extends Controller
         } else if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $newPassword = $_POST['new_password'];
             $newPasswordConfirm = $_POST['new_password_confirm'];
+
+            if (!FormValidator::isValidPassword($newPassword)) {
+                $this->view->render(
+                    'changePassword',
+                    'Change Your Password',
+                    [
+                        'errorMessage' => ErrorMessagesManager::getErrorMessage('formError')
+                    ]
+                );
+                exit();
+            }
 
             if ($newPassword === $newPasswordConfirm) {
                 $newPassword = password_hash($newPassword, PASSWORD_DEFAULT);
