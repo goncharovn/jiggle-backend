@@ -4,7 +4,9 @@
     <p class="auth__message">Please log in to Jiggle to continue</p>
 </header>
 
-<p class="error-message"><?= $errorMessage; ?></p>
+<?php if (!empty($formError)) : ?>
+    <p class="error-message"><?= $formError; ?></p>
+<?php endif; ?>
 
 <form class="auth-form login-form" method="post" action="">
     <input class="input" type="email" name="email" placeholder="Email address">

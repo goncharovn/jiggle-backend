@@ -7,7 +7,7 @@
 <p class="error-message"><?= $errorMessage; ?></p>
 
 <form class="auth-form login-form" method="post" action="">
-    <input class="input" type="email" name="email" placeholder="Email address" required>
+    <input class="input" type="email" name="email" value="<?= $email ?>" placeholder="Email address" required>
     <input class="input" type="password" name="password" placeholder="Enter password" required>
 
     <button class="auth-form__button" type="submit">Continue</button>

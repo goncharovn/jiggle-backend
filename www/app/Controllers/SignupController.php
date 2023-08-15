@@ -4,6 +4,8 @@ namespace app\Controllers;
 
 use app\AccessManager;
 use app\Controller;
+use app\ErrorMessagesManager;
+use app\FormValidator;
 use app\Models\UsersModel;
 
 class SignupController extends Controller
@@ -26,7 +28,19 @@ class SignupController extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $email = $_POST['email'];
+
+            if (!FormValidator::isValidEmail($email)) {
+                $this->showSignupPage($email);
+                exit();
+            }
+
             $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+
+            if (!FormValidator::isValidPassword($_POST['password'])) {
+                $this->showSignupPage($email);
+                exit();
+            }
+
             $hash = md5($email . time());
 
             if ($this->model->isUserRegistered($email)) {
@@ -53,6 +67,18 @@ class SignupController extends Controller
         }
     }
 
+    private function showSignupPage($email = ''): void
+    {
+        $this->view->render(
+            'signup',
+            'Sign Up',
+            [
+                'errorMessage' => ErrorMessagesManager::getErrorMessage('formError') ?? '',
+                'email' => $email ?? ''
+            ]
+        );
+    }
+
     public function confirmSignup(): void
     {
         $hash = $_GET['hash'];
@@ -61,8 +87,10 @@ class SignupController extends Controller
 
         if ($isEmailConfirmed) {
             session_start();
+
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['email_confirmed'] = true;
+
             header('Location: /');
         }
     }

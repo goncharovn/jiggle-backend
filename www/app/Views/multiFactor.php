@@ -4,7 +4,9 @@
     <p class="auth__message">Enter the code sent to your email.</p>
 </header>
 
-<p class="error-message"><?= $errorMessage ?></p>
+<?php if (!empty($formError)) : ?>
+    <p class="error-message"><?= $formError; ?></p>
+<?php endif; ?>
 
 <form class="auth-form" method="post" action="">
     <input class="input" name="two_factor_code" placeholder="Two-factor code">

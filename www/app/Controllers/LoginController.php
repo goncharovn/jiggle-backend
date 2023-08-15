@@ -4,6 +4,8 @@ namespace app\Controllers;
 
 use app\AccessManager;
 use app\Controller;
+use app\ErrorMessagesManager;
+use app\FormValidator;
 use app\Models\UsersModel;
 
 class LoginController extends Controller
@@ -26,9 +28,10 @@ class LoginController extends Controller
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $email = $_POST['email'];
+            $password = $_POST['password'];
             $user = $this->model->getUserByEmail($email);
 
-            if (password_verify($_POST['password'], $user['password'])) {
+            if (password_verify($password, $user['password']) && !empty($user)) {
                 session_start();
 
                 if ($user['2fa_enabled']) {
@@ -39,32 +42,41 @@ class LoginController extends Controller
                     header('Location: /');
                 }
             } else {
-                $this->view->render(
-                    'login',
-                    'Sign In',
-                    [
-                        'errorMessage' => 'Invalid email or password',
-                    ]
-                );
+                ErrorMessagesManager::addNewMessage('formError', 'Wrong email or password.');
             }
-        } else {
-            $this->view->render('login', 'Log In');
         }
+
+        $this->showLoginPage();
+    }
+
+    private function showLoginPage(): void
+    {
+        $this->view->render(
+            'login',
+            'Sign In',
+            [
+                'formError' => ErrorMessagesManager::getErrorMessage('formError',) ?? '',
+            ]
+        );
     }
 
     public function enableMultiFactorAuth(): void
     {
         session_start();
+
         $user = $this->model->getUserById($_SESSION['user_id']);
         $this->model->enableMultiFactorAuth($user['email']);
+
         header('Location: /my-account/my-details');
     }
 
     public function disableMultiFactorAuth(): void
     {
         session_start();
+
         $user = $this->model->getUserById($_SESSION['user_id']);
         $this->model->disableMultiFactorAuth($user['email']);
+
         header('Location: /my-account/my-details');
     }
 
@@ -76,6 +88,7 @@ class LoginController extends Controller
         }
 
         session_start();
+
         $email = $_SESSION['email'];
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -83,18 +96,13 @@ class LoginController extends Controller
             $code = $_POST['two_factor_code'];
             $hashedMFACode = $this->model->getMFACode($email);
 
-            if (password_verify($code, $hashedMFACode)) {
-                session_start();
+            if (password_verify($code, $hashedMFACode) && !empty($user)) {
                 $_SESSION['user_id'] = $user['id'];
+
                 header('Location: /');
             } else {
-                $this->view->render(
-                    'multiFactor',
-                    'Multi-factor Auth',
-                    [
-                        'errorMessage' => 'Invalid code.'
-                    ]
-                );
+                ErrorMessagesManager::addNewMessage('formError', 'Invalid code.');
+                $this->showMultiFactorPage();
             }
         } else {
             $MFACode = mt_rand(100000, 999999);
@@ -104,6 +112,17 @@ class LoginController extends Controller
             $this->view->render('multiFactor', 'Multi-factor Auth');
             $this->sendTwoFactorCode($email, $MFACode);
         }
+    }
+
+    private function showMultiFactorPage(): void
+    {
+        $this->view->render(
+            'multiFactor',
+            'Multi-factor Auth',
+            [
+                'formError' => ErrorMessagesManager::getErrorMessage('formError'),
+            ]
+        );
     }
 
     private function sendTwoFactorCode($email, $code): void
