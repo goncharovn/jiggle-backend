@@ -12,18 +12,29 @@ class Router
         $routes = require '../routes/web.php';
 
         foreach ($routes as $route => $params) {
-            $this->addRoute($route, $params);
+            $this->routes[$route] = $params;
         }
     }
 
-    public function addRoute($route, $params): void
+    public function run(): void
     {
-        $route = '#^' . $route . '$#';
+        if ($this->match()) {
+            $controllerClass = $this->requestParams['controller'];
 
-        $this->routes[$route] = $params;
+            if (class_exists($controllerClass)) {
+                $action = $this->requestParams['action'];
+
+                if (method_exists($controllerClass, $action)) {
+                    $controller = new $controllerClass($this->requestParams);
+                    $controller->$action();
+                }
+            }
+        } else {
+            View::showErrorPage(404);
+        }
     }
 
-    public function match(): bool
+    private function match(): bool
     {
         $url = trim($_SERVER['REQUEST_URI'], '/');
         $urlWithoutQueryString = preg_replace('/\?.*/', '', $url);
@@ -38,23 +49,5 @@ class Router
         }
 
         return false;
-    }
-
-    public function run(): void
-    {
-        if ($this->match()) {
-            $controllerClass = __NAMESPACE__ . '\Controllers\\' . ucfirst($this->requestParams['controller']) . 'Controller';
-
-            if (class_exists($controllerClass)) {
-                $action = $this->requestParams['action'];
-
-                if (method_exists($controllerClass, $action)) {
-                    $controller = new $controllerClass($this->requestParams);
-                    $controller->$action();
-                }
-            }
-        } else {
-            View::showErrorPage(404);
-        }
     }
 }

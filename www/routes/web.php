@@ -1,84 +1,93 @@
 <?php
 
+use app\Controllers\MainPageController;
+use app\Controllers\ProductController;
+use app\Controllers\AccountPagesController;
+use app\Controllers\SignupController;
+use app\Controllers\ProfileController;
+use app\Controllers\LoginController;
+use app\Controllers\ResetPasswordController;
+use app\Controllers\BasketController;
+
 return [
-    '' => [
-        'controller' => 'mainPage',
+    '/^$/' => [
+        'controller' => MainPageController::class,
         'action' => 'index'
     ],
-    'p/(?<id>\d+)' => [
-        'controller' => 'product',
+    '/^p/(?<id>\d+)$/' => [
+        'controller' => ProductController::class,
         'action' => 'index',
     ],
-    'remove-product' => [
-        'controller' => 'product',
+    '/^remove-product$/' => [
+        'controller' => ProductController::class,
         'action' => 'removeProductFromBasket',
     ],
-    'my-account' => [
-        'controller' => 'accountPages',
+    '/^my-account$/' => [
+        'controller' => AccountPagesController::class,
         'action' => 'index'
     ],
-    'my-account/order-history' => [
-        'controller' => 'accountPages',
+    '/^my-account/order-history$/' => [
+        'controller' => AccountPagesController::class,
         'action' => 'orderHistory'
     ],
-    'my-account/delivery-address' => [
-        'controller' => 'accountPages',
+    '/^my-account/delivery-address$/' => [
+        'controller' => AccountPagesController::class,
         'action' => 'deliveryAddress'
     ],
-    'my-account/my-details' => [
-        'controller' => 'accountPages',
+    '/^my-account/my-details$/' => [
+        'controller' => AccountPagesController::class,
         'action' => 'myDetails'
     ],
-    'signup' => [
-        'controller' => 'signup',
+    '/^signup$/' => [
+        'controller' => SignupController::class,
         'action' => 'signup'
     ],
-    'confirm-signup' => [
-        'controller' => 'signup',
+    '/^confirm-signup$/' => [
+        'controller' => SignupController::class,
         'action' => 'confirmSignup'
     ],
-    'confirm-email' => [
-        'controller' => 'profile',
-        'action' => 'confirmEmail'
-    ],
-    'login' => [
-        'controller' => 'login',
+    '/^login$/' => [
+        'controller' => LoginController::class,
         'action' => 'login'
     ],
-    'login/disable-2fa' => [
-        'controller' => 'login',
+    '/^login/disable-2fa$/' => [
+        'controller' => LoginController::class,
         'action' => 'disableMultiFactorAuth'
     ],
-    'login/enable-2fa' => [
-        'controller' => 'login',
+    '/^login/enable-2fa$/' => [
+        'controller' => LoginController::class,
         'action' => 'enableMultiFactorAuth'
     ],
-    'login/process-2fa' => [
-        'controller' => 'login',
+    '/^login/process-2fa$/' => [
+        'controller' => LoginController::class,
         'action' => 'processMultiFactorAuth'
     ],
-    'reset-password' => [
-        'controller' => 'resetPassword',
+    '/^reset-password$/' => [
+        'controller' => ResetPasswordController::class,
         'action' => 'resetPassword'
     ],
-    'change-password' => [
-        'controller' => 'resetPassword',
+    '/^change-password$/' => [
+        'controller' => ResetPasswordController::class,
         'action' => 'changePassword'
     ],
-    'change-name' => [
-        'controller' => 'profile',
+    '/^confirm-email$/' => [
+        'controller' => ProfileController::class,
+        'action' => 'confirmEmail'
+    ],
+    '/^change-name$/' => [
+        'controller' => ProfileController::class,
         'action' => 'changeName'
     ],
-    'change-email' => [
-        'controller' => 'profile',
+    '/^change-email$/' => [
+        'controller' => ProfileController::class,
         'action' => 'changeEmail'
     ],
-    'signout' => [
-        'controller' => 'profile',
+    '/^signout$/' => [
+        'controller' => ProfileController::class,
         'action' => 'signout'
     ],
-    'basket' => [
-        'controller' => 'basket',
+    '/^basket$/' => [
+        'controller' => BasketController::class,
         'action' => 'index'
     ],
 ];

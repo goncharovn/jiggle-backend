@@ -50,7 +50,7 @@ class ProfileController extends Controller
 
         $email = $_POST['email'];
 
-        $userId =  $_SESSION['user_id'];
+        $userId = $_SESSION['user_id'];
 
         $hash = md5($email . time());
 
@@ -81,6 +81,7 @@ class ProfileController extends Controller
         if (!empty($user)) {
             $_SESSION['user_id'] = $user['id'];
             $this->model->updateUserEmail($user['new_email'], $user['id']);
+            $_SESSION['user_email'] = $user['new_email'];
 
             header('Location: /');
         }
