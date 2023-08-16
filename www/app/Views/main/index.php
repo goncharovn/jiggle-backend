@@ -1,3 +1,5 @@
+<h1 class="page-title">Products</h1>
+
 <ul class="products-list">
     <?php foreach ($products as $product): ?>
         <li>

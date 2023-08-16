@@ -4,7 +4,7 @@
     </div>
 
     <div class="product__details">
-        <h2 class="product__title"><?= $product['title']; ?></h2>
+        <h1 class="product__title"><?= $product['title']; ?></h1>
         <div class="product__color">Color: <?= $product['color']; ?></div>
         <form method="get" action="">
             <div class="product__colors">

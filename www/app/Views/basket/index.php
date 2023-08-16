@@ -1,3 +1,5 @@
+<h1 class="page-title">Basket</h1>
+
 <?php if (empty($productsInBasket)) : ?>
     <div class="empty-basket">
         <h2 class="empty-basket__title">Your shopping basket is empty.</h2>

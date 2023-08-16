@@ -40,6 +40,10 @@ button {
     cursor: pointer;
 }
 
+.page-title {
+    margin-right: auto;
+}
+
 .select-color-button {
     display: block;
     box-sizing: border-box;
