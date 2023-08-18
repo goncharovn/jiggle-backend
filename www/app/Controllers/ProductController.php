@@ -3,18 +3,15 @@
 namespace app\Controllers;
 
 use app\Controller;
-use app\Models\ProductsModel;
+use app\Models\ProductModel;
 use JetBrains\PhpStorm\NoReturn;
 use app\ErrorMessagesManager;
 
 class ProductController extends Controller
 {
-    public ProductsModel $model;
-
     public function __construct(array $requestParams)
     {
         parent::__construct($requestParams);
-        $this->model = new ProductsModel();
     }
 
     public function index(): void
@@ -28,7 +25,7 @@ class ProductController extends Controller
                     "Please select a size."
                 );
             } else {
-                $this->changeProductQuantityInBasket();
+                self::changeProductQuantityInBasket();
             }
         }
 
@@ -41,16 +38,16 @@ class ProductController extends Controller
 
         $productId = $this->requestParams['product_id'];
         $productSize = null;
-        $productColor = $_GET['color'] ?? $this->model->getDefaultProductColor($productId);
+        $productColor = $_GET['color'] ?? ProductModel::getDefaultProductColor($productId);
 
         if (isset($_GET['size'])) {
             $productSize = $_GET['size'];
         }
 
-        $product = $this->model->getProduct($productId, $productColor, $productSize);
+        $product = ProductModel::getProduct($productId, $productColor, $productSize);
         $variantId = $product['variant_id'];
-        $availableColors = $this->model->getAvailableColors($productId, $productSize);
-        $availableSizes = $this->model->getAvailableSizes($productId, $productColor);
+        $availableColors = ProductModel::getAvailableColors($productId, $productSize);
+        $availableSizes = ProductModel::getAvailableSizes($productId, $productColor);
         $isProductInBasket = $this->isProductInBasket($variantId);
         $quantityOfProductInBasket = $_SESSION['basket'][$variantId]['quantity'];
         $quantityOfProductInStock = $product['quantity'];
@@ -73,7 +70,7 @@ class ProductController extends Controller
         );
     }
 
-    #[NoReturn] public function changeProductQuantityInBasket(): void
+    #[NoReturn] public static function changeProductQuantityInBasket(): void
     {
         session_start();
 
@@ -84,7 +81,7 @@ class ProductController extends Controller
             $productColor = $_POST['product_color'];
             $action = $_POST['action'];
 
-            $product = $this->model->getProduct($productId, $productColor, $productSize);
+            $product = ProductModel::getProduct($productId, $productColor, $productSize);
 
             $quantityOfProductInStock = $product['quantity'];
 

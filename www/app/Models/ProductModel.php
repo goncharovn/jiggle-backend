@@ -2,14 +2,24 @@
 
 namespace app\Models;
 
-use app\Model;
+use database\Db;
 
-class ProductsModel extends Model
+class ProductModel
 {
-    public function getProducts(): bool|array
+    private int $id;
+    private string $name;
+    private string $email;
+    private string $password;
+    private string $hash;
+    private string $resetKey;
+    private bool $isTwoFactorAuthEnabled;
+    private string $twoFactorAuthCode;
+    private string $newEmail;
+
+    public static function getProducts(): bool|array
     {
-        return $this->db->fetchAll("
-            SELECT DISTINCT 
+        return Db::fetchAll(
+            "SELECT DISTINCT 
                 p.*,
                 pi.image_name
             FROM
@@ -23,14 +33,14 @@ class ProductsModel extends Model
             JOIN
                 sizes s ON pv.size_id = s.id
             LEFT JOIN
-                products_images pi ON pv.id = pi.product_variant_id
-        ");
+                products_images pi ON pv.id = pi.product_variant_id"
+        );
     }
 
-    public function getProduct($productId, $productColor, $productSize): bool|array
+    public static function getProduct($productId, $productColor, $productSize): bool|array
     {
-        return $this->db->fetchAll("
-            SELECT
+        return Db::fetchAll(
+            "SELECT
                 p.*, 
                 pi.image_name,
                 c.name AS color,
@@ -56,20 +66,19 @@ class ProductsModel extends Model
             WHERE 
                 p.id = :product_id AND
                 c.name = :product_color AND
-                (s.name = :product_size OR :product_size IS NULL)
-        ",
+                (s.name = :product_size OR :product_size IS NULL)",
             [
                 'product_id' => $productId,
                 'product_color' => $productColor,
-                'product_size' => $productSize
+                'product_size' => $productSize,
             ]
         )[0];
     }
 
-    public function getAvailableColors($productId, $productSize): bool|array
+    public static function getAvailableColors($productId, $productSize): bool|array
     {
-        return $this->db->fetchAll("
-            SELECT DISTINCT 
+        return Db::fetchAll(
+            "SELECT DISTINCT 
                 c.*
             FROM
                 products p
@@ -81,19 +90,18 @@ class ProductsModel extends Model
                 sizes s ON pv.size_id = s.id
             WHERE
                 p.id = :product_id AND
-                (s.name = :product_size OR :product_size IS NULL )
-        ",
+                (s.name = :product_size OR :product_size IS NULL )",
             [
                 'product_id' => $productId,
-                'product_size' => $productSize
+                'product_size' => $productSize,
             ]
         );
     }
 
-    public function getAvailableSizes($productId, $productColor): bool|array
+    public static function getAvailableSizes($productId, $productColor): bool|array
     {
-        return $this->db->fetchAll("
-            SELECT DISTINCT 
+        return Db::fetchAll(
+            "SELECT DISTINCT 
                 s.name
             FROM
                 products p
@@ -105,38 +113,36 @@ class ProductsModel extends Model
                 colors c ON pv.color_id = c.id
             WHERE
                 p.id = :product_id AND
-                (c.name = :product_color OR c.id = p.default_color_id)
-        ",
+                (c.name = :product_color OR c.id = p.default_color_id)",
             [
                 'product_id' => $productId,
-                'product_color' => $productColor
+                'product_color' => $productColor,
             ]
         );
     }
 
-    public function getDefaultProductColor($productId)
+    public static function getDefaultProductColor($productId)
     {
-        return $this->db->fetchAll("
-            SELECT 
+        return Db::fetchAll(
+            "SELECT 
                 c.name
             FROM 
                 products p
             JOIN 
                 colors c ON p.default_color_id = c.id
             WHERE 
-                p.id = :product_id
-        ",
+                p.id = :product_id",
             [
-                'product_id' => $productId
+                'product_id' => $productId,
             ]
         )[0]["name"];
     }
 
-    public function getProductsInBasket($productsIdsInBasket)
+    public static function getProductsInBasket($productsIdsInBasket)
     {
         if (!empty($productsIdsInBasket)) {
-            return $this->db->fetchAll("
-                SELECT 
+            return Db::fetchAll(
+                "SELECT 
                     p.*, 
                     pi.image_name,
                     pv.id AS variant_id,
@@ -153,8 +159,8 @@ class ProductsModel extends Model
                 JOIN
                     colors c ON pv.color_id = c.id
                 WHERE 
-                    pv.id IN ($productsIdsInBasket)
-            ");
+                    pv.id IN ($productsIdsInBasket)"
+            );
         }
     }
 }

@@ -4,11 +4,11 @@ namespace app\Controllers;
 
 use app\AccessManager;
 use app\Controller;
-use app\Models\UsersModel;
+use app\Models\UserModel;
 
 class AccountPagesController extends Controller
 {
-    public UsersModel $model;
+    public UserModel $model;
 
     public function __construct()
     {
@@ -18,7 +18,7 @@ class AccountPagesController extends Controller
         }
 
         parent::__construct();
-        $this->model = new UsersModel();
+        $this->model = new UserModel();
     }
 
     public function index(): void

@@ -2,6 +2,8 @@
 
 namespace app;
 
+use database\Db;
+
 class Router
 {
     protected array $routes = [];
@@ -18,6 +20,8 @@ class Router
 
     public function run(): void
     {
+        Db::getInstance();
+
         if ($this->match()) {
             $controllerClass = $this->requestParams['controller'];
 

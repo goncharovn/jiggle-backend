@@ -6,17 +6,27 @@ use PDO;
 
 class Db
 {
-    private PDO $db;
+    private static ?Db $instance = null;
+    private static PDO $db;
 
-    public function __construct()
+    private function __construct()
     {
         $config = require '../config/app/db_config.php';
-        $this->db = new PDO('mysql:host=' . $config['host'] . ';dbname=' . $config['dbname'], $config['user'], $config['password']);
+        self::$db = new PDO('mysql:host=' . $config['host'] . ';dbname=' . $config['dbname'], $config['user'], $config['password']);
     }
 
-    public function executeQuery($sql, $params = []): bool|\PDOStatement
+    public static function getInstance(): Db
     {
-        $statement = $this->db->prepare($sql);
+        if (self::$instance === null) {
+            self::$instance = new self();
+        }
+
+        return self::$instance;
+    }
+
+    public static function executeQuery($sql, $params = []): bool|\PDOStatement
+    {
+        $statement = self::$db->prepare($sql);
 
         if (!empty($params)) {
             foreach ($params as $param => $val) {
@@ -29,13 +39,13 @@ class Db
         return $statement;
     }
 
-    public function fetchAll($sql, $params = []): bool|array
+    public static function fetchAll($sql, $params = []): bool|array
     {
-        return $this->executeQuery($sql, $params)->fetchAll(PDO::FETCH_ASSOC);
+        return self::executeQuery($sql, $params)->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function fetchColumn($sql, $params = [])
+    public static function fetchColumn($sql, $params = [])
     {
-        return $this->executeQuery($sql, $params)->fetchColumn();
+        return self::executeQuery($sql, $params)->fetchColumn();
     }
 }

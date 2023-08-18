@@ -3,24 +3,18 @@
 namespace app\Controllers;
 
 use app\Controller;
-use app\Models\ProductsModel;
 
 class BasketController extends Controller
 {
-    public ProductsModel $model;
-    private ProductController $productController;
-
     public function __construct(array $requestParams)
     {
         parent::__construct();
-        $this->model = new ProductsModel();
-        $this->productController = new ProductController($requestParams);
     }
 
     public function index(): void
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $this->productController->changeProductQuantityInBasket();
+            ProductController::changeProductQuantityInBasket();
         }
 
         $this->showBasketPage();

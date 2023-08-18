@@ -5,16 +5,16 @@ namespace app\Controllers;
 use app\AccessManager;
 use app\Controller;
 use app\ErrorMessagesManager;
-use app\Models\UsersModel;
+use app\Models\UserModel;
 
 class ProfileController extends Controller
 {
-    public UsersModel $model;
+    public UserModel $model;
 
     public function __construct()
     {
         parent::__construct();
-        $this->model = new UsersModel();
+        $this->model = new UserModel();
 
         if (!AccessManager::isUserLoggedIn()) {
             header('Location: /');
