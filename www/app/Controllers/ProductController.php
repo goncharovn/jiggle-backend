@@ -45,12 +45,12 @@ class ProductController extends Controller
         }
 
         $product = ProductModel::getProduct($productId, $productColor, $productSize);
-        $variantId = $product['variant_id'];
-        $availableColors = ProductModel::getAvailableColors($productId, $productSize);
-        $availableSizes = ProductModel::getAvailableSizes($productId, $productColor);
+        $variantId = $product->getVariantId();
+        $availableColors = $product->getAvailableColors($productSize);
+        $availableSizes = $product->getAvailableSizes($productColor);
         $isProductInBasket = $this->isProductInBasket($variantId);
-        $quantityOfProductInBasket = $_SESSION['basket'][$variantId]['quantity'];
-        $quantityOfProductInStock = $product['quantity'];
+        $quantityOfProductInBasket = $_SESSION['basket'][$variantId]['quantity'] ?? 0;
+        $quantityOfProductInStock = $product->getQuantity();
         $message = ($quantityOfProductInBasket > 1) ? 'items' : 'item';
 
         $this->view->render(
@@ -80,19 +80,17 @@ class ProductController extends Controller
             $productSize = $_POST['product_size'];
             $productColor = $_POST['product_color'];
             $action = $_POST['action'];
-
             $product = ProductModel::getProduct($productId, $productColor, $productSize);
-
-            $quantityOfProductInStock = $product['quantity'];
-
+            $quantityOfProductInStock = $product->getQuantity();
             $quantityChange = 0;
+
             if ($action === 'increase') {
                 $quantityChange = 1;
             } elseif ($action === 'decrease') {
                 $quantityChange = -1;
             }
 
-            $variantId = $product['variant_id'];
+            $variantId = $product->getVariantId();
 
             if (!isset($_SESSION['basket'][$variantId])) {
                 $_SESSION['basket'][$variantId] = ['variant_id' => $variantId, 'quantity' => 0];

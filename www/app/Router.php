@@ -46,7 +46,7 @@ class Router
         foreach ($this->routes as $route => $params) {
             if (preg_match($route, $urlWithoutQueryString, $matches)) {
                 $this->requestParams = $params;
-                $this->requestParams['product_id'] = $matches['id'];
+                $this->requestParams['product_id'] = (int)$matches['id'];
 
                 return true;
             }

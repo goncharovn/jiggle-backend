@@ -7,14 +7,66 @@ use database\Db;
 class ProductModel
 {
     private int $id;
-    private string $name;
-    private string $email;
-    private string $password;
-    private string $hash;
-    private string $resetKey;
-    private bool $isTwoFactorAuthEnabled;
-    private string $twoFactorAuthCode;
-    private string $newEmail;
+    private string $title;
+    private int $price;
+    private string $description;
+    private int $defaultColorId;
+    private string $imageName;
+    private string $color;
+    private string $size;
+    private int $quantity;
+    private int|null $variantId;
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    public function getTitle(): string
+    {
+        return $this->title;
+    }
+
+    public function getPrice(): int
+    {
+        return $this->price;
+    }
+
+    public function getDescription(): string
+    {
+        return $this->description;
+    }
+
+    public function getDefaultColorId(): int
+    {
+        return $this->defaultColorId;
+    }
+
+    public function getImageName(): string
+    {
+        return $this->imageName;
+    }
+
+
+    public function getColor(): string
+    {
+        return $this->color;
+    }
+
+    public function getSize(): string
+    {
+        return $this->size;
+    }
+
+    public function getQuantity(): int
+    {
+        return $this->quantity;
+    }
+
+    public function getVariantId(): ?int
+    {
+        return $this->variantId ?? null;
+    }
 
     public static function getProducts(): bool|array
     {
@@ -37,9 +89,9 @@ class ProductModel
         );
     }
 
-    public static function getProduct($productId, $productColor, $productSize): bool|array
+    public static function getProduct($productId, $productColor, $productSize): ProductModel
     {
-        return Db::fetchAll(
+        $result = Db::fetchAll(
             "SELECT
                 p.*, 
                 pi.image_name,
@@ -73,9 +125,23 @@ class ProductModel
                 'product_size' => $productSize,
             ]
         )[0];
+
+        $product = new self();
+        $product->id = $result['id'] ?? '';
+        $product->title = $result['title'] ?? '';
+        $product->price = $result['price'] ?? '';
+        $product->description = $result['description'] ?? '';
+        $product->defaultColorId = $result['default_color_id'] ?? '';
+        $product->imageName = $result['image_name'] ?? '';
+        $product->color = $result['color'] ?? '';
+        $product->size = $result['size'] ?? '';
+        $product->quantity = $result['quantity'] ?? '';
+        $product->variantId = $result['variant_id'] ?? null;
+
+        return $product;
     }
 
-    public static function getAvailableColors($productId, $productSize): bool|array
+    public function getAvailableColors($productSize): bool|array
     {
         return Db::fetchAll(
             "SELECT DISTINCT 
@@ -92,13 +158,13 @@ class ProductModel
                 p.id = :product_id AND
                 (s.name = :product_size OR :product_size IS NULL )",
             [
-                'product_id' => $productId,
+                'product_id' => $this->id,
                 'product_size' => $productSize,
             ]
         );
     }
 
-    public static function getAvailableSizes($productId, $productColor): bool|array
+    public function getAvailableSizes($productColor): bool|array
     {
         return Db::fetchAll(
             "SELECT DISTINCT 
@@ -115,7 +181,7 @@ class ProductModel
                 p.id = :product_id AND
                 (c.name = :product_color OR c.id = p.default_color_id)",
             [
-                'product_id' => $productId,
+                'product_id' => $this->id,
                 'product_color' => $productColor,
             ]
         );
@@ -138,7 +204,7 @@ class ProductModel
         )[0]["name"];
     }
 
-    public static function getProductsInBasket($productsIdsInBasket)
+    public static function getProductsInBasket($productsIdsInBasket): bool|array
     {
         if (!empty($productsIdsInBasket)) {
             return Db::fetchAll(
@@ -162,5 +228,7 @@ class ProductModel
                     pv.id IN ($productsIdsInBasket)"
             );
         }
+
+        return false;
     }
 }

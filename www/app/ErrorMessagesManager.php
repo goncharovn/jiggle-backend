@@ -8,7 +8,7 @@ class ErrorMessagesManager
 
     public static function getErrorMessage(string $messageName)
     {
-        return self::$errorMessages[$messageName];
+        return self::$errorMessages[$messageName] ?? '';
     }
 
     public static function addNewMessage($messageName, $messageText): void

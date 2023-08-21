@@ -6,9 +6,19 @@ use database\Db;
 
 class UserModel
 {
+    private int $id;
+    private string $name;
+    private string $email;
+    private string $password;
+    private string $hash;
+    private string $resetKey;
+    private bool $twoFactorAuthEnabled;
+    private string $twoFactorAuthCode;
+    private string $newEmail;
+
     public function addUser($email, $password, $hash): void
     {
-        Db::fetchAll(
+        $user = Db::fetchAll(
             "INSERT INTO users (email, password, hash) 
             VALUES (:email, :password, :hash)",
             [

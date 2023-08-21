@@ -3,6 +3,7 @@
 namespace app\Controllers;
 
 use app\Controller;
+use app\Models\ProductModel;
 
 class BasketController extends Controller
 {
@@ -45,7 +46,7 @@ class BasketController extends Controller
     private function getProductsInBasket(): array|null
     {
         $productsIdsInBasket = $this->getProductsIdsInBasket();
-        $productsInBasket = $this->model->getProductsInBasket($productsIdsInBasket);
+        $productsInBasket = ProductModel::getProductsInBasket($productsIdsInBasket);
 
         foreach ($productsInBasket as &$product) {
             $variantId = $product['variant_id'];
@@ -58,9 +59,10 @@ class BasketController extends Controller
         return $productsInBasket;
     }
 
-    private function getOrderTotal($productsInBasket): float|int
+    private function getOrderTotal($productsInBasket): float
     {
         $orderTotal = 0;
+
         foreach ($productsInBasket as $product) {
             $price = $product['price'];
             $quantityOfProductInBasket = $_SESSION['basket'][$product['variant_id']]['quantity'];
