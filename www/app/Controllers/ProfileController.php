@@ -24,7 +24,7 @@ class ProfileController extends Controller
     public function signout(): void
     {
         if (AccessManager::isUserLoggedIn()) {
-            $_SESSION['user_id'] = null;
+            session_destroy();
             header('Location: /');
         }
     }
@@ -62,7 +62,7 @@ class ProfileController extends Controller
         $user = $this->model->getUserById($userId);
 
         $this->view->render(
-            'account/myDetails',
+            'account/my_details',
             'My Account - My Details',
             [
                 'user' => $user,

@@ -9,6 +9,7 @@ use app\Models\UserModel;
 class AccountPagesController extends Controller
 {
     public UserModel $model;
+    private bool $isAdmin = false;
 
     public function __construct()
     {
@@ -17,31 +18,47 @@ class AccountPagesController extends Controller
             exit();
         }
 
+        $this->isAdmin = $_SESSION['user_role'] === 'admin';
+
         parent::__construct();
         $this->model = new UserModel();
     }
 
     public function index(): void
     {
+
         $user = $this->model->getUserById($_SESSION['user_id']);
 
         $this->view->render(
             'account/index',
             'My Account',
             [
-                'user' => $user
+                'user' => $user,
+                'isAdmin' => $this->isAdmin,
             ]
         );
     }
 
     public function orderHistory(): void
     {
-        $this->view->render('account/orderHistory', 'My Account - Order History');
+        $this->view->render(
+            'account/order_history',
+            'My Account - Order History',
+            [
+                'isAdmin' => $this->isAdmin,
+            ]
+        );
     }
 
     public function deliveryAddress(): void
     {
-        $this->view->render('account/deliveryAddress', 'My Account - Delivery Addresses');
+        $this->view->render(
+            'account/delivery_address',
+            'My Account - Delivery Addresses',
+            [
+                'isAdmin' => $this->isAdmin,
+            ]
+        );
     }
 
     public function myDetails(): void
@@ -50,11 +67,13 @@ class AccountPagesController extends Controller
 
         $user = $this->model->getUserById($_SESSION['user_id']);
 
+
         $this->view->render(
-            'account/myDetails',
+            'account/my_details',
             'My Account - My Details',
             [
-                'user' => $user
+                'user' => $user,
+                'isAdmin' => $this->isAdmin,
             ]
         );
     }

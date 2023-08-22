@@ -56,7 +56,7 @@ class SignupController extends Controller
                 var_dump(1);
                 $this->sendConfirmationEmail($email, $hash);
                 $this->view->render(
-                    'checkEmailSignup',
+                    'check_email_signup',
                     'Check email',
                     [
                         'email' => $email,
@@ -64,7 +64,10 @@ class SignupController extends Controller
                 );
             }
         } else {
-            $this->view->render('signup', 'Sign Up');
+            $this->view->render(
+                'signup',
+                'Sign Up'
+            );
         }
     }
 

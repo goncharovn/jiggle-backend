@@ -39,6 +39,7 @@ class LoginController extends Controller
                 } else {
                     $_SESSION['user_id'] = $user['id'];
                     $_SESSION['user_email'] = $email;
+                    $_SESSION['user_role'] = $user['role'];
 
                     header('Location: /');
                 }
@@ -110,7 +111,10 @@ class LoginController extends Controller
             $hashedMFACode = password_hash($MFACode, PASSWORD_DEFAULT);
 
             $this->model->setMFACode($hashedMFACode, $email);
-            $this->view->render('multiFactor', 'Multi-factor Auth');
+            $this->view->render(
+                'multi_factor',
+                'Multi-factor Auth'
+            );
             $this->sendTwoFactorCode($email, $MFACode);
         }
     }
@@ -118,7 +122,7 @@ class LoginController extends Controller
     private function showMultiFactorPage(): void
     {
         $this->view->render(
-            'multiFactor',
+            'multi_factor',
             'Multi-factor Auth',
             [
                 'formError' => ErrorMessagesManager::getErrorMessage('formError'),

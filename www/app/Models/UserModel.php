@@ -47,7 +47,7 @@ class UserModel
     {
         return (
         Db::fetchAll(
-            "SELECT id, name, password, 2fa_enabled 
+            "SELECT users.* 
             FROM users 
             WHERE email = :email",
             [

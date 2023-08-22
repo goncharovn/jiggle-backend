@@ -8,6 +8,7 @@ use app\Controllers\ProfileController;
 use app\Controllers\LoginController;
 use app\Controllers\ResetPasswordController;
 use app\Controllers\BasketController;
+use app\Controllers\AdminController;
 
 return [
     '#^$#' => [
@@ -89,5 +90,21 @@ return [
     '#^basket$#' => [
         'controller' => BasketController::class,
         'action' => 'index'
+    ],
+    '#^admin/products$#' => [
+        'controller' => AdminController::class,
+        'action' => 'showProductsPage'
+    ],
+    '#^admin/add-product$#' => [
+        'controller' => AdminController::class,
+        'action' => 'showAddProductPage'
+    ],
+    '#^admin/orders$#' => [
+        'controller' => AdminController::class,
+        'action' => 'showOrdersPage'
+    ],
+    '#^admin/customers$#' => [
+        'controller' => AdminController::class,
+        'action' => 'showCustomersPage'
     ],
 ];

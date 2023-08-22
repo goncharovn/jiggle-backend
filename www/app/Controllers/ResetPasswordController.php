@@ -41,7 +41,7 @@ class ResetPasswordController extends Controller
                 );
             } else {
                 $this->view->render(
-                    'resetPassword',
+                    'reset_password',
                     'Forgotten Password',
                     [
                         'errorMessage' => 'User with this email address is not registered.',
@@ -49,7 +49,10 @@ class ResetPasswordController extends Controller
                 );
             }
         } else {
-            $this->view->render('resetPassword', 'Forgotten Password');
+            $this->view->render(
+                'reset_password',
+                'Forgotten Password'
+            );
         }
     }
 
@@ -66,7 +69,7 @@ class ResetPasswordController extends Controller
 
             if (!FormValidator::isValidPassword($newPassword)) {
                 $this->view->render(
-                    'changePassword',
+                    'change_password',
                     'Change Your Password',
                     [
                         'errorMessage' => ErrorMessagesManager::getErrorMessage('formError')
@@ -81,14 +84,24 @@ class ResetPasswordController extends Controller
                 $this->model->changePassword($resetKey, $newPassword);
                 $this->model->deleteResetKey($resetKey);
 
-                $this->view->render('passwordChanged', 'Password changed');
+                $this->view->render(
+                    'password_changed',
+                    'Password changed'
+                );
             } else {
-                $this->view->render('changePassword', 'Change Your Password', [
-                    'errorMessage' => 'Password mismatch.',
-                ]);
+                $this->view->render(
+                    'change_password',
+                    'Change Your Password',
+                    [
+                        'errorMessage' => 'Password mismatch.',
+                    ]
+                );
             }
         } else {
-            $this->view->render('changePassword', 'Change Your Password');
+            $this->view->render(
+                'change_password',
+                'Change Your Password'
+            );
         }
     }
 

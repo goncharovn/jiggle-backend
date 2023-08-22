@@ -5,6 +5,9 @@
             <li><a href="/my-account/order-history">Order history</a></li>
             <li><a href="/my-account/delivery-address">Delivery addresses</a></li>
             <li><a href="/my-account/my-details">My details</a></li>
+            <?php if ($isAdmin): ?>
+                <li><a href="/admin/products">Admin</a></li>
+            <?php endif; ?>
             <li>
                 <form method="post" action="/signout">
                     <button type="submit">Sign out</button>
