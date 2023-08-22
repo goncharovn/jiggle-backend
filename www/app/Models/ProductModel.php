@@ -1,8 +1,8 @@
 <?php
 
-namespace app\Models;
+namespace jiggle\app\Models;
 
-use database\Db;
+use jiggle\database\Db;
 
 class ProductModel
 {

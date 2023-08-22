@@ -1,13 +1,13 @@
 <?php
 
-namespace app\Controllers;
+namespace jiggle\app\Controllers;
 
-use app\AccessManager;
-use app\Controller;
-use app\ErrorMessagesManager;
-use app\FormValidator;
-use app\Models\UserModel;
-use app\View;
+use jiggle\app\AccessManager;
+use jiggle\app\Core\Controller;
+use jiggle\app\Core\View;
+use jiggle\app\ErrorMessagesManager;
+use jiggle\app\FormValidator;
+use jiggle\app\Models\UserModel;
 
 class ResetPasswordController extends Controller
 {

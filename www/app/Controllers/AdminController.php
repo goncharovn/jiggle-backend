@@ -1,8 +1,8 @@
 <?php
 
-namespace app\Controllers;
+namespace jiggle\app\Controllers;
 
-use app\Controller;
+use jiggle\app\Core\Controller;
 
 class AdminController extends Controller
 {

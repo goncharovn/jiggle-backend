@@ -1,11 +1,11 @@
 <?php
 
-namespace app\Controllers;
+namespace jiggle\app\Controllers;
 
-use app\Controller;
-use app\Models\ProductModel;
+use jiggle\app\Core\Controller;
+use jiggle\app\ErrorMessagesManager;
+use jiggle\app\Models\ProductModel;
 use JetBrains\PhpStorm\NoReturn;
-use app\ErrorMessagesManager;
 
 class ProductController extends Controller
 {

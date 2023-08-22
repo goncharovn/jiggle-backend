@@ -1,11 +1,11 @@
 <?php
 
-namespace app\Controllers;
+namespace jiggle\app\Controllers;
 
-use app\AccessManager;
-use app\Controller;
-use app\ErrorMessagesManager;
-use app\Models\UserModel;
+use jiggle\app\AccessManager;
+use jiggle\app\Core\Controller;
+use jiggle\app\ErrorMessagesManager;
+use jiggle\app\Models\UserModel;
 
 class LoginController extends Controller
 {

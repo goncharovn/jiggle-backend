@@ -1,9 +1,9 @@
 <?php
 
-namespace app\Controllers;
+namespace jiggle\app\Controllers;
 
-use app\Controller;
-use app\Models\ProductModel;
+use jiggle\app\Core\Controller;
+use jiggle\app\Models\ProductModel;
 
 class BasketController extends Controller
 {
@@ -43,7 +43,7 @@ class BasketController extends Controller
         return implode(',', array_keys($_SESSION['basket'] ?? []));
     }
 
-    private function getProductsInBasket(): array|null
+    private function getProductsInBasket(): array|string
     {
         $productsIdsInBasket = $this->getProductsIdsInBasket();
         $productsInBasket = ProductModel::getProductsInBasket($productsIdsInBasket);

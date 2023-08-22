@@ -1,6 +1,6 @@
 <?php
 
-namespace database;
+namespace jiggle\database;
 
 use PDO;
 

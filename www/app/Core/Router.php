@@ -1,8 +1,8 @@
 <?php
 
-namespace app;
+namespace jiggle\app\Core;
 
-use database\Db;
+use jiggle\database\Db;
 
 class Router
 {
@@ -11,7 +11,8 @@ class Router
 
     public function __construct()
     {
-        $routes = require '../routes/web.php';
+        $routesPath = dirname(__FILE__, 3) . '/routes/web.php';
+        $routes = require $routesPath;
 
         foreach ($routes as $route => $params) {
             $this->routes[$route] = $params;

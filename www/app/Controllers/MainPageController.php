@@ -1,9 +1,9 @@
 <?php
 
-namespace app\Controllers;
+namespace jiggle\app\Controllers;
 
-use app\Controller;
-use app\Models\ProductModel;
+use jiggle\app\Core\Controller;
+use jiggle\app\Models\ProductModel;
 
 class MainPageController extends Controller
 {

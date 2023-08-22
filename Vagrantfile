@@ -11,4 +11,7 @@ Vagrant.configure("2") do |config|
   config.vm.provision "shell", path: "scripts/setup-apache.sh"
   config.vm.provision "shell", path: "scripts/setup-db.sh"
   config.vm.provision "shell", path: "scripts/setup-mail.sh"
+  config.vm.provision "shell", inline: <<-SHELL
+    rm -r /var/www/html
+  SHELL
 end

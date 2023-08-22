@@ -1,14 +1,14 @@
 <?php
 
-use app\Controllers\MainPageController;
-use app\Controllers\ProductController;
-use app\Controllers\AccountPagesController;
-use app\Controllers\SignupController;
-use app\Controllers\ProfileController;
-use app\Controllers\LoginController;
-use app\Controllers\ResetPasswordController;
-use app\Controllers\BasketController;
-use app\Controllers\AdminController;
+use jiggle\app\Controllers\MainPageController;
+use jiggle\app\Controllers\ProductController;
+use jiggle\app\Controllers\AccountPagesController;
+use jiggle\app\Controllers\SignupController;
+use jiggle\app\Controllers\ProfileController;
+use jiggle\app\Controllers\LoginController;
+use jiggle\app\Controllers\ResetPasswordController;
+use jiggle\app\Controllers\BasketController;
+use jiggle\app\Controllers\AdminController;
 
 return [
     '#^$#' => [

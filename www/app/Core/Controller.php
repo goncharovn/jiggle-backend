@@ -1,8 +1,6 @@
 <?php
 
-namespace app;
-
-use app\Models;
+namespace jiggle\app\Core;
 
 abstract class Controller
 {

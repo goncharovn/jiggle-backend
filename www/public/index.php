@@ -1,14 +1,25 @@
 <?php
 
-use app\Router;
+namespace jiggle\public;
 
-spl_autoload_register(function (string $class) {
-    $path = '../' . str_replace('\\', DIRECTORY_SEPARATOR, $class . '.php');
+use jiggle\app\Core\Router;
 
-    if (file_exists($path)) {
-        require $path;
+spl_autoload_register(function (string $className) {
+    $namespacePrefix = 'jiggle\\';
+    $baseDirectory = dirname(__DIR__) . '/';
+    $prefixLength = strlen($namespacePrefix);
+
+    if (strncmp($namespacePrefix, $className, $prefixLength) !== 0) {
+        return;
+    }
+
+    $relativeClassName = substr($className, $prefixLength);
+    $classFile = $baseDirectory . str_replace('\\', '/', $relativeClassName) . '.php';
+
+    if (file_exists($classFile)) {
+        require $classFile;
     } else {
-        echo 'Class not found ' . $path;
+        echo 'Class not found ' . $classFile;
     }
 });
 

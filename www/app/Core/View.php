@@ -1,8 +1,8 @@
 <?php
 
-namespace app;
+namespace jiggle\app\Core;
 
-use app\AccessManager;
+use jiggle\app\AccessManager;
 
 class View
 {
@@ -13,15 +13,13 @@ class View
         extract($vars);
 
         $isUserLoggedIn = AccessManager::isUserLoggedIn();
-
-        $viewPath = '../app/Views/' . $template . '.php';
+        $viewPath = dirname(__DIR__) . '/Views/' . $template . '.php';
 
         if (file_exists($viewPath)) {
             ob_start();
             require $viewPath;
             $content = ob_get_clean();
-
-            require 'Views/layouts/' . $this->layout . '.php';
+            require dirname(__DIR__) . '/Views/layouts/' . $this->layout . '.php';
         }
     }
 
