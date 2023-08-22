@@ -9,12 +9,9 @@ use jiggle\app\Models\UserModel;
 
 class LoginController extends Controller
 {
-    public UserModel $model;
-
     public function __construct()
     {
         parent::__construct();
-        $this->model = new UserModel();
         $this->view->layout = 'auth';
     }
 
@@ -28,18 +25,18 @@ class LoginController extends Controller
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $email = $_POST['email'];
             $password = $_POST['password'];
-            $user = $this->model->getUserByEmail($email);
+            $user = UserModel::getUserByEmail($email);
 
-            if (password_verify($password, $user['password']) && !empty($user)) {
+            if (password_verify($password, $user->getPassword()) && !empty($user)) {
                 session_start();
 
-                if ($user['2fa_enabled']) {
+                if ($user->isTwoFactorAuthEnabled()) {
                     $_SESSION['email'] = $email;
                     header('Location: login/process-2fa');
                 } else {
-                    $_SESSION['user_id'] = $user['id'];
+                    $_SESSION['user_id'] = $user->getId();
                     $_SESSION['user_email'] = $email;
-                    $_SESSION['user_role'] = $user['role'];
+                    $_SESSION['user_role'] = $user->getRole();
 
                     header('Location: /');
                 }
@@ -51,23 +48,12 @@ class LoginController extends Controller
         $this->showLoginPage();
     }
 
-    private function showLoginPage(): void
-    {
-        $this->view->render(
-            'login',
-            'Sign In',
-            [
-                'formError' => ErrorMessagesManager::getErrorMessage('formError',) ?? '',
-            ]
-        );
-    }
-
     public function enableMultiFactorAuth(): void
     {
         session_start();
 
-        $user = $this->model->getUserById($_SESSION['user_id']);
-        $this->model->enableMultiFactorAuth($user['email']);
+        $user = UserModel::getUserById($_SESSION['user_id']);
+        $user->enableMultiFactorAuth();
 
         header('Location: /my-account/my-details');
     }
@@ -76,8 +62,8 @@ class LoginController extends Controller
     {
         session_start();
 
-        $user = $this->model->getUserById($_SESSION['user_id']);
-        $this->model->disableMultiFactorAuth($user['email']);
+        $user = UserModel::getUserById($_SESSION['user_id']);
+        $user->disableMultiFactorAuth();
 
         header('Location: /my-account/my-details');
     }
@@ -92,11 +78,11 @@ class LoginController extends Controller
         session_start();
 
         $email = $_SESSION['email'];
+        $user = UserModel::getUserByEmail($email);
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $user = $this->model->getUserByEmail($email);
             $code = $_POST['two_factor_code'];
-            $hashedMFACode = $this->model->getMFACode($email);
+            $hashedMFACode = $user->getMFACode();
 
             if (password_verify($code, $hashedMFACode) && !empty($user)) {
                 $_SESSION['user_id'] = $user['id'];
@@ -110,13 +96,24 @@ class LoginController extends Controller
             $MFACode = mt_rand(100000, 999999);
             $hashedMFACode = password_hash($MFACode, PASSWORD_DEFAULT);
 
-            $this->model->setMFACode($hashedMFACode, $email);
+            $user->setMFACode($hashedMFACode);
             $this->view->render(
                 'multi_factor',
                 'Multi-factor Auth'
             );
             $this->sendTwoFactorCode($email, $MFACode);
         }
+    }
+
+    private function showLoginPage(): void
+    {
+        $this->view->render(
+            'login',
+            'Sign In',
+            [
+                'formError' => ErrorMessagesManager::getErrorMessage('formError',) ?? '',
+            ]
+        );
     }
 
     private function showMultiFactorPage(): void

@@ -8,12 +8,10 @@ use jiggle\app\Models\UserModel;
 
 class ProfileController extends Controller
 {
-    public UserModel $model;
 
     public function __construct()
     {
         parent::__construct();
-        $this->model = new UserModel();
 
         if (!AccessManager::isUserLoggedIn()) {
             header('Location: /');
@@ -36,9 +34,10 @@ class ProfileController extends Controller
 
         $firstName = $_POST['first_name'];
         $lastName = $_POST['last_name'];
-        $userName = $firstName . ' ' . $lastName;
+        $username = $firstName . ' ' . $lastName;
 
-        $this->model->updateUserName($userName, $userId);
+        $user = UserModel::getUserById($userId);
+        $user->updateName($username);
 
         header('Location: /my-account/my-details');
     }
@@ -47,25 +46,22 @@ class ProfileController extends Controller
     {
         session_start();
 
-        $email = $_POST['email'];
-
+        $newEmail = $_POST['email'];
         $userId = $_SESSION['user_id'];
+        $hash = md5($newEmail . time());
+        $user = UserModel::getUserById($userId);
 
-        $hash = md5($email . time());
+        $user->updateNewEmail($newEmail);
+        $user->updateHash($hash);
 
-        $this->model->updateUserNewEmail($email, $userId);
-        $this->model->updateUserHash($hash, $userId);
-
-        $this->sendConfirmationEmail($email, $hash);
-
-        $user = $this->model->getUserById($userId);
+        $this->sendConfirmationEmail($newEmail, $hash);
 
         $this->view->render(
             'account/my_details',
             'My Account - My Details',
             [
                 'user' => $user,
-                'emailMessage' => "Check  $email to update your email address."
+                'emailMessage' => "Check  $newEmail to update your email address.",
             ]
         );
     }
@@ -75,15 +71,12 @@ class ProfileController extends Controller
         session_start();
 
         $hash = $_GET['hash'];
-        $user = $this->model->getUserByHash($hash);
+        $user = UserModel::getUserByHash($hash);
+        $_SESSION['user_id'] = $user->getId();
+        $user->updateEmail($user->getNewEmail());
+        $_SESSION['user_email'] = $user->getNewEmail();
 
-        if (!empty($user)) {
-            $_SESSION['user_id'] = $user['id'];
-            $this->model->updateUserEmail($user['new_email'], $user['id']);
-            $_SESSION['user_email'] = $user['new_email'];
-
-            header('Location: /');
-        }
+        header('Location: /');
     }
 
     private function sendConfirmationEmail($email, $hash): void

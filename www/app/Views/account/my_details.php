@@ -30,8 +30,8 @@
                         <span>Name</span>
                         <button class="edit-name-button edit-button_active edit-button" href="">Edit</button>
                     </p>
-                    <?php if (!empty($user['name'])) : ?>
-                        <p><?= $user['name'] ?></p>
+                    <?php if (!empty($user->getName())) : ?>
+                        <p><?= $user->getName() ?></p>
                     <?php endif; ?>
 
                     <form class="edit-name-form edit-form" action="/change-name" method="post">
@@ -52,7 +52,7 @@
                         <span>Email</span>
                         <button class="edit-email-button edit-button edit-button_active" href="">Edit</button>
                     </p>
-                    <p><?= $user['email'] ?></p>
+                    <p><?= $user->getEmail() ?></p>
 
                     <form class="edit-email-form edit-form" action="/change-email" method="post">
                         <label for="email">Email*</label>
@@ -78,7 +78,7 @@
                 <div class="account-details__detail-section">
                     <p class="account-details__label">Multi-factor authentication</p>
 
-                    <?php if ($user['2fa_enabled']): ?>
+                    <?php if ($user->isTwoFactorAuthEnabled()): ?>
                         <form method="post" action="/login/disable-2fa">
                             <button class="button_secondary" type="submit">Disable</button>
                         </form>

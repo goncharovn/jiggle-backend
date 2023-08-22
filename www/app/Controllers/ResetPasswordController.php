@@ -11,12 +11,9 @@ use jiggle\app\Models\UserModel;
 
 class ResetPasswordController extends Controller
 {
-    public UserModel $model;
-
     public function __construct()
     {
         parent::__construct();
-        $this->model = new UserModel();
         $this->view->layout = 'auth';
     }
 
@@ -26,11 +23,11 @@ class ResetPasswordController extends Controller
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST' || AccessManager::isUserLoggedIn()) {
             $email = $_POST['email'] ?? $_SESSION['user_email'];
+            $user = UserModel::getUserByEmail($email);
 
-            if ($this->model->isUserRegistered($email)) {
+            if (UserModel::isUserRegistered($email)) {
                 $resetKey = md5($email . time());
-
-                $this->model->addResetKey($email, $resetKey);
+                $user->updateResetKey($resetKey);
                 $this->sendResetPasswordEmail($email, $resetKey);
                 $this->view->render(
                     'checkEmail',
@@ -59,9 +56,9 @@ class ResetPasswordController extends Controller
     public function changePassword(): void
     {
         $resetKey = $_GET['resetKey'];
-        $user = $this->model->getUserByResetKey($resetKey);
+        $user = UserModel::getUserByResetKey($resetKey);
 
-        if (!$user) {
+        if (!$user->getId()) {
             View::showErrorPage(404);
         } else if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $newPassword = $_POST['new_password'];
@@ -80,10 +77,8 @@ class ResetPasswordController extends Controller
 
             if ($newPassword === $newPasswordConfirm) {
                 $newPassword = password_hash($newPassword, PASSWORD_DEFAULT);
-
-                $this->model->changePassword($resetKey, $newPassword);
-                $this->model->deleteResetKey($resetKey);
-
+                $user->updatePassword($newPassword);
+                $user->deleteResetKey();
                 $this->view->render(
                     'password_changed',
                     'Password changed'
@@ -110,7 +105,6 @@ class ResetPasswordController extends Controller
         $headers = "MIME-Version: 1.0\r\n";
         $headers .= "Content-type: text/html; charset=utf-8\r\n";
         $headers .= "From: Jiggle <nagoncharov11@gmail.com>\r\n";
-
         $message = '
                 <html>
                 <head>

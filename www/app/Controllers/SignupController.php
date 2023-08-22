@@ -10,8 +10,6 @@ use jiggle\app\Models\UserModel;
 
 class SignupController extends Controller
 {
-    public UserModel $model;
-
     public function __construct()
     {
         if (AccessManager::isUserLoggedIn()) {
@@ -20,7 +18,6 @@ class SignupController extends Controller
         }
 
         parent::__construct();
-        $this->model = new UserModel();
         $this->view->layout = 'auth';
     }
 
@@ -43,7 +40,7 @@ class SignupController extends Controller
 
             $hash = md5($email . time());
 
-            if ($this->model->isUserRegistered($email)) {
+            if (UserModel::isUserRegistered($email)) {
                 $this->view->render(
                     'signup',
                     'Sign Up',
@@ -52,8 +49,7 @@ class SignupController extends Controller
                     ]
                 );
             } else {
-                $this->model->addUser($email, $password, $hash);
-                var_dump(1);
+                UserModel::addUser($email, $password, $hash);
                 $this->sendConfirmationEmail($email, $hash);
                 $this->view->render(
                     'check_email_signup',
@@ -88,9 +84,9 @@ class SignupController extends Controller
         session_start();
 
         $hash = $_GET['hash'];
-        $user = $this->model->getUserByHash($hash);
+        $user = UserModel::getUserByHash($hash);
 
-        if (!empty($user)) {
+        if ($user->getId()) {
             $_SESSION['user_id'] = $user['id'];
 
             header('Location: /');

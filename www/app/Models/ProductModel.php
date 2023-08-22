@@ -89,7 +89,7 @@ class ProductModel
         );
     }
 
-    public static function getProduct($productId, $productColor, $productSize): ProductModel
+    public static function getProduct($productId, $productColor, $productSize): self
     {
         $result = Db::fetchAll(
             "SELECT

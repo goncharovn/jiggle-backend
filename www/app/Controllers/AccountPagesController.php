@@ -8,7 +8,6 @@ use jiggle\app\Models\UserModel;
 
 class AccountPagesController extends Controller
 {
-    public UserModel $model;
     private bool $isAdmin = false;
 
     public function __construct()
@@ -21,12 +20,11 @@ class AccountPagesController extends Controller
         $this->isAdmin = $_SESSION['user_role'] === 'admin';
 
         parent::__construct();
-        $this->model = new UserModel();
     }
 
     public function showOverviewPage(): void
     {
-        $user = $this->model->getUserById($_SESSION['user_id']);
+        $user = UserModel::getUserById($_SESSION['user_id']);
 
         $this->view->render(
             'account/index',
@@ -64,7 +62,7 @@ class AccountPagesController extends Controller
     {
         session_start();
 
-        $user = $this->model->getUserById($_SESSION['user_id']);
+        $user = UserModel::getUserById($_SESSION['user_id']);
 
 
         $this->view->render(
