@@ -13,7 +13,7 @@ use jiggle\app\Controllers\AdminController;
 return [
     '#^$#' => [
         'controller' => MainPageController::class,
-        'action' => 'index'
+        'action' => 'showMainPage'
     ],
     '#^p/(?<id>\d+)$#' => [
         'controller' => ProductController::class,
@@ -25,19 +25,19 @@ return [
     ],
     '#^my-account$#' => [
         'controller' => AccountPagesController::class,
-        'action' => 'index'
+        'action' => 'showOverviewPage'
     ],
     '#^my-account/order-history$#' => [
         'controller' => AccountPagesController::class,
-        'action' => 'orderHistory'
+        'action' => 'showOrderHistoryPage'
     ],
     '#^my-account/delivery-address$#' => [
         'controller' => AccountPagesController::class,
-        'action' => 'deliveryAddress'
+        'action' => 'showDeliveryAddressPage'
     ],
     '#^my-account/my-details$#' => [
         'controller' => AccountPagesController::class,
-        'action' => 'myDetails'
+        'action' => 'showMyDetailsPage'
     ],
     '#^signup$#' => [
         'controller' => SignupController::class,
@@ -49,7 +49,7 @@ return [
     ],
     '#^login$#' => [
         'controller' => LoginController::class,
-        'action' => 'login'
+        'action' => 'processLogin'
     ],
     '#^login/disable-2fa$#' => [
         'controller' => LoginController::class,

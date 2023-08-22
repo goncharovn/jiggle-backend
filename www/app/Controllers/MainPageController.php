@@ -12,7 +12,7 @@ class MainPageController extends Controller
         parent::__construct();
     }
 
-    public function index(): void
+    public function showMainPage(): void
     {
         $products = ProductModel::getProducts();
 

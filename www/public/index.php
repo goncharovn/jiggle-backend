@@ -5,8 +5,8 @@ namespace jiggle\public;
 use jiggle\app\Core\Router;
 
 spl_autoload_register(function (string $className) {
-    $namespacePrefix = 'jiggle\\';
-    $baseDirectory = dirname(__DIR__) . '/';
+    $namespacePrefix = 'jiggle';
+    $baseDirectory = dirname(__DIR__);
     $prefixLength = strlen($namespacePrefix);
 
     if (strncmp($namespacePrefix, $className, $prefixLength) !== 0) {

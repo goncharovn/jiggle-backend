@@ -24,9 +24,8 @@ class AccountPagesController extends Controller
         $this->model = new UserModel();
     }
 
-    public function index(): void
+    public function showOverviewPage(): void
     {
-
         $user = $this->model->getUserById($_SESSION['user_id']);
 
         $this->view->render(
@@ -39,7 +38,7 @@ class AccountPagesController extends Controller
         );
     }
 
-    public function orderHistory(): void
+    public function showOrderHistoryPage(): void
     {
         $this->view->render(
             'account/order_history',
@@ -50,7 +49,7 @@ class AccountPagesController extends Controller
         );
     }
 
-    public function deliveryAddress(): void
+    public function showDeliveryAddressPage(): void
     {
         $this->view->render(
             'account/delivery_address',
@@ -61,7 +60,7 @@ class AccountPagesController extends Controller
         );
     }
 
-    public function myDetails(): void
+    public function showMyDetailsPage(): void
     {
         session_start();
 

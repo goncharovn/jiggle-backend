@@ -18,7 +18,7 @@ class LoginController extends Controller
         $this->view->layout = 'auth';
     }
 
-    public function login(): void
+    public function processLogin(): void
     {
         if (AccessManager::isUserLoggedIn()) {
             header('Location: /');
