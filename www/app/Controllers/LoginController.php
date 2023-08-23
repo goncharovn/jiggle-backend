@@ -28,8 +28,6 @@ class LoginController extends Controller
             $user = UserModel::getUserByEmail($email);
 
             if (password_verify($password, $user->getPassword()) && !empty($user)) {
-                session_start();
-
                 if ($user->isTwoFactorAuthEnabled()) {
                     $_SESSION['email'] = $email;
                     header('Location: login/process-2fa');
@@ -50,8 +48,6 @@ class LoginController extends Controller
 
     public function enableMultiFactorAuth(): void
     {
-        session_start();
-
         $user = UserModel::getUserById($_SESSION['user_id']);
         $user->enableMultiFactorAuth();
 
@@ -60,8 +56,6 @@ class LoginController extends Controller
 
     public function disableMultiFactorAuth(): void
     {
-        session_start();
-
         $user = UserModel::getUserById($_SESSION['user_id']);
         $user->disableMultiFactorAuth();
 
@@ -74,8 +68,6 @@ class LoginController extends Controller
             header('Location: /');
             exit();
         }
-
-        session_start();
 
         $email = $_SESSION['email'];
         $user = UserModel::getUserByEmail($email);

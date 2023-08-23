@@ -81,8 +81,6 @@ class SignupController extends Controller
 
     public function confirmSignup(): void
     {
-        session_start();
-
         $hash = $_GET['hash'];
         $user = UserModel::getUserByHash($hash);
 

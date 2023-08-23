@@ -34,8 +34,6 @@ class ProductController extends Controller
 
     private function showProductPage(): void
     {
-        session_start();
-
         $productId = $this->requestParams['product_id'];
         $productSize = null;
         $productColor = $_GET['color'] ?? ProductModel::getDefaultProductColor($productId);
@@ -72,8 +70,6 @@ class ProductController extends Controller
 
     #[NoReturn] public static function changeProductQuantityInBasket(): void
     {
-        session_start();
-
         $productId = $_POST['product_id'];
 
         if (isset($productId)) {
@@ -120,8 +116,6 @@ class ProductController extends Controller
 
     #[NoReturn] public function removeProductFromBasket(): void
     {
-        session_start();
-
         $variantId = $_POST['variant_id'];
 
         unset($_SESSION['basket'][$variantId]);

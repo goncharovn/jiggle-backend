@@ -28,8 +28,6 @@ class ProfileController extends Controller
 
     public function changeName(): void
     {
-        session_start();
-
         $userId = $_SESSION['user_id'];
 
         $firstName = $_POST['first_name'];
@@ -44,8 +42,6 @@ class ProfileController extends Controller
 
     public function changeEmail(): void
     {
-        session_start();
-
         $newEmail = $_POST['email'];
         $userId = $_SESSION['user_id'];
         $hash = md5($newEmail . time());
@@ -68,8 +64,6 @@ class ProfileController extends Controller
 
     public function confirmEmail()
     {
-        session_start();
-
         $hash = $_GET['hash'];
         $user = UserModel::getUserByHash($hash);
         $_SESSION['user_id'] = $user->getId();

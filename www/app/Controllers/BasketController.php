@@ -23,8 +23,6 @@ class BasketController extends Controller
 
     private function showBasketPage(): void
     {
-        session_start();
-
         $productsInBasket = $this->getProductsInBasket();
         $orderTotal = $this->getOrderTotal($productsInBasket);
 

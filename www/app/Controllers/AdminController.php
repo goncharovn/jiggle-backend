@@ -8,8 +8,6 @@ class AdminController extends Controller
 {
     public function __construct(array $requestParams)
     {
-        session_start();
-
         if ($_SESSION['user_role'] !== 'admin') {
             header('Location: /');
         }

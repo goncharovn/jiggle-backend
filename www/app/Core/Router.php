@@ -22,6 +22,7 @@ class Router
     public function run(): void
     {
         Db::getInstance();
+        session_start();
 
         if ($this->match()) {
             $controllerClass = $this->requestParams['controller'];

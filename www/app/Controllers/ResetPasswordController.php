@@ -19,8 +19,6 @@ class ResetPasswordController extends Controller
 
     public function resetPassword(): void
     {
-        session_start();
-
         if ($_SERVER['REQUEST_METHOD'] === 'POST' || AccessManager::isUserLoggedIn()) {
             $email = $_POST['email'] ?? $_SESSION['user_email'];
             $user = UserModel::getUserByEmail($email);

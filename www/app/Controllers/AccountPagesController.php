@@ -60,10 +60,7 @@ class AccountPagesController extends Controller
 
     public function showMyDetailsPage(): void
     {
-        session_start();
-
         $user = UserModel::getUserById($_SESSION['user_id']);
-
 
         $this->view->render(
             'account/my_details',
