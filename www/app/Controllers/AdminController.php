@@ -24,7 +24,7 @@ class AdminController extends Controller
             'admin/products',
             'Admin - Products',
             [
-            ],
+            ]
         );
     }
 
@@ -34,16 +34,37 @@ class AdminController extends Controller
             'admin/add_product',
             'Admin - Add Product',
             [
-            ],
+            ]
         );
     }
+
+    public function showEditProductPage(): void
+    {
+        $this->view->render(
+            'admin/edit_product',
+            'Admin - Edit Product',
+            [
+            ]
+        );
+    }
+
+    public function showEditProductVariantPage(): void
+    {
+        $this->view->render(
+            'admin/edit_product_variant',
+            'Admin - Edit Product Variant',
+            [
+            ]
+        );
+    }
+
     public function showOrdersPage(): void
     {
         $this->view->render(
             'admin/orders',
             'Admin - Orders',
             [
-            ],
+            ]
         );
     }
 

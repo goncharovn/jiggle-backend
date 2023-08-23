@@ -99,6 +99,14 @@ return [
         'controller' => AdminController::class,
         'action' => 'showAddProductPage'
     ],
+    '#^admin/edit-product$#' => [
+        'controller' => AdminController::class,
+        'action' => 'showEditProductPage'
+    ],
+    '#^admin/edit-product-variant$#' => [
+        'controller' => AdminController::class,
+        'action' => 'showEditProductVariantPage'
+    ],
     '#^admin/orders$#' => [
         'controller' => AdminController::class,
         'action' => 'showOrdersPage'
