@@ -28,7 +28,7 @@ class ResetPasswordController extends Controller
                 $user->updateResetKey($resetKey);
                 $this->sendResetPasswordEmail($email, $resetKey);
                 $this->view->render(
-                    'checkEmail',
+                    'check_email',
                     'Check your email',
                     [
                         'email' => $email,

@@ -89,7 +89,7 @@ class ProductModel
         );
     }
 
-    public static function getProduct($productId, $productColor, $productSize): self
+    public static function getProductVariant($productId, $productColor, $productSize): self
     {
         $result = Db::fetchAll(
             "SELECT
@@ -137,6 +137,35 @@ class ProductModel
         $product->size = $result['size'] ?? '';
         $product->quantity = $result['quantity'] ?? '';
         $product->variantId = $result['variant_id'] ?? null;
+
+        return $product;
+    }
+
+    public static function getProductVariantById($productVariantId): self
+    {
+        $result = Db::fetchAll(
+            "SELECT
+                pv.*
+            FROM 
+                products_variants pv
+            WHERE 
+                pv.id = :product_variant_id",
+            [
+                'product_variant_id' => $productVariantId,
+            ]
+        )[0];
+
+        $product = new self();
+        $product->id = $result['product_id'] ?? '';
+        $product->title = $result['title'] ?? '';
+        $product->price = $result['price'] ?? 0;
+        $product->description = $result['description'] ?? '';
+        $product->defaultColorId = $result['default_color_id'] ?? -1;
+        $product->imageName = $result['image_name'] ?? '';
+        $product->color = $result['color'] ?? '';
+        $product->size = $result['size'] ?? '';
+        $product->quantity = $result['quantity'] ?? 0;
+        $product->variantId = $result['id'] ?? null;
 
         return $product;
     }
@@ -204,12 +233,14 @@ class ProductModel
         )[0]["name"];
     }
 
-    public static function getProductsInBasket($productsIdsInBasket): bool|array
+    public static function getProductsVariantsByIds(array $ids): array
     {
-        if (!empty($productsIdsInBasket)) {
-            return Db::fetchAll(
-                "SELECT 
-                    p.*, 
+        $ids = implode(',', array_keys($ids));
+
+        return Db::fetchAll(
+            "SELECT 
+                    p.*,
+                    p.id AS product_id,
                     pi.image_name,
                     pv.id AS variant_id,
                     c.name AS color,
@@ -225,10 +256,7 @@ class ProductModel
                 JOIN
                     colors c ON pv.color_id = c.id
                 WHERE 
-                    pv.id IN ($productsIdsInBasket)"
-            );
-        }
-
-        return false;
+                    pv.id IN ($ids)"
+        );
     }
 }

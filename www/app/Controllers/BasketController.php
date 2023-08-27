@@ -2,69 +2,116 @@
 
 namespace jiggle\app\Controllers;
 
+use JetBrains\PhpStorm\NoReturn;
 use jiggle\app\Core\Controller;
+use jiggle\app\ErrorMessagesManager;
 use jiggle\app\Models\ProductModel;
 
 class BasketController extends Controller
 {
-    public function __construct(array $requestParams)
+    public function showBasketPage(): void
     {
-        parent::__construct();
-    }
-
-    public function index(): void
-    {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            ProductController::changeProductQuantityInBasket();
-        }
-
-        $this->showBasketPage();
-    }
-
-    private function showBasketPage(): void
-    {
-        $productsInBasket = $this->getProductsInBasket();
-        $orderTotal = $this->getOrderTotal($productsInBasket);
+        $productsVariantsInBasket = $this->getProductsVariantsInBasket();
+        $orderTotal = $this->getOrderTotal($productsVariantsInBasket);
 
         $this->view->render(
             'basket/index',
             'Jiggle - Basket',
             [
-                'productsInBasket' => $productsInBasket,
+                'productsVariantsInBasket' => $productsVariantsInBasket,
                 'orderTotal' => $orderTotal,
             ],
         );
     }
 
-    private function getProductsIdsInBasket(): string
+    #[NoReturn]
+    public static function changeProductVariantQuantityInBasket(): void
     {
-        return implode(',', array_keys($_SESSION['basket'] ?? []));
-    }
+        $productId = $_POST['product_id'] ?? null;
+        $action = $_POST['action'] ?? null;
+        $productColor = $_POST['product_color'] ?? null;
+        $productSize = $_POST['product_size'] ?? null;
 
-    private function getProductsInBasket(): array|string
-    {
-        $productsIdsInBasket = $this->getProductsIdsInBasket();
-        $productsInBasket = ProductModel::getProductsInBasket($productsIdsInBasket);
-
-        foreach ($productsInBasket as &$product) {
-            $variantId = $product['variant_id'];
-
-            if (isset($_SESSION['basket'][$variantId]['quantity'])) {
-                $product['quantity'] = $_SESSION['basket'][$variantId]['quantity'];
-            }
+        if (empty($productSize)) {
+            header('Location: ' . $_SERVER['HTTP_REFERER'] . '?size_error=1');
+            exit();
         }
 
-        return $productsInBasket;
+        if (!$productId || !$action || !$productColor || !$productSize) {
+            header('Location: ' . $_SERVER['HTTP_REFERER']);
+            exit();
+        }
+
+        $product = ProductModel::getProductVariant($productId, $productColor, $productSize);
+
+        $quantityOfProductInStock = $product->getQuantity();
+        $quantityChange = 0;
+
+        if ($action === 'increase') {
+            $quantityChange = 1;
+        } elseif ($action === 'decrease') {
+            $quantityChange = -1;
+        }
+
+        $variantId = $product->getVariantId();
+
+        if (!isset($_SESSION['basket'][$variantId])) {
+            $_SESSION['basket'][$variantId] = ['variant_id' => $variantId, 'basket_quantity' => 0];
+        }
+
+        $quantityOfProductInBasket = $_SESSION['basket'][$variantId]['basket_quantity'] + $quantityChange;
+
+        if ($quantityOfProductInBasket <= 0) {
+            unset($_SESSION['basket'][$variantId]);
+        } elseif ($quantityOfProductInBasket <= $quantityOfProductInStock) {
+            $_SESSION['basket'][$variantId]['basket_quantity'] = $quantityOfProductInBasket;
+        }
+
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
+        exit();
     }
 
-    private function getOrderTotal($productsInBasket): float
+    #[NoReturn]
+    public function removeProductVariantFromBasket(): void
+    {
+        $variantId = $_POST['variant_id'];
+
+        unset($_SESSION['basket'][$variantId]);
+
+        header('Location: /basket');
+        exit();
+    }
+
+    public static function isProductVariantInBasket($variantId): bool
+    {
+        return isset($variantId, $_SESSION['basket'][$variantId]);
+    }
+
+    private function getProductsVariantsInBasket(): array
+    {
+        if (!empty($_SESSION['basket'])) {
+            $productsVariantsIdsInBasket = $_SESSION['basket'];
+            $productsVariantsInBasket = ProductModel::getProductsVariantsByIds($productsVariantsIdsInBasket);
+
+            foreach ($productsVariantsInBasket as &$productVariant) {
+                if (isset($_SESSION['basket'][$productVariant['variant_id']]['basket_quantity'])) {
+                    $productVariant['basket_quantity'] = $_SESSION['basket'][$productVariant['variant_id']]['basket_quantity'];
+                }
+            }
+        } else {
+            return [];
+        }
+
+        return $productsVariantsInBasket;
+    }
+
+    private function getOrderTotal($productsVariantsInBasket): float
     {
         $orderTotal = 0;
 
-        foreach ($productsInBasket as $product) {
-            $price = $product['price'];
-            $quantityOfProductInBasket = $_SESSION['basket'][$product['variant_id']]['quantity'];
-            $orderTotal += $price * $quantityOfProductInBasket;
+        foreach ($productsVariantsInBasket as $productVariant) {
+            $quantityOfProductInBasket = $_SESSION['basket'][$productVariant['variant_id']]['basket_quantity'];
+            $orderTotal += $productVariant['price'] * $quantityOfProductInBasket;
         }
 
         return $orderTotal;

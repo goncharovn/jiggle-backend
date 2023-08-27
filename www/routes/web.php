@@ -19,9 +19,9 @@ return [
         'controller' => ProductController::class,
         'action' => 'index',
     ],
-    '#^remove-product$#' => [
-        'controller' => ProductController::class,
-        'action' => 'removeProductFromBasket',
+    '#^remove-product-variant-from-basket$#' => [
+        'controller' => BasketController::class,
+        'action' => 'removeProductVariantFromBasket',
     ],
     '#^my-account$#' => [
         'controller' => AccountPagesController::class,
@@ -89,7 +89,11 @@ return [
     ],
     '#^basket$#' => [
         'controller' => BasketController::class,
-        'action' => 'index'
+        'action' => 'showBasketPage'
+    ],
+    '#^change-product-variant-quantity-in-basket$#' => [
+        'controller' => BasketController::class,
+        'action' => 'changeProductVariantQuantityInBasket'
     ],
     '#^admin/products$#' => [
         'controller' => AdminController::class,
