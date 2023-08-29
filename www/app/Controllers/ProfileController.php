@@ -81,23 +81,11 @@ class ProfileController extends Controller
 
     private function sendConfirmationEmail($email, $hash): void
     {
-        $headers = "MIME-Version: 1.0\r\n";
-        $headers .= "Content-type: text/html; charset=utf-8\r\n";
-        $headers .= "From: Jiggle <nagoncharov11@gmail.com>\r\n";
-
-        $message = '
-                <html>
-                <head>
-                <title>Confirm your Email</title>
-                </head>
-                <body>
-                <p>Confirm your email using this <a href="http://' . $_SERVER['HTTP_HOST'] . '/confirm-email?hash=' . $hash . '">link</a>.</p>
-                </body>
-                </html>
-                ';
-
-        if (!mail($email, "Confirm your Email on Jiggle", $message, $headers)) {
-            echo 'Email sending error';
-        }
+        EmailController::sendEmail(
+            'Confirm your Email',
+            'Confirm your email using this <a href="http://' . $_SERVER['HTTP_HOST'] . '/confirm-email?hash=' . $hash . '">link</a>.',
+            'Confirm your Email on Jiggle',
+            $_POST['email']
+        );
     }
 }

@@ -120,22 +120,11 @@ class ResetPasswordController extends Controller
 
     private function sendResetPasswordEmail($email, $resetKey): void
     {
-        $headers = "MIME-Version: 1.0\r\n";
-        $headers .= "Content-type: text/html; charset=utf-8\r\n";
-        $headers .= "From: Jiggle <nagoncharov11@gmail.com>\r\n";
-        $message = '
-                <html>
-                <head>
-                <title>Reset your password</title>
-                </head>
-                <body>
-                <p>Reset your password using this <a href="http://' . $_SERVER['HTTP_HOST'] . '/change-password?resetKey=' . $resetKey . '">link</a>.</p>
-                </body>
-                </html>
-                ';
-
-        if (!mail($email, "Reset your password on Jiggle", $message, $headers)) {
-            echo 'Email sending error';
-        }
+        EmailController::sendEmail(
+            'Reset your password',
+            'Reset your password using this <a href="http://' . $_SERVER['HTTP_HOST'] . '/change-password?resetKey=' . $resetKey . '">link</a>.',
+            'Reset your password on Jiggle',
+            $email
+        );
     }
 }

@@ -111,14 +111,11 @@ class LoginController extends Controller
 
     private function sendTwoFactorCode($code): void
     {
-        $headers = "MIME-Version: 1.0\r\n";
-        $headers .= "Content-type: text/plain; charset=utf-8\r\n";
-        $headers .= "From: Jiggle <nagoncharov11@gmail.com>\r\n";
-
-        $message = "Enter this code $code.";
-
-        if (!mail($this->user->getEmail(), "Multi-factor auth", $message, $headers)) {
-            echo 'Email sending error';
-        }
+        EmailController::sendEmail(
+            'Reset your password',
+            "Enter this code $code.",
+            'Multi-factor auth on Jiggle',
+            $this->user->getEmail()
+        );
     }
 }
