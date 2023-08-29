@@ -11,12 +11,7 @@ class Router
 
     public function __construct()
     {
-        $routesPath = dirname(__FILE__, 3) . '/routes/web.php';
-        $routes = require $routesPath;
-
-        foreach ($routes as $route => $params) {
-            $this->routes[$route] = $params;
-        }
+        $this->routes = require dirname(__FILE__, 3) . '/routes/web.php';
     }
 
     public function run(): void
