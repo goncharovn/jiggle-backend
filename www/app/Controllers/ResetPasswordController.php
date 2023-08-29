@@ -22,17 +22,16 @@ class ResetPasswordController extends Controller
     public function resetPassword(): void
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST' || AccessManager::isUserLoggedIn()) {
-            $email = $_POST['email'] ?? $_SESSION['user_email'];
-            $user = UserModel::getUserByEmail($email);
+            $user = UserModel::getUserById($_SESSION['user_id']);
 
-            if (UserModel::isUserRegistered($email)) {
-                $resetKey = md5($email . time());
+            if (UserModel::isUserRegistered($user->getId())) {
+                $resetKey = md5($user->getEmail() . time());
                 $user->updateResetKey($resetKey);
-                $this->sendResetPasswordEmail($email, $resetKey);
+                $this->sendResetPasswordEmail($user->getEmail(), $resetKey);
 
                 AuthLayout::render(
                     'check_email',
-                        CheckEmailView::make($email)
+                        CheckEmailView::make($user->getEmail())
                 );
             } else {
                 AuthLayout::render(

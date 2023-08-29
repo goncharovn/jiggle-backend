@@ -70,7 +70,8 @@ class UserModel
     public static function getUserById($id): self
     {
         $queryResult = Db::fetchAll(
-            "SELECT u.*
+            "SELECT 
+                u.*
             FROM 
                 users u 
             WHERE 
@@ -121,11 +122,11 @@ class UserModel
     {
         $queryResult = Db::fetchAll(
             "SELECT 
-                    u.*
-                FROM 
-                    users u
-                WHERE 
-                    reset_key = :reset_key",
+                u.*
+            FROM 
+                users u
+            WHERE 
+                reset_key = :reset_key",
             [
                 'reset_key' => $resetKey,
             ]
@@ -149,20 +150,22 @@ class UserModel
         );
     }
 
-    public static function isUserRegistered($email): bool
+    public static function isUserRegistered($id): bool
     {
         return (
             Db::fetchColumn(
                 "SELECT 
-                id 
-            FROM 
-                users 
-            WHERE 
-                email = :email",
+                EXISTS(
+                    SELECT 
+                        * 
+                    FROM 
+                        users 
+                    WHERE 
+                        id = :id)",
                 [
-                    'email' => $email,
+                    'id' => $id,
                 ]
-            ) !== false
+            ) !== 0
         );
     }
 
