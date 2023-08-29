@@ -2,9 +2,9 @@
 
 namespace jiggle\app\Core;
 
-class View
+abstract class View
 {
-    public static function make(string $templateName, array $templateData = [])
+    public static function make(string $templateName, array $templateData = []): string
     {
         $templateFile = dirname(__DIR__) . '/Views/templates/' . $templateName . '.php';
 
@@ -12,7 +12,7 @@ class View
             ob_start();
             extract($templateData);
             require $templateFile;
-            return (string) ob_get_clean();
+            return (string)ob_get_clean();
         } else {
             return "File not found: $templateFile";
         }

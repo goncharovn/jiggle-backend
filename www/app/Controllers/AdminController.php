@@ -5,13 +5,13 @@ namespace jiggle\app\Controllers;
 use jiggle\app\AccessManager;
 use jiggle\app\Core\Controller;
 use jiggle\app\Models\UserModel;
-use jiggle\app\Views\AdminAddProductView;
-use jiggle\app\Views\AdminCustomersView;
-use jiggle\app\Views\AdminEditProductVariantView;
-use jiggle\app\Views\AdminEditProductView;
-use jiggle\app\Views\AdminOrdersView;
-use jiggle\app\Views\AdminProductsView;
-use jiggle\app\Views\Layouts\AdminLayout;
+use jiggle\app\Views\Components\AdminAddProductComponent;
+use jiggle\app\Views\Components\AdminCustomersComponent;
+use jiggle\app\Views\Components\AdminEditProductComponent;
+use jiggle\app\Views\Components\AdminEditProductVariantComponent;
+use jiggle\app\Views\Components\AdminLayoutComponent;
+use jiggle\app\Views\Components\AdminOrdersComponent;
+use jiggle\app\Views\Components\AdminProductsComponent;
 
 class AdminController extends Controller
 {
@@ -35,49 +35,49 @@ class AdminController extends Controller
 
     public function showProductsPage(): void
     {
-        AdminLayout::render(
+        echo new AdminLayoutComponent(
             'Admin - Products',
-            AdminProductsView::make()
+            new AdminProductsComponent()
         );
     }
 
     public function showAddProductPage(): void
     {
-        AdminLayout::render(
+        echo new AdminLayoutComponent(
             'Admin - Add Product',
-            AdminAddProductView::make()
+            new AdminAddProductComponent()
         );
     }
 
     public function showEditProductPage(): void
     {
-        AdminLayout::render(
+        echo new AdminLayoutComponent(
             'Admin - Edit Product',
-            AdminEditProductView::make()
+            new AdminEditProductComponent()
         );
     }
 
     public function showEditProductVariantPage(): void
     {
-        AdminLayout::render(
+        echo new AdminLayoutComponent(
             'Admin - Edit Product Variant',
-            AdminEditProductVariantView::make()
+            new AdminEditProductVariantComponent()
         );
     }
 
     public function showOrdersPage(): void
     {
-        AdminLayout::render(
+        echo new AdminLayoutComponent(
             'Admin - Orders',
-            AdminOrdersView::make()
+            new AdminOrdersComponent()
         );
     }
 
     public function showCustomersPage(): void
     {
-        AdminLayout::render(
+        echo new AdminLayoutComponent(
             'Admin - Customers',
-            AdminCustomersView::make()
+            new AdminCustomersComponent()
         );
     }
 }

@@ -3,10 +3,10 @@
 namespace jiggle\app\Controllers;
 
 use jiggle\app\Core\Controller;
-use jiggle\app\ErrorMessagesManager;
+use jiggle\app\NotificationMessagesManager;
 use jiggle\app\Models\ProductModel;
-use jiggle\app\Views\Layouts\DefaultLayout;
-use jiggle\app\Views\ProductPageView;
+use jiggle\app\Views\Components\DefaultLayoutComponent;
+use jiggle\app\Views\Components\ProductPageComponent;
 
 class ProductController extends Controller
 {
@@ -33,7 +33,7 @@ class ProductController extends Controller
     {
         $productId = $this->requestParams['product_id'];
         $productSize = $_GET['size'] ?? null;
-        $productColor = $this->requestParams['color'] ?? ProductModel::getDefaultProductColor($productId);
+        $productColor = $_GET['color'] ?? ProductModel::getDefaultProductColor($productId);
 
         $this->product = $this->getProductVariant($productId, $productColor, $productSize);
         $this->availableColors = $this->getAvailableColors($productSize);
@@ -77,7 +77,7 @@ class ProductController extends Controller
     private function checkQuantityLimitError(): void
     {
         if ($this->quantityOfProductInBasket >= $this->quantityOfProductInStock) {
-            ErrorMessagesManager::addNewMessage(
+            NotificationMessagesManager::setMessage(
                 'quantityLimitError',
                 "Only $this->quantityOfProductInStock item" . ($this->quantityOfProductInStock > 1 ? 's' : '') . " available."
             );
@@ -87,7 +87,7 @@ class ProductController extends Controller
     private function checkUnselectedSizeError(): void
     {
         if ($_GET['sizeError'] === '1') {
-            ErrorMessagesManager::addNewMessage(
+            NotificationMessagesManager::setMessage(
                 'unselectedSizeError',
                 "Please select a size."
             );
@@ -96,9 +96,9 @@ class ProductController extends Controller
 
     private function renderProductPage(): void
     {
-        DefaultLayout::render(
+        echo new DefaultLayoutComponent(
             $this->product->getTitle(),
-            ProductPageView::make(
+            new ProductPageComponent(
                 $this->product,
                 $this->availableColors,
                 $this->availableSizes,

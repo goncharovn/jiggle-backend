@@ -5,9 +5,10 @@ namespace jiggle\app\Controllers;
 use jiggle\app\AccessManager;
 use jiggle\app\Core\Controller;
 use jiggle\app\Models\UserModel;
-use jiggle\app\Views\AccountMenu;
-use jiggle\app\Views\AccountView;
-use jiggle\app\Views\Layouts\DefaultLayout;
+use jiggle\app\Views\Components\AccountBodyComponent;
+use jiggle\app\Views\Components\AccountComponent;
+use jiggle\app\Views\Components\AccountMenuComponent;
+use jiggle\app\Views\Components\DefaultLayoutComponent;
 
 class AccountPagesController extends Controller
 {
@@ -24,14 +25,21 @@ class AccountPagesController extends Controller
         }
 
         $this->user = UserModel::getUserById($_SESSION['user_id']);
-        $this->accountMenu = AccountMenu::make($this->user->getRole() === 'admin');
+        $this->accountMenu = new AccountMenuComponent($this->user->getRole() === 'admin');
     }
 
     public function showOverviewPage(): void
     {
+        if (empty($this->user->getName())) {
+            $greetings = 'Hi!';
+        } else {
+            $greetings = "Hi, {$this->user->getName()}!";
+        }
+
         $this->renderAccountPage(
             'overview',
-            'My Account - Overview'
+            'My Account - Overview',
+            $greetings
         );
     }
 
@@ -39,7 +47,8 @@ class AccountPagesController extends Controller
     {
         $this->renderAccountPage(
             'order_history',
-            'My Account - Order History'
+            'My Account - Order History',
+            'Order History'
         );
     }
 
@@ -47,7 +56,8 @@ class AccountPagesController extends Controller
     {
         $this->renderAccountPage(
             'delivery_addresses',
-            'My Account - Delivery Addresses'
+            'My Account - Delivery Addresses',
+            'Delivery Addresses'
         );
     }
 
@@ -55,19 +65,21 @@ class AccountPagesController extends Controller
     {
         $this->renderAccountPage(
             'my_details',
-            'My Account - My Details'
+            'My Account - My Details',
+            'My Details'
         );
     }
 
-    private function renderAccountPage($templateName, $title): void
+    private function renderAccountPage($templateName, $title, $accountHeading): void
     {
-        DefaultLayout::render(
-            $title,
-            AccountView::make(
-                $templateName,
-                $this->user,
-                $this->accountMenu
-            )
+        $accountBody = new AccountBodyComponent($templateName, $this->user);
+
+        $main = new AccountComponent(
+            $this->accountMenu,
+            $accountHeading,
+            $accountBody
         );
+
+        echo(new DefaultLayoutComponent($title, $main));
     }
 }

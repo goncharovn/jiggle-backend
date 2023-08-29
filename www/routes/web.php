@@ -83,7 +83,7 @@ return [
         'controller' => ProfileController::class,
         'action' => 'changeEmail'
     ],
-    '#^signout$#' => [
+    '#^sign-out$#' => [
         'controller' => ProfileController::class,
         'action' => 'signout'
     ],

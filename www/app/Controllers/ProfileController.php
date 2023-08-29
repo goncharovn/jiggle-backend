@@ -5,9 +5,10 @@ namespace jiggle\app\Controllers;
 use jiggle\app\AccessManager;
 use jiggle\app\Core\Controller;
 use jiggle\app\Models\UserModel;
-use jiggle\app\Views\AccountMenu;
-use jiggle\app\Views\AccountView;
-use jiggle\app\Views\Layouts\DefaultLayout;
+use jiggle\app\Views\Components\AccountBodyComponent;
+use jiggle\app\Views\Components\AccountComponent;
+use jiggle\app\Views\Components\AccountMenuComponent;
+use jiggle\app\Views\Components\DefaultLayoutComponent;
 
 class ProfileController extends Controller
 {
@@ -55,12 +56,15 @@ class ProfileController extends Controller
 
         $this->sendConfirmationEmail($newEmail, $hash);
 
-        DefaultLayout::render(
+        echo new DefaultLayoutComponent(
             'My Account - My Details',
-            AccountView::make(
-                'my_details',
-                $user,
-                AccountMenu::make($user->getRole() === 'admin')
+            new AccountComponent(
+                new AccountMenuComponent($user->getRole() === 'admin'),
+                'My Details',
+                new AccountBodyComponent(
+                    'my_details',
+                    $user
+                )
             )
         );
     }

@@ -6,9 +6,9 @@ use jiggle\database\Db;
 
 class UserModel
 {
-    private int|null $id;
+    private ?int $id;
     private string $name;
-    private string $email;
+    private ?string $email;
     private string $password;
     private string $hash;
     private string $resetKey;
@@ -17,7 +17,7 @@ class UserModel
     private string $newEmail;
     private string $role;
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -27,7 +27,7 @@ class UserModel
         return $this->name;
     }
 
-    public function getEmail(): string
+    public function getEmail(): ?string
     {
         return $this->email;
     }
@@ -150,7 +150,7 @@ class UserModel
         );
     }
 
-    public static function isUserRegistered($id): bool
+    public static function isUserRegistered(int $id): bool
     {
         return (
             Db::fetchColumn(
@@ -346,7 +346,7 @@ class UserModel
         $user = new self();
         $user->id = $queryResult['id'] ?? null;
         $user->name = $queryResult['name'] ?? '';
-        $user->email = $queryResult['email'] ?? '';
+        $user->email = $queryResult['email'] ?? null;
         $user->password = $queryResult['password'] ?? '';
         $user->hash = $queryResult['hash'] ?? '';
         $user->resetKey = $queryResult['reset_key'] ?? '';

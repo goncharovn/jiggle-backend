@@ -8,7 +8,7 @@
             <li><a href="/admin/products">Admin</a></li>
         <?php endif; ?>
         <li>
-            <form method="post" action="/signout">
+            <form method="post" action="/sign-out">
                 <button type="submit">Sign out</button>
             </form>
         </li>

@@ -4,11 +4,12 @@ namespace jiggle\app\Controllers;
 
 use jiggle\app\AccessManager;
 use jiggle\app\Core\Controller;
-use jiggle\app\ErrorMessagesManager;
+use jiggle\app\NotificationMessagesManager;
 use jiggle\app\Models\UserModel;
-use jiggle\app\Views\Layouts\AuthLayout;
-use jiggle\app\Views\LoginView;
-use jiggle\app\Views\MultiFactorAuthView;
+use jiggle\app\Views\Components\AuthContentComponent;
+use jiggle\app\Views\Components\AuthLayoutComponent;
+use jiggle\app\Views\Components\LoginFormComponent;
+use jiggle\app\Views\Components\MultiFactorAuthComponent;
 
 class LoginController extends Controller
 {
@@ -35,7 +36,7 @@ class LoginController extends Controller
                     header('Location: /');
                 }
             } else {
-                ErrorMessagesManager::addNewMessage('formError', 'Wrong email or password.');
+                NotificationMessagesManager::setMessage('formError', 'Wrong email or password.');
             }
         }
 
@@ -68,7 +69,7 @@ class LoginController extends Controller
             $_SESSION['user_id'] = $this->user->getId();
             header('Location: /');
         } else {
-            ErrorMessagesManager::addNewMessage('formError', 'Invalid code.');
+            NotificationMessagesManager::setMessage('formError', 'Invalid code.');
             $this->showMultiFactorPage();
         }
     }
@@ -81,25 +82,32 @@ class LoginController extends Controller
         $this->sendTwoFactorCode($MFACode);
         $_SESSION['email'] = $this->user->getEmail();
 
-        AuthLayout::render(
-            'multi_factor',
-            MultiFactorAuthView::make()
+        echo new AuthLayoutComponent(
+            'Multi-Factor Auth',
+            new MultiFactorAuthComponent(),
         );
     }
 
     private function showLoginPage(): void
     {
-        AuthLayout::render(
+        $content = new AuthContentComponent(
+            'Welcome',
+            'Please log in to Jiggle to continue',
+            NotificationMessagesManager::getMessage('formError',) ?? '',
+            new LoginFormComponent()
+        );
+
+        echo new AuthLayoutComponent(
             'Sign In',
-            LoginView::make()
+            $content
         );
     }
 
     private function showMultiFactorPage(): void
     {
-        AuthLayout::render(
+        echo new AuthLayoutComponent(
             'Multi-Factor Auth',
-            MultiFactorAuthView::make()
+            new MultiFactorAuthComponent()
         );
     }
 

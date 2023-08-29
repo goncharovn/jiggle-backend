@@ -5,16 +5,16 @@ namespace jiggle\app\Controllers;
 use JetBrains\PhpStorm\NoReturn;
 use jiggle\app\Core\Controller;
 use jiggle\app\Models\ProductModel;
-use jiggle\app\Views\BasketView;
-use jiggle\app\Views\Layouts\DefaultLayout;
+use jiggle\app\Views\Components\BasketComponent;
+use jiggle\app\Views\Components\DefaultLayoutComponent;
 
 class BasketController extends Controller
 {
     public function showBasketPage(): void
     {
-        DefaultLayout::render(
+        echo new DefaultLayoutComponent(
             'Basket - Jiggle',
-            BasketView::make(
+            new BasketComponent(
                 self::getProductsVariantsInBasket(),
                 self::getOrderTotal()
             )

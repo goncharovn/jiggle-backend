@@ -2,17 +2,21 @@
 
 namespace jiggle\app\Controllers;
 
+use JetBrains\PhpStorm\NoReturn;
 use jiggle\app\AccessManager;
 use jiggle\app\Core\Controller;
-use jiggle\app\ErrorMessagesManager;
+use jiggle\app\NotificationMessagesManager;
 use jiggle\app\FormValidator;
 use jiggle\app\Models\UserModel;
-use jiggle\app\Views\CheckEmailSignupView;
-use jiggle\app\Views\Layouts\AuthLayout;
-use jiggle\app\Views\SignupView;
+use jiggle\app\Views\Components\AuthContentComponent;
+use jiggle\app\Views\Components\AuthLayoutComponent;
+use jiggle\app\Views\Components\CheckEmailSignupComponent;
+use jiggle\app\Views\Components\SignupComponent;
 
 class SignupController extends Controller
 {
+    private ?UserModel $user;
+
     public function __construct()
     {
         if (AccessManager::isUserLoggedIn()) {
@@ -20,64 +24,58 @@ class SignupController extends Controller
             exit();
         }
 
+        $this->user = null;
+
         parent::__construct();
     }
 
     public function signup(): void
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $email = $_POST['email'];
+            $this->user = UserModel::getUserByEmail($_POST['email']);
 
-            if (!FormValidator::isValidEmail($email)) {
-                $this->showSignupPage($email);
-                exit();
+            if (!empty($this->user->getId())) {
+                NotificationMessagesManager::setMessage(
+                    'formError',
+                    'This email is already taken.'
+                );
+                $this->showSignupPage();
+            }
+
+            if (!FormValidator::isValidPassword($_POST['password'])) {
+                $this->showSignupPage();
             }
 
             $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+            $hash = md5($_POST['email'] . time());
 
-            if (!FormValidator::isValidPassword($_POST['password'])) {
-                $this->showSignupPage($email);
-                exit();
-            }
+            UserModel::addUser($_POST['email'], $password, $hash);
+            $this->sendConfirmationEmail($hash);
 
-            $hash = md5($email . time());
-
-            if (UserModel::isUserRegistered($email)) {
-                AuthLayout::render(
-                    'Sign Up',
-                    SignupView::make(
-                        'This email is already taken.',
-                        $email
-                    )
-                );
-            } else {
-                UserModel::addUser($email, $password, $hash);
-                $this->sendConfirmationEmail($email, $hash);
-
-                AuthLayout::render(
-                    'Check Your Email',
-                    CheckEmailSignupView::make(
-                        $email
-                    )
-                );
-            }
-        } else {
-            AuthLayout::render(
-                'Sign Up',
-                SignupView::make()
+            echo new AuthLayoutComponent(
+                'Check Your Email',
+                new CheckEmailSignupComponent(
+                    $_POST['email']
+                )
             );
+        } else {
+            $this->showSignupPage();
         }
     }
 
-    private function showSignupPage(?string $email): void
+    #[NoReturn]
+    private function showSignupPage(): void
     {
-        AuthLayout::render(
+        echo new AuthLayoutComponent(
             'Sign Up',
-            SignupView::make(
-                ErrorMessagesManager::getErrorMessage('formError') ?? '',
-                $email
+            new AuthContentComponent(
+                'Welcome',
+                'Create your account to continue',
+                NotificationMessagesManager::getMessage('formError') ?? '',
+                new SignupComponent($this?->user?->getEmail() ?? $_POST['email'] ?? '')
             )
         );
+        exit();
     }
 
     public function confirmSignup(): void
@@ -86,13 +84,12 @@ class SignupController extends Controller
         $user = UserModel::getUserByHash($hash);
 
         if ($user->getId()) {
-            $_SESSION['user_id'] = $user['id'];
-
+            $_SESSION['user_id'] = $user->getId();
             header('Location: /');
         }
     }
 
-    private function sendConfirmationEmail($email, $hash): void
+    private function sendConfirmationEmail($hash): void
     {
         $headers = "MIME-Version: 1.0\r\n";
         $headers .= "Content-type: text/html; charset=utf-8\r\n";
@@ -109,7 +106,7 @@ class SignupController extends Controller
                 </html>
                 ';
 
-        if (!mail($email, "Confirm your Email on Jiggle", $message, $headers)) {
+        if (!mail($_POST['email'], "Confirm your Email on Jiggle", $message, $headers)) {
             echo 'Email sending error';
         }
     }

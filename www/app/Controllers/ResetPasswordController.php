@@ -5,12 +5,15 @@ namespace jiggle\app\Controllers;
 use jiggle\app\AccessManager;
 use jiggle\app\Core\Controller;
 use jiggle\app\Core\View;
-use jiggle\app\ErrorMessagesManager;
+use jiggle\app\NotificationMessagesManager;
 use jiggle\app\FormValidator;
 use jiggle\app\Models\UserModel;
-use jiggle\app\Views\CheckEmailView;
-use jiggle\app\Views\Layouts\AuthLayout;
-use jiggle\app\Views\ResetPasswordView;
+use jiggle\app\Views\Components\AuthContentComponent;
+use jiggle\app\Views\Components\AuthLayoutComponent;
+use jiggle\app\Views\Components\ChangePasswordComponent;
+use jiggle\app\Views\Components\CheckEmailComponent;
+use jiggle\app\Views\Components\PasswordChangedComponent;
+use jiggle\app\Views\Components\ResetPasswordComponent;
 
 class ResetPasswordController extends Controller
 {
@@ -24,28 +27,39 @@ class ResetPasswordController extends Controller
         if ($_SERVER['REQUEST_METHOD'] === 'POST' || AccessManager::isUserLoggedIn()) {
             $user = UserModel::getUserById($_SESSION['user_id']);
 
-            if (UserModel::isUserRegistered($user->getId())) {
+            if (empty($user->getId())) {
+                $user = UserModel::getUserByEmail($_POST['email']);
+            }
+
+            if (!empty($user->getId())) {
                 $resetKey = md5($user->getEmail() . time());
                 $user->updateResetKey($resetKey);
                 $this->sendResetPasswordEmail($user->getEmail(), $resetKey);
 
-                AuthLayout::render(
-                    'check_email',
-                        CheckEmailView::make($user->getEmail())
+                echo new AuthLayoutComponent(
+                    'Check Your Email',
+                    new CheckEmailComponent($user->getEmail())
                 );
             } else {
-                AuthLayout::render(
+                echo new AuthLayoutComponent(
                     'Forgotten Password',
-                    ResetPasswordView::make(
-                        'reset_password',
-                        'User with this email address is not registered.'
+                    new AuthContentComponent(
+                        'Forgotten Password',
+                        'Enter your email address, and we will send you instructions to reset your password.',
+                        'User with this email address is not registered.',
+                        new ResetPasswordComponent()
                     )
                 );
             }
         } else {
-            AuthLayout::render(
+            echo new AuthLayoutComponent(
                 'Forgotten Password',
-                ResetPasswordView::make('reset_password')
+                new AuthContentComponent(
+                    'Forgotten Password',
+                    'Enter your email address, and we will send you instructions to reset your password.',
+                    '',
+                    new ResetPasswordComponent()
+                )
             );
         }
     }
@@ -62,18 +76,13 @@ class ResetPasswordController extends Controller
             $newPasswordConfirm = $_POST['new_password_confirm'];
 
             if (!FormValidator::isValidPassword($newPassword)) {
-                AuthLayout::render(
-                    'Forgotten Password',
-                    ResetPasswordView::make(
-                        'reset_password',
-                        'User with this email address is not registered.'
-                    )
-                );
-                AuthLayout::render(
+                echo new AuthLayoutComponent(
                     'Change Your Password',
-                    ResetPasswordView::make(
-                        'change_password',
-                        ErrorMessagesManager::getErrorMessage('formError')
+                    new AuthContentComponent(
+                        'Change Your Password',
+                        'Enter a new password below to change your password.',
+                        NotificationMessagesManager::getMessage('formError'),
+                        new ChangePasswordComponent()
                     )
                 );
                 exit();
@@ -84,23 +93,30 @@ class ResetPasswordController extends Controller
                 $user->updatePassword($newPassword);
                 $user->deleteResetKey();
 
-                AuthLayout::render(
+                echo new AuthLayoutComponent(
                     'Password Changed',
-                    ResetPasswordView::make('password_changed')
+                    new PasswordChangedComponent()
                 );
             } else {
-                AuthLayout::render(
+                echo new AuthLayoutComponent(
                     'Change Your Password',
-                    ResetPasswordView::make(
-                        'change_password',
-                        'Password mismatch.'
+                    new AuthContentComponent(
+                        'Change Your Password',
+                        'Enter a new password below to change your password.',
+                        'Password mismatch.',
+                        new ChangePasswordComponent()
                     )
                 );
             }
         } else {
-            AuthLayout::render(
+            echo new AuthLayoutComponent(
                 'Change Your Password',
-                ResetPasswordView::make('change_password')
+                new AuthContentComponent(
+                    'Change Your Password',
+                    'Enter a new password below to change your password.',
+                    '',
+                    new ChangePasswordComponent()
+                )
             );
         }
     }
