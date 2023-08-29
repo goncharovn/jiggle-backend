@@ -17,7 +17,7 @@ return [
     ],
     '#^p/(?<id>\d+)$#' => [
         'controller' => ProductController::class,
-        'action' => 'index',
+        'action' => 'showProductPage',
     ],
     '#^remove-product-variant-from-basket$#' => [
         'controller' => BasketController::class,

@@ -2,77 +2,82 @@
 
 namespace jiggle\app\Controllers;
 
+use jiggle\app\AccessManager;
 use jiggle\app\Core\Controller;
+use jiggle\app\Models\UserModel;
+use jiggle\app\Views\AdminAddProductView;
+use jiggle\app\Views\AdminCustomersView;
+use jiggle\app\Views\AdminEditProductVariantView;
+use jiggle\app\Views\AdminEditProductView;
+use jiggle\app\Views\AdminOrdersView;
+use jiggle\app\Views\AdminProductsView;
+use jiggle\app\Views\Layouts\AdminLayout;
 
 class AdminController extends Controller
 {
+    private UserModel $user;
+
     public function __construct(array $requestParams)
     {
-        if ($_SESSION['user_role'] !== 'admin') {
+        if (!AccessManager::isUserLoggedIn()) {
+            header('Location: /');
+            exit();
+        }
+
+        $this->user = UserModel::getUserById($_SESSION['user_id']);
+
+        if ($this->user->getRole() !== 'admin') {
             header('Location: /');
         }
 
         parent::__construct($requestParams);
-        $this->view->layout = 'admin';
     }
 
     public function showProductsPage(): void
     {
-        $this->view->render(
-            'admin/products',
+        AdminLayout::render(
             'Admin - Products',
-            [
-            ]
+            AdminProductsView::make()
         );
     }
 
     public function showAddProductPage(): void
     {
-        $this->view->render(
-            'admin/add_product',
+        AdminLayout::render(
             'Admin - Add Product',
-            [
-            ]
+            AdminAddProductView::make()
         );
     }
 
     public function showEditProductPage(): void
     {
-        $this->view->render(
-            'admin/edit_product',
+        AdminLayout::render(
             'Admin - Edit Product',
-            [
-            ]
+            AdminEditProductView::make()
         );
     }
 
     public function showEditProductVariantPage(): void
     {
-        $this->view->render(
-            'admin/edit_product_variant',
+        AdminLayout::render(
             'Admin - Edit Product Variant',
-            [
-            ]
+            AdminEditProductVariantView::make()
         );
     }
 
     public function showOrdersPage(): void
     {
-        $this->view->render(
-            'admin/orders',
+        AdminLayout::render(
             'Admin - Orders',
-            [
-            ]
+            AdminOrdersView::make()
         );
     }
 
     public function showCustomersPage(): void
     {
-        $this->view->render(
-            'admin/customers',
+        AdminLayout::render(
             'Admin - Customers',
-            [
-            ],
+            AdminCustomersView::make()
         );
     }
 }

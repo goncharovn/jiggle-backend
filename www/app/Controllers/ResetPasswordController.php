@@ -8,13 +8,15 @@ use jiggle\app\Core\View;
 use jiggle\app\ErrorMessagesManager;
 use jiggle\app\FormValidator;
 use jiggle\app\Models\UserModel;
+use jiggle\app\Views\CheckEmailView;
+use jiggle\app\Views\Layouts\AuthLayout;
+use jiggle\app\Views\ResetPasswordView;
 
 class ResetPasswordController extends Controller
 {
     public function __construct()
     {
         parent::__construct();
-        $this->view->layout = 'auth';
     }
 
     public function resetPassword(): void
@@ -27,26 +29,24 @@ class ResetPasswordController extends Controller
                 $resetKey = md5($email . time());
                 $user->updateResetKey($resetKey);
                 $this->sendResetPasswordEmail($email, $resetKey);
-                $this->view->render(
+
+                AuthLayout::render(
                     'check_email',
-                    'Check your email',
-                    [
-                        'email' => $email,
-                    ]
+                        CheckEmailView::make($email)
                 );
             } else {
-                $this->view->render(
-                    'reset_password',
+                AuthLayout::render(
                     'Forgotten Password',
-                    [
-                        'errorMessage' => 'User with this email address is not registered.',
-                    ]
+                    ResetPasswordView::make(
+                        'reset_password',
+                        'User with this email address is not registered.'
+                    )
                 );
             }
         } else {
-            $this->view->render(
-                'reset_password',
-                'Forgotten Password'
+            AuthLayout::render(
+                'Forgotten Password',
+                ResetPasswordView::make('reset_password')
             );
         }
     }
@@ -63,12 +63,19 @@ class ResetPasswordController extends Controller
             $newPasswordConfirm = $_POST['new_password_confirm'];
 
             if (!FormValidator::isValidPassword($newPassword)) {
-                $this->view->render(
-                    'change_password',
+                AuthLayout::render(
+                    'Forgotten Password',
+                    ResetPasswordView::make(
+                        'reset_password',
+                        'User with this email address is not registered.'
+                    )
+                );
+                AuthLayout::render(
                     'Change Your Password',
-                    [
-                        'errorMessage' => ErrorMessagesManager::getErrorMessage('formError')
-                    ]
+                    ResetPasswordView::make(
+                        'change_password',
+                        ErrorMessagesManager::getErrorMessage('formError')
+                    )
                 );
                 exit();
             }
@@ -77,23 +84,24 @@ class ResetPasswordController extends Controller
                 $newPassword = password_hash($newPassword, PASSWORD_DEFAULT);
                 $user->updatePassword($newPassword);
                 $user->deleteResetKey();
-                $this->view->render(
-                    'password_changed',
-                    'Password changed'
+
+                AuthLayout::render(
+                    'Password Changed',
+                    ResetPasswordView::make('password_changed')
                 );
             } else {
-                $this->view->render(
-                    'change_password',
+                AuthLayout::render(
                     'Change Your Password',
-                    [
-                        'errorMessage' => 'Password mismatch.',
-                    ]
+                    ResetPasswordView::make(
+                        'change_password',
+                        'Password mismatch.'
+                    )
                 );
             }
         } else {
-            $this->view->render(
-                'change_password',
-                'Change Your Password'
+            AuthLayout::render(
+                'Change Your Password',
+                ResetPasswordView::make('change_password')
             );
         }
     }

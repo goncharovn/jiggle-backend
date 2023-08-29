@@ -10,10 +10,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Anton&family=Sora:wght@700&display=swap" rel="stylesheet">
-
     <link rel="stylesheet" href="/styles/index.css">
 
-    <title><?= $title; ?></title>
+    <title><?= $title ?></title>
 </head>
 <body>
 <header class="header">
@@ -27,6 +26,10 @@
                 <a class="header__signin" href="/login">Sign In</a>
             <?php endif; ?>
 
+            <div>
+                <?= $orderTotal ?>
+            </div>
+
             <a class="basket-notification" href="/basket">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
                      aria-hidden="true" class="icon" focusable="false">
@@ -37,8 +40,9 @@
         </div>
     </div>
 </header>
+
 <main class="main container">
-    <?= $content; ?>
+    <?= $main ?>
 </main>
 
 <script src="/scripts/index.js"></script>

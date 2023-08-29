@@ -5,70 +5,69 @@ namespace jiggle\app\Controllers;
 use jiggle\app\AccessManager;
 use jiggle\app\Core\Controller;
 use jiggle\app\Models\UserModel;
+use jiggle\app\Views\AccountMenu;
+use jiggle\app\Views\AccountView;
+use jiggle\app\Views\Layouts\DefaultLayout;
 
 class AccountPagesController extends Controller
 {
-    private bool $isAdmin = false;
+    private UserModel $user;
+    private string $accountMenu;
 
     public function __construct()
     {
+        parent::__construct();
+
         if (!AccessManager::isUserLoggedIn()) {
             header('Location: /');
             exit();
         }
 
-        $this->isAdmin = $_SESSION['user_role'] === 'admin';
-
-        parent::__construct();
+        $this->user = UserModel::getUserById($_SESSION['user_id']);
+        $this->accountMenu = AccountMenu::make($this->user->getRole() === 'admin');
     }
 
     public function showOverviewPage(): void
     {
-        $user = UserModel::getUserById($_SESSION['user_id']);
-
-        $this->view->render(
-            'account/index',
-            'My Account',
-            [
-                'user' => $user,
-                'isAdmin' => $this->isAdmin,
-            ]
+        $this->renderAccountPage(
+            'overview',
+            'My Account - Overview'
         );
     }
 
     public function showOrderHistoryPage(): void
     {
-        $this->view->render(
-            'account/order_history',
-            'My Account - Order History',
-            [
-                'isAdmin' => $this->isAdmin,
-            ]
+        $this->renderAccountPage(
+            'order_history',
+            'My Account - Order History'
         );
     }
 
     public function showDeliveryAddressPage(): void
     {
-        $this->view->render(
-            'account/delivery_address',
-            'My Account - Delivery Addresses',
-            [
-                'isAdmin' => $this->isAdmin,
-            ]
+        $this->renderAccountPage(
+            'delivery_addresses',
+            'My Account - Delivery Addresses'
         );
     }
 
     public function showMyDetailsPage(): void
     {
-        $user = UserModel::getUserById($_SESSION['user_id']);
+        $this->renderAccountPage(
+            'my_details',
+            'My Account - My Details'
+        );
+    }
 
-        $this->view->render(
-            'account/my_details',
-            'My Account - My Details',
-            [
-                'user' => $user,
-                'isAdmin' => $this->isAdmin,
-            ]
+    private function renderAccountPage($templateName, $title): void
+    {
+        DefaultLayout::render(
+            $title,
+            AccountView::make(
+                $templateName,
+                $this->user,
+                $this->accountMenu
+            )
         );
     }
 }

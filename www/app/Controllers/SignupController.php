@@ -7,6 +7,9 @@ use jiggle\app\Core\Controller;
 use jiggle\app\ErrorMessagesManager;
 use jiggle\app\FormValidator;
 use jiggle\app\Models\UserModel;
+use jiggle\app\Views\CheckEmailSignupView;
+use jiggle\app\Views\Layouts\AuthLayout;
+use jiggle\app\Views\SignupView;
 
 class SignupController extends Controller
 {
@@ -18,7 +21,6 @@ class SignupController extends Controller
         }
 
         parent::__construct();
-        $this->view->layout = 'auth';
     }
 
     public function signup(): void
@@ -41,41 +43,40 @@ class SignupController extends Controller
             $hash = md5($email . time());
 
             if (UserModel::isUserRegistered($email)) {
-                $this->view->render(
-                    'signup',
+                AuthLayout::render(
                     'Sign Up',
-                    [
-                        'errorMessage' => 'This email is already taken.',
-                    ]
+                    SignupView::make(
+                        'This email is already taken.',
+                        $email
+                    )
                 );
             } else {
                 UserModel::addUser($email, $password, $hash);
                 $this->sendConfirmationEmail($email, $hash);
-                $this->view->render(
-                    'check_email_signup',
-                    'Check email',
-                    [
-                        'email' => $email,
-                    ]
+
+                AuthLayout::render(
+                    'Check Your Email',
+                    CheckEmailSignupView::make(
+                        $email
+                    )
                 );
             }
         } else {
-            $this->view->render(
-                'signup',
-                'Sign Up'
+            AuthLayout::render(
+                'Sign Up',
+                SignupView::make()
             );
         }
     }
 
-    private function showSignupPage($email = ''): void
+    private function showSignupPage(?string $email): void
     {
-        $this->view->render(
-            'signup',
+        AuthLayout::render(
             'Sign Up',
-            [
-                'errorMessage' => ErrorMessagesManager::getErrorMessage('formError') ?? '',
-                'email' => $email ?? ''
-            ]
+            SignupView::make(
+                ErrorMessagesManager::getErrorMessage('formError') ?? '',
+                $email
+            )
         );
     }
 

@@ -2,25 +2,19 @@
 
 namespace jiggle\app\Core;
 
-use jiggle\app\AccessManager;
-
 class View
 {
-    public string $layout = 'default';
-
-    public function render(string $templateFile, string $title, array $parameters = []): void
+    public static function make(string $templateName, array $templateData = [])
     {
-        extract($parameters);
+        $templateFile = dirname(__DIR__) . '/Views/templates/' . $templateName . '.php';
 
-        $isUserLoggedIn = AccessManager::isUserLoggedIn();
-        $viewPath = dirname(__DIR__) . '/Views/' . $templateFile . '.php';
-
-        if (file_exists($viewPath)) {
+        if (file_exists($templateFile)) {
             ob_start();
-            require $viewPath;
-            $content = ob_get_clean();
-
-            require dirname(__DIR__) . '/Views/layouts/' . $this->layout . '.php';
+            extract($templateData);
+            require $templateFile;
+            return (string) ob_get_clean();
+        } else {
+            return "File not found: $templateFile";
         }
     }
 

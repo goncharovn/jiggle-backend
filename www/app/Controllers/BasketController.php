@@ -4,23 +4,20 @@ namespace jiggle\app\Controllers;
 
 use JetBrains\PhpStorm\NoReturn;
 use jiggle\app\Core\Controller;
-use jiggle\app\ErrorMessagesManager;
 use jiggle\app\Models\ProductModel;
+use jiggle\app\Views\BasketView;
+use jiggle\app\Views\Layouts\DefaultLayout;
 
 class BasketController extends Controller
 {
     public function showBasketPage(): void
     {
-        $productsVariantsInBasket = $this->getProductsVariantsInBasket();
-        $orderTotal = $this->getOrderTotal($productsVariantsInBasket);
-
-        $this->view->render(
-            'basket/index',
-            'Jiggle - Basket',
-            [
-                'productsVariantsInBasket' => $productsVariantsInBasket,
-                'orderTotal' => $orderTotal,
-            ],
+        DefaultLayout::render(
+            'Basket - Jiggle',
+            BasketView::make(
+                self::getProductsVariantsInBasket(),
+                self::getOrderTotal()
+            )
         );
     }
 
@@ -32,8 +29,11 @@ class BasketController extends Controller
         $productColor = $_POST['product_color'] ?? null;
         $productSize = $_POST['product_size'] ?? null;
 
-        if (empty($productSize)) {
-            header('Location: ' . $_SERVER['HTTP_REFERER'] . '?size_error=1');
+        if (empty($productSize) && empty($_GET['size_error'])) {
+            $refererUrl = strtok($_SERVER['HTTP_REFERER'], '?');
+            $redirectUrl = $refererUrl . '?sizeError=1';
+
+            header('Location: ' . $redirectUrl);
             exit();
         }
 
@@ -87,7 +87,19 @@ class BasketController extends Controller
         return isset($variantId, $_SESSION['basket'][$variantId]);
     }
 
-    private function getProductsVariantsInBasket(): array
+    public static function getOrderTotal(): float
+    {
+        $orderTotal = 0;
+
+        foreach (static::getProductsVariantsInBasket() as $productVariant) {
+            $quantityOfProductInBasket = $_SESSION['basket'][$productVariant['variant_id']]['basket_quantity'];
+            $orderTotal += $productVariant['price'] * $quantityOfProductInBasket;
+        }
+
+        return $orderTotal;
+    }
+
+    private static function getProductsVariantsInBasket(): array
     {
         if (!empty($_SESSION['basket'])) {
             $productsVariantsIdsInBasket = $_SESSION['basket'];
@@ -103,17 +115,5 @@ class BasketController extends Controller
         }
 
         return $productsVariantsInBasket;
-    }
-
-    private function getOrderTotal($productsVariantsInBasket): float
-    {
-        $orderTotal = 0;
-
-        foreach ($productsVariantsInBasket as $productVariant) {
-            $quantityOfProductInBasket = $_SESSION['basket'][$productVariant['variant_id']]['basket_quantity'];
-            $orderTotal += $productVariant['price'] * $quantityOfProductInBasket;
-        }
-
-        return $orderTotal;
     }
 }

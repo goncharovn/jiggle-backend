@@ -5,6 +5,9 @@ namespace jiggle\app\Controllers;
 use jiggle\app\AccessManager;
 use jiggle\app\Core\Controller;
 use jiggle\app\Models\UserModel;
+use jiggle\app\Views\AccountMenu;
+use jiggle\app\Views\AccountView;
+use jiggle\app\Views\Layouts\DefaultLayout;
 
 class ProfileController extends Controller
 {
@@ -52,17 +55,17 @@ class ProfileController extends Controller
 
         $this->sendConfirmationEmail($newEmail, $hash);
 
-        $this->view->render(
-            'account/my_details',
+        DefaultLayout::render(
             'My Account - My Details',
-            [
-                'user' => $user,
-                'emailMessage' => "Check  $newEmail to update your email address.",
-            ]
+            AccountView::make(
+                'my_details',
+                $user,
+                AccountMenu::make($user->getRole() === 'admin')
+            )
         );
     }
 
-    public function confirmEmail()
+    public function confirmEmail(): void
     {
         $hash = $_GET['hash'];
         $user = UserModel::getUserByHash($hash);

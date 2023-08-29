@@ -11,7 +11,7 @@
  * @var bool $isProductInBasket
  */
 
-use app\Models\ProductModel;
+use jiggle\app\Models\ProductModel;
 
 ?>
 

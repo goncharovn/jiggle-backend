@@ -8,7 +8,7 @@
     <p class="error-message"><?= $formError; ?></p>
 <?php endif; ?>
 
-<form class="auth-form" method="post" action="">
+<form class="auth-form" method="post" action="/login/process-2fa">
     <input class="input" name="two_factor_code" placeholder="Two-factor code">
     <button class="auth-form__button" type="submit">Continue</button>
 </form>

@@ -6,14 +6,13 @@ use jiggle\app\AccessManager;
 use jiggle\app\Core\Controller;
 use jiggle\app\ErrorMessagesManager;
 use jiggle\app\Models\UserModel;
+use jiggle\app\Views\Layouts\AuthLayout;
+use jiggle\app\Views\LoginView;
+use jiggle\app\Views\MultiFactorAuthView;
 
 class LoginController extends Controller
 {
-    public function __construct()
-    {
-        parent::__construct();
-        $this->view->layout = 'auth';
-    }
+    private UserModel $user;
 
     public function processLogin(): void
     {
@@ -25,17 +24,14 @@ class LoginController extends Controller
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $email = $_POST['email'];
             $password = $_POST['password'];
-            $user = UserModel::getUserByEmail($email);
+            $this->user = UserModel::getUserByEmail($email);
 
-            if (password_verify($password, $user->getPassword()) && !empty($user)) {
-                if ($user->isTwoFactorAuthEnabled()) {
-                    $_SESSION['email'] = $email;
-                    header('Location: login/process-2fa');
+            if (password_verify($password, $this->user->getPassword())) {
+                if ($this->user->isTwoFactorAuthEnabled()) {
+                    $this->showMultiFactorAuthPage();
+                    exit();
                 } else {
-                    $_SESSION['user_id'] = $user->getId();
-                    $_SESSION['user_email'] = $email;
-                    $_SESSION['user_role'] = $user->getRole();
-
+                    $_SESSION['user_id'] = $this->user->getId();
                     header('Location: /');
                 }
             } else {
@@ -64,79 +60,58 @@ class LoginController extends Controller
 
     public function processMultiFactorAuth(): void
     {
-        if (AccessManager::isUserLoggedIn()) {
+        $this->user = UserModel::getUserByEmail($_SESSION['email']);
+        $code = $_POST['two_factor_code'];
+        $hashedMFACode = $this->user->getMFACode();
+
+        if (password_verify($code, $hashedMFACode) && !empty($this->user->getId())) {
+            $_SESSION['user_id'] = $this->user->getId();
             header('Location: /');
-            exit();
-        }
-
-        $email = $_SESSION['email'];
-        $user = UserModel::getUserByEmail($email);
-
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $code = $_POST['two_factor_code'];
-            $hashedMFACode = $user->getMFACode();
-
-            if (password_verify($code, $hashedMFACode) && !empty($user)) {
-                $_SESSION['user_id'] = $user['id'];
-
-                header('Location: /');
-            } else {
-                ErrorMessagesManager::addNewMessage('formError', 'Invalid code.');
-                $this->showMultiFactorPage();
-            }
         } else {
-            $MFACode = mt_rand(100000, 999999);
-            $hashedMFACode = password_hash($MFACode, PASSWORD_DEFAULT);
-
-            $user->setMFACode($hashedMFACode);
-            $this->view->render(
-                'multi_factor',
-                'Multi-factor Auth'
-            );
-            $this->sendTwoFactorCode($email, $MFACode);
+            ErrorMessagesManager::addNewMessage('formError', 'Invalid code.');
+            $this->showMultiFactorPage();
         }
+    }
+
+    private function showMultiFactorAuthPage(): void
+    {
+        $MFACode = mt_rand(100000, 999999);
+        $hashedMFACode = password_hash($MFACode, PASSWORD_DEFAULT);
+        $this->user->setMFACode($hashedMFACode);
+        $this->sendTwoFactorCode($MFACode);
+        $_SESSION['email'] = $this->user->getEmail();
+
+        AuthLayout::render(
+            'multi_factor',
+            MultiFactorAuthView::make()
+        );
     }
 
     private function showLoginPage(): void
     {
-        $this->view->render(
-            'login',
+        AuthLayout::render(
             'Sign In',
-            [
-                'formError' => ErrorMessagesManager::getErrorMessage('formError',) ?? '',
-            ]
+            LoginView::make()
         );
     }
 
     private function showMultiFactorPage(): void
     {
-        $this->view->render(
-            'multi_factor',
-            'Multi-factor Auth',
-            [
-                'formError' => ErrorMessagesManager::getErrorMessage('formError'),
-            ]
+        AuthLayout::render(
+            'Multi-Factor Auth',
+            MultiFactorAuthView::make()
         );
     }
 
-    private function sendTwoFactorCode($email, $code): void
+    private function sendTwoFactorCode($code): void
     {
         $headers = "MIME-Version: 1.0\r\n";
-        $headers .= "Content-type: text/html; charset=utf-8\r\n";
+        $headers .= "Content-type: text/plain; charset=utf-8\r\n";
         $headers .= "From: Jiggle <nagoncharov11@gmail.com>\r\n";
 
-        $message = "
-                <html>
-                <head>
-                <title>Multi-factor code</title>
-                </head>
-                <body>
-                <p>Enter this code $code.</p>
-                </body>
-                </html>
-                ";
+        $message = "Enter this code $code.";
 
-        if (!mail($email, "Multi-factor auth", $message, $headers)) {
+        if (!mail($this->user->getEmail(), "Multi-factor auth", $message, $headers)) {
             echo 'Email sending error';
         }
     }
