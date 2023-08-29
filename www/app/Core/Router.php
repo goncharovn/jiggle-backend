@@ -28,11 +28,13 @@ class Router
                 if (method_exists($controllerClass, $action)) {
                     $controller = new $controllerClass($this->requestParams);
                     $controller->$action();
+
+                    return;
                 }
             }
-        } else {
-            View::showErrorPage(404);
         }
+
+        View::showErrorPage(404);
     }
 
     private function match(): bool
