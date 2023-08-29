@@ -15,7 +15,7 @@ return [
         'controller' => MainPageController::class,
         'action' => 'showMainPage'
     ],
-    '#^p/(?<id>\d+)$#' => [
+    '#^product/(?<id>\d+)$#' => [
         'controller' => ProductController::class,
         'action' => 'showProductPage',
     ],
