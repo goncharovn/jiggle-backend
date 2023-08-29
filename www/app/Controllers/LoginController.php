@@ -61,9 +61,9 @@ class LoginController extends Controller
     {
         $this->user = UserModel::getUserByEmail($_SESSION['email']);
         $code = $_POST['two_factor_code'];
-        $hashedMFACode = $this->user->getMFACode();
+        $hashedMultiFactorAuthCode = $this->user->getMultiFactorAuthCode();
 
-        if (password_verify($code, $hashedMFACode) && !empty($this->user->getId())) {
+        if (password_verify($code, $hashedMultiFactorAuthCode) && !empty($this->user->getId())) {
             $_SESSION['user_id'] = $this->user->getId();
             header('Location: /');
         } else {
@@ -74,10 +74,10 @@ class LoginController extends Controller
 
     private function showMultiFactorAuthPage(): void
     {
-        $MFACode = mt_rand(100000, 999999);
-        $hashedMFACode = password_hash($MFACode, PASSWORD_DEFAULT);
-        $this->user->setMFACode($hashedMFACode);
-        $this->sendTwoFactorCode($MFACode);
+        $MultiFactorAuthCode = mt_rand(100000, 999999);
+        $hashedMultiFactorAuthCode = password_hash($MultiFactorAuthCode, PASSWORD_DEFAULT);
+        $this->user->setMultiFactorAuthCode($hashedMultiFactorAuthCode);
+        $this->sendTwoFactorCode($MultiFactorAuthCode);
         $_SESSION['email'] = $this->user->getEmail();
 
         echo new AuthLayoutComponent(

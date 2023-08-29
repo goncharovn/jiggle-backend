@@ -246,7 +246,7 @@ class UserModel
         );
     }
 
-    public function setMFACode($code): void
+    public function setMultiFactorAuthCode($code): void
     {
         Db::executeQuery(
             "UPDATE 
@@ -262,7 +262,7 @@ class UserModel
         );
     }
 
-    public function getMFACode()
+    public function getMultiFactorAuthCode()
     {
         return (Db::fetchAll(
             "SELECT 
