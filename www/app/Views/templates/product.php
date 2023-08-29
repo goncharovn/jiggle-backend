@@ -20,7 +20,7 @@ use jiggle\app\Models\ProductModel;
         <img src="/img/<?= $product->getImageName() ?>" alt="">
     </div>
 
-    <div class="product__details">
+    <section class="product__details">
         <h1 class="product__title"><?= $product->getTitle() ?></h1>
         <div class="product__color">Color: <?= $product->getColor() ?></div>
         <form method="get" action="">
@@ -101,10 +101,10 @@ use jiggle\app\Models\ProductModel;
         <?php else : ?>
             <p>Out of stock.</p>
         <?php endif; ?>
-    </div>
+    </section>
 
-    <div class="product__features">
+    <section class="product__features">
         <h3>Product description</h3>
         <p class="text"><?= $product->getDescription() ?></p>
-    </div>
+    </section>
 </div>
