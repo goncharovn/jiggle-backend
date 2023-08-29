@@ -341,19 +341,19 @@ class UserModel
         );
     }
 
-    private static function createUser(mixed $queryResult): self
+    private static function createUser(array $userRow): self
     {
         $user = new self();
-        $user->id = $queryResult['id'] ?? null;
-        $user->name = $queryResult['name'] ?? '';
-        $user->email = $queryResult['email'] ?? null;
-        $user->password = $queryResult['password'] ?? '';
-        $user->hash = $queryResult['hash'] ?? '';
-        $user->resetKey = $queryResult['reset_key'] ?? '';
-        $user->twoFactorAuthEnabled = $queryResult['2fa_enabled'] ?? false;
-        $user->twoFactorAuthCode = $queryResult['2fa_code'] ?? '';
-        $user->newEmail = $queryResult['new_email'] ?? '';
-        $user->role = $queryResult['role'] ?? '';
+        $user->id = $userRow['id'] ?? null;
+        $user->name = $userRow['name'] ?? '';
+        $user->email = $userRow['email'] ?? null;
+        $user->password = $userRow['password'] ?? '';
+        $user->hash = $userRow['hash'] ?? '';
+        $user->resetKey = $userRow['reset_key'] ?? '';
+        $user->twoFactorAuthEnabled = $userRow['2fa_enabled'] ?? false;
+        $user->twoFactorAuthCode = $userRow['2fa_code'] ?? '';
+        $user->newEmail = $userRow['new_email'] ?? '';
+        $user->role = $userRow['role'] ?? '';
 
         return $user;
     }

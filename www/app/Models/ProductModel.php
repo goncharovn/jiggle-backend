@@ -68,9 +68,9 @@ class ProductModel
         return $this->variantId ?? null;
     }
 
-    public static function getProducts(): bool|array
+    public static function getProductsVariants(): bool|array
     {
-        return Db::fetchAll(
+        $queryResult = Db::fetchAll(
             "SELECT DISTINCT 
                 p.*,
                 pi.image_name
@@ -87,11 +87,18 @@ class ProductModel
             LEFT JOIN
                 products_images pi ON pv.id = pi.product_variant_id"
         );
+
+        $productArray = [];
+        foreach ($queryResult as $row) {
+            $productArray[] = self::createProduct($row);
+        }
+
+        return $productArray;
     }
 
     public static function getProductVariant($productId, $productColor, $productSize): self
     {
-        $result = Db::fetchAll(
+        $queryResult = Db::fetchAll(
             "SELECT
                 p.*, 
                 pi.image_name,
@@ -126,19 +133,7 @@ class ProductModel
             ]
         )[0];
 
-        $product = new self();
-        $product->id = $result['id'] ?? '';
-        $product->title = $result['title'] ?? '';
-        $product->price = $result['price'] ?? '';
-        $product->description = $result['description'] ?? '';
-        $product->defaultColorId = $result['default_color_id'] ?? '';
-        $product->imageName = $result['image_name'] ?? '';
-        $product->color = $result['color'] ?? '';
-        $product->size = $result['size'] ?? '';
-        $product->quantity = $result['quantity'] ?? '';
-        $product->variantId = $result['variant_id'] ?? null;
-
-        return $product;
+        return self::createProduct($queryResult);
     }
 
     public static function getProductVariantById($productVariantId): self
@@ -155,19 +150,7 @@ class ProductModel
             ]
         )[0];
 
-        $product = new self();
-        $product->id = $result['product_id'] ?? '';
-        $product->title = $result['title'] ?? '';
-        $product->price = $result['price'] ?? 0;
-        $product->description = $result['description'] ?? '';
-        $product->defaultColorId = $result['default_color_id'] ?? -1;
-        $product->imageName = $result['image_name'] ?? '';
-        $product->color = $result['color'] ?? '';
-        $product->size = $result['size'] ?? '';
-        $product->quantity = $result['quantity'] ?? 0;
-        $product->variantId = $result['id'] ?? null;
 
-        return $product;
     }
 
     public function getAvailableColors($productSize): bool|array
@@ -258,5 +241,22 @@ class ProductModel
                 WHERE 
                     pv.id IN ($ids)"
         );
+    }
+
+    private static function createProduct(array $productRow): self
+    {
+        $product = new self();
+        $product->id = $productRow['id'] ?? '';
+        $product->title = $productRow['title'] ?? '';
+        $product->price = $productRow['price'] ?? 0;
+        $product->description = $productRow['description'] ?? '';
+        $product->defaultColorId = $productRow['default_color_id'] ?? -1;
+        $product->imageName = $productRow['image_name'] ?? '';
+        $product->color = $productRow['color'] ?? '';
+        $product->size = $productRow['size'] ?? '';
+        $product->quantity = $productRow['quantity'] ?? 0;
+        $product->variantId = $productRow['variant_id'] ?? null;
+
+        return $product;
     }
 }

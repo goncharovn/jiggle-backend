@@ -4,19 +4,19 @@
     <?php foreach ($products as $product): ?>
         <li>
             <div class="products-list__product">
-                <a class="products-list__img-link" href="/product/<?= $product['id'] ?>">
+                <a class="products-list__img-link" href="/product/<?= $product->getId() ?>">
                     <img class="products-list__img"
-                         src="/img/<?= $product['image_name'] ?>"
+                         src="/img/<?= $product->getImageName() ?>"
                          alt="">
                 </a>
 
-                <a class="products-list__title-link" href="/product/<?= $product['id'] ?>">
+                <a class="products-list__title-link" href="/product/<?= $product->getId() ?>">
                     <h2 class="products-list__product-title">
-                        <?= $product['title'] ?>
+                        <?= $product->getTitle() ?>
                     </h2>
                 </a>
 
-                <p class="products-list__product-price">£<?= $product['price'] ?></p>
+                <p class="products-list__product-price">£<?= $product->getPrice() ?></p>
             </div>
         </li>
     <?php endforeach; ?>

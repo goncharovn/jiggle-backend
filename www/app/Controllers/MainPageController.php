@@ -11,7 +11,7 @@ class MainPageController extends Controller
 {
     public function showMainPage(): void
     {
-        $products = ProductModel::getProducts();
+        $products = ProductModel::getProductsVariants();
 
         echo new DefaultLayoutComponent(
             'Get Your Jiggle On | Cycle, Run & Outdoor Shop | Wiggle',
