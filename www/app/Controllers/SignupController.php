@@ -3,10 +3,7 @@
 namespace jiggle\app\Controllers;
 
 use JetBrains\PhpStorm\NoReturn;
-use jiggle\app\AccessManager;
 use jiggle\app\Core\Controller;
-use jiggle\app\NotificationMessagesManager;
-use jiggle\app\FormValidator;
 use jiggle\app\Models\UserModel;
 use jiggle\app\Views\Components\AuthContentComponent;
 use jiggle\app\Views\Components\AuthLayoutComponent;
@@ -19,7 +16,7 @@ class SignupController extends Controller
 
     public function __construct()
     {
-        if (AccessManager::isUserLoggedIn()) {
+        if (AccessController::isUserLoggedIn()) {
             header('Location: /');
             exit();
         }
@@ -35,14 +32,14 @@ class SignupController extends Controller
             $this->user = UserModel::getUserByEmail($_POST['email']);
 
             if (!empty($this->user->getId())) {
-                NotificationMessagesManager::setMessage(
+                NotificationMessagesController::setMessage(
                     'formError',
                     'This email is already taken.'
                 );
                 $this->showSignupPage();
             }
 
-            if (!FormValidator::isValidPassword($_POST['password'])) {
+            if (!FormController::isValidPassword($_POST['password'])) {
                 $this->showSignupPage();
             }
 
@@ -71,7 +68,7 @@ class SignupController extends Controller
             new AuthContentComponent(
                 'Welcome',
                 'Create your account to continue',
-                NotificationMessagesManager::getMessage('formError') ?? '',
+                NotificationMessagesController::getMessage('formError') ?? '',
                 new SignupComponent($this?->user?->getEmail() ?? $_POST['email'] ?? '')
             )
         );

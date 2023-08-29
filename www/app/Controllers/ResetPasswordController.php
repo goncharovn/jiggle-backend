@@ -2,11 +2,8 @@
 
 namespace jiggle\app\Controllers;
 
-use jiggle\app\AccessManager;
 use jiggle\app\Core\Controller;
 use jiggle\app\Core\View;
-use jiggle\app\NotificationMessagesManager;
-use jiggle\app\FormValidator;
 use jiggle\app\Models\UserModel;
 use jiggle\app\Views\Components\AuthContentComponent;
 use jiggle\app\Views\Components\AuthLayoutComponent;
@@ -24,7 +21,7 @@ class ResetPasswordController extends Controller
 
     public function resetPassword(): void
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST' || AccessManager::isUserLoggedIn()) {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' || AccessController::isUserLoggedIn()) {
             $user = UserModel::getUserById($_SESSION['user_id']);
 
             if (empty($user->getId())) {
@@ -75,13 +72,13 @@ class ResetPasswordController extends Controller
             $newPassword = $_POST['new_password'];
             $newPasswordConfirm = $_POST['new_password_confirm'];
 
-            if (!FormValidator::isValidPassword($newPassword)) {
+            if (!FormController::isValidPassword($newPassword)) {
                 echo new AuthLayoutComponent(
                     'Change Your Password',
                     new AuthContentComponent(
                         'Change Your Password',
                         'Enter a new password below to change your password.',
-                        NotificationMessagesManager::getMessage('formError'),
+                        NotificationMessagesController::getMessage('formError'),
                         new ChangePasswordComponent()
                     )
                 );

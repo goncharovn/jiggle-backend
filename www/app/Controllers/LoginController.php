@@ -2,9 +2,7 @@
 
 namespace jiggle\app\Controllers;
 
-use jiggle\app\AccessManager;
 use jiggle\app\Core\Controller;
-use jiggle\app\NotificationMessagesManager;
 use jiggle\app\Models\UserModel;
 use jiggle\app\Views\Components\AuthContentComponent;
 use jiggle\app\Views\Components\AuthLayoutComponent;
@@ -17,7 +15,7 @@ class LoginController extends Controller
 
     public function processLogin(): void
     {
-        if (AccessManager::isUserLoggedIn()) {
+        if (AccessController::isUserLoggedIn()) {
             header('Location: /');
             exit();
         }
@@ -36,7 +34,7 @@ class LoginController extends Controller
                     header('Location: /');
                 }
             } else {
-                NotificationMessagesManager::setMessage('formError', 'Wrong email or password.');
+                NotificationMessagesController::setMessage('formError', 'Wrong email or password.');
             }
         }
 
@@ -69,7 +67,7 @@ class LoginController extends Controller
             $_SESSION['user_id'] = $this->user->getId();
             header('Location: /');
         } else {
-            NotificationMessagesManager::setMessage('formError', 'Invalid code.');
+            NotificationMessagesController::setMessage('formError', 'Invalid code.');
             $this->showMultiFactorPage();
         }
     }
@@ -93,7 +91,7 @@ class LoginController extends Controller
         $content = new AuthContentComponent(
             'Welcome',
             'Please log in to Jiggle to continue',
-            NotificationMessagesManager::getMessage('formError',) ?? '',
+            NotificationMessagesController::getMessage('formError',) ?? '',
             new LoginFormComponent()
         );
 

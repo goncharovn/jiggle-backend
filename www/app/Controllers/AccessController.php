@@ -1,8 +1,8 @@
 <?php
 
-namespace jiggle\app;
+namespace jiggle\app\Controllers;
 
-class AccessManager
+class AccessController
 {
     public static function isUserLoggedIn(): bool
     {

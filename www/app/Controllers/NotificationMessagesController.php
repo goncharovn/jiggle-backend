@@ -1,8 +1,8 @@
 <?php
 
-namespace jiggle\app;
+namespace jiggle\app\Controllers;
 
-class NotificationMessagesManager
+class NotificationMessagesController
 {
     private static array $messages = [];
 

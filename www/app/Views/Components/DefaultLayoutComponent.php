@@ -2,7 +2,7 @@
 
 namespace jiggle\app\Views\Components;
 
-use jiggle\app\AccessManager;
+use jiggle\app\Controllers\AccessController;
 use jiggle\app\Controllers\BasketController;
 use jiggle\app\Core\View;
 use jiggle\app\Views\Component;
@@ -26,7 +26,7 @@ class DefaultLayoutComponent extends Component
                 'title' => $this->title,
                 'main' => $this->main,
                 'orderTotal' => BasketController::getOrderTotal(),
-                'isUserLoggedIn' => AccessManager::isUserLoggedIn()
+                'isUserLoggedIn' => AccessController::isUserLoggedIn()
             ]
         );
     }

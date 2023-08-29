@@ -3,7 +3,6 @@
 namespace jiggle\app\Controllers;
 
 use jiggle\app\Core\Controller;
-use jiggle\app\NotificationMessagesManager;
 use jiggle\app\Models\ProductModel;
 use jiggle\app\Views\Components\DefaultLayoutComponent;
 use jiggle\app\Views\Components\ProductPageComponent;
@@ -77,7 +76,7 @@ class ProductController extends Controller
     private function checkQuantityLimitError(): void
     {
         if ($this->quantityOfProductInBasket >= $this->quantityOfProductInStock) {
-            NotificationMessagesManager::setMessage(
+            NotificationMessagesController::setMessage(
                 'quantityLimitError',
                 "Only $this->quantityOfProductInStock item" . ($this->quantityOfProductInStock > 1 ? 's' : '') . " available."
             );
@@ -87,7 +86,7 @@ class ProductController extends Controller
     private function checkUnselectedSizeError(): void
     {
         if ($_GET['sizeError'] === '1') {
-            NotificationMessagesManager::setMessage(
+            NotificationMessagesController::setMessage(
                 'unselectedSizeError',
                 "Please select a size."
             );

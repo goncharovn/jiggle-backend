@@ -2,7 +2,6 @@
 
 namespace jiggle\app\Controllers;
 
-use jiggle\app\AccessManager;
 use jiggle\app\Core\Controller;
 use jiggle\app\Models\UserModel;
 use jiggle\app\Views\Components\AccountBodyComponent;
@@ -19,7 +18,7 @@ class AccountPagesController extends Controller
     {
         parent::__construct();
 
-        if (!AccessManager::isUserLoggedIn()) {
+        if (!AccessController::isUserLoggedIn()) {
             header('Location: /');
             exit();
         }

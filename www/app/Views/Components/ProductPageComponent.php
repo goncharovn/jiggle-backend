@@ -2,8 +2,8 @@
 
 namespace jiggle\app\Views\Components;
 
+use jiggle\app\Controllers\NotificationMessagesController;
 use jiggle\app\Core\View;
-use jiggle\app\NotificationMessagesManager;
 use jiggle\app\Models\ProductModel;
 use jiggle\app\Views\Component;
 
@@ -36,8 +36,8 @@ class ProductPageComponent extends Component
         $this->quantityOfProductInBasket = $quantityOfProductInBasket;
         $this->quantityOfProductInStock = $quantityOfProductInStock;
         $this->message = $message;
-        $this->quantityLimitError = NotificationMessagesManager::getMessage('quantityLimitError') ?? '';
-        $this->unselectedSizeError = NotificationMessagesManager::getMessage('unselectedSizeError') ?? '';
+        $this->quantityLimitError = NotificationMessagesController::getMessage('quantityLimitError') ?? '';
+        $this->unselectedSizeError = NotificationMessagesController::getMessage('unselectedSizeError') ?? '';
     }
 
     public function render(): string
