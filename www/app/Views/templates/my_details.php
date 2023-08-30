@@ -54,16 +54,16 @@
     <div class="account-details__detail-section">
         <p class="account-details__label">Multi-factor authentication</p>
 
-        <?php if ($user->isTwoFactorAuthEnabled()): ?>
-            <form method="post" action="/login/disable-2fa">
-                <button class="button_secondary" type="submit">Disable</button>
-            </form>
-        <?php else: ?>
-            <p>Require a secondary password to sign in to your account</p>
+        <p>Require a secondary password to sign in to your account</p>
 
-            <form method="post" action="/login/enable-2fa">
-                <button class="button_secondary" type="submit">Enable</button>
-            </form>
-        <?php endif; ?>
+        <form method="post" action="/login/toggle-multi-factor-auth">
+            <button class="button_secondary" type="submit">
+                <?php if ($user->isTwoFactorAuthEnabled()): ?>
+                    Disable
+                <?php else: ?>
+                    Enable
+                <?php endif; ?>
+            </button>
+        </form>
     </div>
 </div>

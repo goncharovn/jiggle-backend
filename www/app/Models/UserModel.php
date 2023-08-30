@@ -12,8 +12,8 @@ class UserModel
     private string $password;
     private string $hash;
     private string $resetKey;
-    private bool $twoFactorAuthEnabled;
-    private string $twoFactorAuthCode;
+    private bool $multiFactorAuthEnabled;
+    private string $multiFactorAuthCode;
     private string $newEmail;
     private string $role;
 
@@ -47,14 +47,14 @@ class UserModel
         return $this->resetKey;
     }
 
-    public function isTwoFactorAuthEnabled(): bool
+    public function isMultiFactorAuthEnabled(): bool
     {
-        return $this->twoFactorAuthEnabled;
+        return $this->multiFactorAuthEnabled;
     }
 
-    public function getTwoFactorAuthCode(): string
+    public function getMultiFactorAuthCode(): string
     {
-        return $this->twoFactorAuthCode;
+        return $this->multiFactorAuthCode;
     }
 
     public function getNewEmail(): string
@@ -216,32 +216,18 @@ class UserModel
         );
     }
 
-    public function enableMultifactorAuth(): void
+    public function toggleMultifactorAuth(): void
     {
         Db::executeQuery(
             "UPDATE 
                 users 
             SET 
-                2fa_enabled = true
+                2fa_enabled = :multiFactorAuthEnabled 
             WHERE 
                 email = :email",
             [
                 'email' => $this->email,
-            ]
-        );
-    }
-
-    public function disableMultifactorAuth(): void
-    {
-        Db::executeQuery(
-            "UPDATE 
-                users 
-            SET 
-                2fa_enabled = false 
-            WHERE 
-                email = :email",
-            [
-                'email' => $this->email,
+                'multiFactorAuthEnabled' => !$this->multiFactorAuthEnabled
             ]
         );
     }
@@ -260,21 +246,6 @@ class UserModel
                 'email' => $this->email,
             ]
         );
-    }
-
-    public function getMultiFactorAuthCode()
-    {
-        return (Db::fetchAll(
-            "SELECT 
-                2fa_code 
-            FROM 
-                users
-            WHERE 
-                email = :email",
-            [
-                'email' => $this->email,
-            ]
-        )[0]['2fa_code']);
     }
 
     public function updateName($name): void
@@ -350,8 +321,8 @@ class UserModel
         $user->password = $userRow['password'] ?? '';
         $user->hash = $userRow['hash'] ?? '';
         $user->resetKey = $userRow['reset_key'] ?? '';
-        $user->twoFactorAuthEnabled = $userRow['2fa_enabled'] ?? false;
-        $user->twoFactorAuthCode = $userRow['2fa_code'] ?? '';
+        $user->multiFactorAuthEnabled = $userRow['2fa_enabled'] ?? false;
+        $user->multiFactorAuthCode = $userRow['2fa_code'] ?? '';
         $user->newEmail = $userRow['new_email'] ?? '';
         $user->role = $userRow['role'] ?? '';
 

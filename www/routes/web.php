@@ -49,19 +49,19 @@ return [
     ],
     '#^login$#' => [
         'controller' => LoginController::class,
+        'action' => 'showLoginPage'
+    ],
+    '#^process-login$#' => [
+        'controller' => LoginController::class,
         'action' => 'processLogin'
     ],
-    '#^login/disable-2fa$#' => [
-        'controller' => LoginController::class,
-        'action' => 'disableMultiFactorAuth'
-    ],
-    '#^login/enable-2fa$#' => [
-        'controller' => LoginController::class,
-        'action' => 'enableMultiFactorAuth'
-    ],
-    '#^login/process-2fa$#' => [
+    '#^login/process-multi-factor-auth$#' => [
         'controller' => LoginController::class,
         'action' => 'processMultiFactorAuth'
+    ],
+    '#^login/toggle-multi-factor-auth$#' => [
+        'controller' => LoginController::class,
+        'action' => 'toggleMultiFactorAuth'
     ],
     '#^reset-password$#' => [
         'controller' => ResetPasswordController::class,
