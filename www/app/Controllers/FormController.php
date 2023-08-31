@@ -17,7 +17,7 @@ class FormController
 
     public static function isValidPassword($password): bool
     {
-        if (!preg_match("#([0-9]+|[A-Z]+|[a-z]+)#", $password) ||
+        if (!preg_match("#(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z])#", $password) ||
             strlen($password) < 6 ||
             strlen($password) > 128) {
             NotificationMessagesController::setMessage(

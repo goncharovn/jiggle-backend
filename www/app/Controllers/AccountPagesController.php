@@ -79,6 +79,6 @@ class AccountPagesController extends Controller
             $accountBody
         );
 
-        echo(new DefaultLayoutComponent($title, $main));
+        echo new DefaultLayoutComponent($title, $main);
     }
 }

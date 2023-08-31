@@ -77,11 +77,6 @@ class ResetPasswordController extends Controller
             $newPassword = $_POST['new_password'];
             $newPasswordConfirm = $_POST['new_password_confirm'];
 
-            if (!FormController::isValidPassword($newPassword)) {
-                $this->errorMessage = NotificationMessagesController::getMessage('formError');
-                $this->showChangePasswordPage();
-            }
-
             if ($newPassword === $newPasswordConfirm) {
                 $this->user->updatePassword(password_hash($newPassword, PASSWORD_DEFAULT));
                 $this->user->deleteResetKey();
@@ -92,6 +87,11 @@ class ResetPasswordController extends Controller
                 );
             } else {
                 $this->errorMessage = 'Password mismatch.';
+                $this->showChangePasswordPage();
+            }
+
+            if (!FormController::isValidPassword($newPassword)) {
+                $this->errorMessage = NotificationMessagesController::getMessage('formError');
                 $this->showChangePasswordPage();
             }
         } else {

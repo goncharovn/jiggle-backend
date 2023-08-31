@@ -46,7 +46,7 @@
     <div class="account-details__detail-section">
         <p class="account-details__label">
             <span>Password</span>
-            <a class="edit-button edit-button_active" href="/reset-password">Reset</a>
+            <a class="edit-button edit-button_active" href="/process-reset-password">Reset</a>
         </p>
         <p>************</p>
     </div>
@@ -58,7 +58,7 @@
 
         <form method="post" action="/login/toggle-multi-factor-auth">
             <button class="button_secondary" type="submit">
-                <?php if ($user->isTwoFactorAuthEnabled()): ?>
+                <?php if ($user->isMultiFactorAuthEnabled()): ?>
                     Disable
                 <?php else: ?>
                     Enable
