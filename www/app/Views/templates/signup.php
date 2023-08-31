@@ -1,4 +1,4 @@
-<form class="auth-form login-form" method="post" action="">
+<form class="auth-form login-form" method="post" action="/process-signup">
     <input class="input" type="email" name="email" value="<?= $email ?>" placeholder="Email address" required>
     <input class="input" type="password" name="password" placeholder="Enter password" required>
 

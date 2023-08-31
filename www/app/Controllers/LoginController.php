@@ -53,7 +53,7 @@ class LoginController extends Controller
                 $this->completeLogin();
             }
         } else {
-            $this->handleFailedLogin('Wrong email or password.', function () {
+            $this->handleFailedLogin('Wrong email or password', function () {
                 $this->showLoginPage();
             });
         }

@@ -84,7 +84,7 @@ class UserModel
         return self::createUser($queryResult);
     }
 
-    public static function getUserByEmail($email): self
+    public static function getUserByEmail($email): ?self
     {
         $queryResult = Db::fetchAll(
             "SELECT 
@@ -98,7 +98,7 @@ class UserModel
             ]
         )[0];
 
-        return self::createUser($queryResult);
+        return $queryResult ? self::createUser($queryResult) : null;
     }
 
     public static function getUserByHash($hash): self

@@ -41,7 +41,11 @@ return [
     ],
     '#^signup$#' => [
         'controller' => SignupController::class,
-        'action' => 'signup'
+        'action' => 'showSignupPage'
+    ],
+    '#^process-signup$#' => [
+        'controller' => SignupController::class,
+        'action' => 'processSignup'
     ],
     '#^confirm-signup$#' => [
         'controller' => SignupController::class,
