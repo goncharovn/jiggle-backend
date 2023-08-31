@@ -2,6 +2,7 @@
 
 namespace jiggle\app\Controllers;
 
+use JetBrains\PhpStorm\NoReturn;
 use jiggle\app\Core\Controller;
 use jiggle\app\Models\UserModel;
 use jiggle\app\Views\Components\AccountBodyComponent;
@@ -17,7 +18,7 @@ class ProfileController extends Controller
         parent::__construct();
 
         if (!AccessController::isUserLoggedIn()) {
-            header('Location: /');
+            AccessController::redirectToUrl('/');
         }
     }
 
@@ -25,35 +26,28 @@ class ProfileController extends Controller
     {
         if (AccessController::isUserLoggedIn()) {
             session_destroy();
-            header('Location: /');
+            AccessController::redirectToUrl('/');
         }
     }
 
+    #[NoReturn]
     public function changeName(): void
     {
-        $userId = $_SESSION['user_id'];
-
-        $firstName = $_POST['first_name'];
-        $lastName = $_POST['last_name'];
-        $username = $firstName . ' ' . $lastName;
-
-        $user = UserModel::getUserById($userId);
+        $username = $_POST['first_name'] . ' ' . $_POST['last_name'];
+        $user = UserModel::getUserById($_SESSION['user_id']);
         $user->updateName($username);
-
-        header('Location: /my-account/my-details');
+        AccessController::redirectToUrl('/my-account/my-details');
     }
 
     public function changeEmail(): void
     {
         $newEmail = $_POST['email'];
-        $userId = $_SESSION['user_id'];
         $hash = md5($newEmail . time());
-        $user = UserModel::getUserById($userId);
-
+        $user = UserModel::getUserById($_SESSION['user_id']);
         $user->updateNewEmail($newEmail);
         $user->updateHash($hash);
 
-        $this->sendConfirmationEmail($newEmail, $hash);
+        $this->sendConfirmationEmail($hash);
 
         echo new DefaultLayoutComponent(
             'My Account - My Details',
@@ -68,6 +62,7 @@ class ProfileController extends Controller
         );
     }
 
+    #[NoReturn]
     public function confirmEmail(): void
     {
         $hash = $_GET['hash'];
@@ -75,11 +70,10 @@ class ProfileController extends Controller
         $_SESSION['user_id'] = $user->getId();
         $user->updateEmail($user->getNewEmail());
         $_SESSION['user_email'] = $user->getNewEmail();
-
-        header('Location: /');
+        AccessController::redirectToUrl('/');
     }
 
-    private function sendConfirmationEmail($email, $hash): void
+    private function sendConfirmationEmail(string $hash): void
     {
         EmailController::sendEmail(
             'Confirm your Email',
