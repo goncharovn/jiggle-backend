@@ -67,7 +67,7 @@ class UserModel
         return $this->role;
     }
 
-    public static function getUserById($id): self
+    public static function getUserById($id): ?self
     {
         $queryResult = Db::fetchAll(
             "SELECT 
@@ -81,7 +81,7 @@ class UserModel
             ]
         )[0];
 
-        return self::createUser($queryResult);
+        return $queryResult ? self::createUser($queryResult) : null;
     }
 
     public static function getUserByEmail($email): ?self
@@ -101,7 +101,7 @@ class UserModel
         return $queryResult ? self::createUser($queryResult) : null;
     }
 
-    public static function getUserByHash($hash): self
+    public static function getUserByHash($hash): ?self
     {
         $queryResult = Db::fetchAll(
             "SELECT 
@@ -115,10 +115,10 @@ class UserModel
             ]
         )[0];
 
-        return self::createUser($queryResult);
+        return $queryResult ? self::createUser($queryResult) : null;
     }
 
-    public static function getUserByResetKey($resetKey): self
+    public static function getUserByResetKey($resetKey): ?self
     {
         $queryResult = Db::fetchAll(
             "SELECT 
@@ -132,7 +132,7 @@ class UserModel
             ]
         )[0];
 
-        return self::createUser($queryResult);
+        return $queryResult ? self::createUser($queryResult) : null;
     }
 
     public static function addUser($email, $password, $hash): void

@@ -26,6 +26,22 @@ class SignupController extends Controller
     }
 
     #[NoReturn]
+    public function showSignupPage(): void
+    {
+        echo new AuthLayoutComponent(
+            'Sign Up',
+            new AuthContentComponent(
+                'Welcome',
+                'Create your account to continue',
+                NotificationMessagesController::getMessage('formError') ?? '',
+                new SignupComponent($this?->user?->getEmail() ?? $_POST['email'] ?? '')
+            )
+        );
+
+        exit();
+    }
+
+    #[NoReturn]
     public function processSignup(): void
     {
         $this->user = UserModel::getUserByEmail($_POST['email']);
@@ -43,22 +59,6 @@ class SignupController extends Controller
         }
 
         $this->registerUser();
-    }
-
-    #[NoReturn]
-    public function showSignupPage(): void
-    {
-        echo new AuthLayoutComponent(
-            'Sign Up',
-            new AuthContentComponent(
-                'Welcome',
-                'Create your account to continue',
-                NotificationMessagesController::getMessage('formError') ?? '',
-                new SignupComponent($this?->user?->getEmail() ?? $_POST['email'] ?? '')
-            )
-        );
-
-        exit();
     }
 
     #[NoReturn]

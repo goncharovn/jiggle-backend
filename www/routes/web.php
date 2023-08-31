@@ -69,11 +69,19 @@ return [
     ],
     '#^reset-password$#' => [
         'controller' => ResetPasswordController::class,
-        'action' => 'resetPassword'
+        'action' => 'showResetPasswordPage'
+    ],
+    '#^process-reset-password$#' => [
+        'controller' => ResetPasswordController::class,
+        'action' => 'processResetPassword'
     ],
     '#^change-password$#' => [
         'controller' => ResetPasswordController::class,
-        'action' => 'changePassword'
+        'action' => 'showChangePasswordPage'
+    ],
+    '#^process-change-password$#' => [
+        'controller' => ResetPasswordController::class,
+        'action' => 'processChangePassword'
     ],
     '#^confirm-email$#' => [
         'controller' => ProfileController::class,

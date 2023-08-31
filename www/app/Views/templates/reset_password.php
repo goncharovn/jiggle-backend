@@ -1,4 +1,4 @@
-<form class="auth-form" method="post" action="">
+<form class="auth-form" method="post" action="/process-reset-password">
     <input class="input" type="email" name="email" placeholder="Email address">
     <button class="auth-form__button" type="submit">Continue</button>
 </form>
