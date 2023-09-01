@@ -67,15 +67,15 @@ class UserModel
         return $this->role;
     }
 
-    public static function getUserById($id): ?self
+    public static function getUserById(int $id): ?self
     {
         $queryResult = Db::fetchAll(
-            "SELECT 
+            'SELECT 
                 u.*
             FROM 
                 users u 
             WHERE 
-                id = :id",
+                id = :id',
             [
                 'id' => $id,
             ]
@@ -84,15 +84,15 @@ class UserModel
         return $queryResult ? self::createUser($queryResult) : null;
     }
 
-    public static function getUserByEmail($email): ?self
+    public static function getUserByEmail(string $email): ?self
     {
         $queryResult = Db::fetchAll(
-            "SELECT 
+            'SELECT 
                 u.* 
             FROM 
                 users u
             WHERE 
-                email = :email",
+                email = :email',
             [
                 'email' => $email,
             ]
@@ -101,15 +101,15 @@ class UserModel
         return $queryResult ? self::createUser($queryResult) : null;
     }
 
-    public static function getUserByHash($hash): ?self
+    public static function getUserByHash(string $hash): ?self
     {
         $queryResult = Db::fetchAll(
-            "SELECT 
+            'SELECT 
                 u.*
             FROM 
                 users u
             WHERE 
-                hash = :hash",
+                hash = :hash',
             [
                 'hash' => $hash,
             ]
@@ -118,15 +118,15 @@ class UserModel
         return $queryResult ? self::createUser($queryResult) : null;
     }
 
-    public static function getUserByResetKey($resetKey): ?self
+    public static function getUserByResetKey(string $resetKey): ?self
     {
         $queryResult = Db::fetchAll(
-            "SELECT 
+            'SELECT 
                 u.*
             FROM 
                 users u
             WHERE 
-                reset_key = :reset_key",
+                reset_key = :reset_key',
             [
                 'reset_key' => $resetKey,
             ]
@@ -135,13 +135,13 @@ class UserModel
         return $queryResult ? self::createUser($queryResult) : null;
     }
 
-    public static function addUser($email, $password, $hash): void
+    public static function addUser(string $email, string $password, string $hash): void
     {
         Db::fetchAll(
-            "INSERT INTO 
+            'INSERT INTO 
                 users (email, password, hash) 
             VALUES 
-                (:email, :password, :hash)",
+                (:email, :password, :hash)',
             [
                 'email' => $email,
                 'password' => $password,
@@ -154,14 +154,14 @@ class UserModel
     {
         return (
             Db::fetchColumn(
-                "SELECT 
+                'SELECT 
                 EXISTS(
                     SELECT 
                         * 
                     FROM 
                         users 
                     WHERE 
-                        id = :id)",
+                        id = :id)',
                 [
                     'id' => $id,
                 ]
@@ -169,15 +169,15 @@ class UserModel
         );
     }
 
-    public function updateResetKey($resetKey): void
+    public function updateResetKey(string $resetKey): void
     {
         Db::executeQuery(
-            "UPDATE 
+            'UPDATE 
                 users 
             SET 
                 reset_key = :reset_key 
             WHERE 
-                email = :email",
+                email = :email',
             [
                 'reset_key' => $resetKey,
                 'email' => $this->email,
@@ -185,15 +185,15 @@ class UserModel
         );
     }
 
-    public function updatePassword($password): void
+    public function updatePassword(string $password): void
     {
         Db::executeQuery(
-            "UPDATE 
+            'UPDATE 
                 users 
             SET 
                 password = :password 
             WHERE 
-                reset_key = :reset_key",
+                reset_key = :reset_key',
             [
                 'password' => $password,
                 'reset_key' => $this->resetKey,
@@ -204,59 +204,61 @@ class UserModel
     public function deleteResetKey(): void
     {
         Db::executeQuery(
-            "UPDATE 
+            'UPDATE 
                 users 
             SET 
                 reset_key = NULL 
             WHERE 
-                reset_key = :reset_key",
+                reset_key = :reset_key',
             [
                 'reset_key' => $this->resetKey,
             ]
         );
     }
 
-    public function toggleMultifactorAuth(): void
+    public function toggleMultiFactorAuth(): void
     {
+        $this->multiFactorAuthEnabled = !$this->multiFactorAuthEnabled;
+
         Db::executeQuery(
             "UPDATE 
                 users 
             SET 
                 2fa_enabled = :multiFactorAuthEnabled 
             WHERE 
-                email = :email",
+                id = :id",
             [
-                'email' => $this->email,
-                'multiFactorAuthEnabled' => !$this->multiFactorAuthEnabled
+                'id' => $this->id,
+                'multiFactorAuthEnabled' => (int)$this->multiFactorAuthEnabled
             ]
         );
     }
 
-    public function setMultiFactorAuthCode($code): void
+    public function setMultiFactorAuthCode(string $multiFactorAuthCode): void
     {
         Db::executeQuery(
-            "UPDATE 
+            'UPDATE 
                 users 
             SET 
-                2fa_code = :code
+                2fa_code = :multiFactorAuthCode
             WHERE 
-                email = :email",
+                email = :email',
             [
-                'code' => $code,
+                'multiFactorAuthCode' => $multiFactorAuthCode,
                 'email' => $this->email,
             ]
         );
     }
 
-    public function updateName($name): void
+    public function updateName(string $name): void
     {
         Db::executeQuery(
-            "UPDATE 
+            'UPDATE 
                 users
             SET 
                 name = :user_name
             WHERE 
-                id = :user_id",
+                id = :user_id',
             [
                 'user_name' => $name,
                 'user_id' => $this->id,
@@ -264,15 +266,15 @@ class UserModel
         );
     }
 
-    public function updateEmail($userEmail): void
+    public function updateEmail(string $userEmail): void
     {
         Db::executeQuery(
-            "UPDATE 
+            'UPDATE 
                 users
             SET 
                 email = :user_email
             WHERE 
-                id = :user_id",
+                id = :user_id',
             [
                 'user_email' => $userEmail,
                 'user_id' => $this->id,
@@ -280,15 +282,15 @@ class UserModel
         );
     }
 
-    public function updateNewEmail($userNewEmail): void
+    public function updateNewEmail(string $userNewEmail): void
     {
         Db::executeQuery(
-            "UPDATE 
+            'UPDATE 
                 users
             SET 
                 new_email = :user_new_email
             WHERE 
-                id = :user_id",
+                id = :user_id',
             [
                 'user_new_email' => $userNewEmail,
                 'user_id' => $this->id,
@@ -296,15 +298,15 @@ class UserModel
         );
     }
 
-    public function updateHash($userHash): void
+    public function updateHash(string $userHash): void
     {
         Db::executeQuery(
-            "UPDATE 
+            'UPDATE 
                 users
             SET 
                 hash = :user_hash
             WHERE 
-                id = :user_id",
+                id = :user_id',
             [
                 'user_hash' => $userHash,
                 'user_id' => $this->id,
