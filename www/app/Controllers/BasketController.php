@@ -92,8 +92,8 @@ class BasketController extends Controller
         $orderTotal = 0;
 
         foreach (static::getProductsVariantsInBasket() as $productVariant) {
-            $quantityOfProductInBasket = $_SESSION['basket'][$productVariant['variant_id']]['basket_quantity'];
-            $orderTotal += $productVariant['price'] * $quantityOfProductInBasket;
+            $quantityOfProductInBasket = $_SESSION['basket'][$productVariant->getVariantId()]['basket_quantity'];
+            $orderTotal += $productVariant->getPrice() * $quantityOfProductInBasket;
         }
 
         return $orderTotal;
@@ -106,8 +106,8 @@ class BasketController extends Controller
             $productsVariantsInBasket = ProductModel::getProductsVariantsByIds($productsVariantsIdsInBasket);
 
             foreach ($productsVariantsInBasket as &$productVariant) {
-                if (isset($_SESSION['basket'][$productVariant['variant_id']]['basket_quantity'])) {
-                    $productVariant['basket_quantity'] = $_SESSION['basket'][$productVariant['variant_id']]['basket_quantity'];
+                if (isset($_SESSION['basket'][$productVariant->getVariantId()]['basket_quantity'])) {
+                    $productVariant->setBasketQuantity($_SESSION['basket'][$productVariant->getVariantId()]['basket_quantity']);
                 }
             }
         } else {

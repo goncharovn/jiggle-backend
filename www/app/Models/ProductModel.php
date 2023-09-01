@@ -15,9 +15,10 @@ class ProductModel
     private string $color;
     private string $size;
     private int $quantity;
-    private int|null $variantId;
+    private int $basketQuantity;
+    private ?int $variantId;
 
-    public function getId(): int
+    public function getProductId(): int
     {
         return $this->id;
     }
@@ -68,10 +69,20 @@ class ProductModel
         return $this->variantId ?? null;
     }
 
+    public function getBasketQuantity(): int
+    {
+        return $this->basketQuantity;
+    }
+
+    public function setBasketQuantity(int $basketQuantity): void
+    {
+        $this->basketQuantity = $basketQuantity;
+    }
+
     public static function getProductsVariants(): bool|array
     {
         $queryResult = Db::fetchAll(
-            "SELECT DISTINCT 
+            'SELECT DISTINCT 
                 p.*,
                 pi.image_name
             FROM
@@ -85,7 +96,7 @@ class ProductModel
             JOIN
                 sizes s ON pv.size_id = s.id
             LEFT JOIN
-                products_images pi ON pv.id = pi.product_variant_id"
+                products_images pi ON pv.id = pi.product_variant_id'
         );
 
         $productArray = [];
@@ -99,7 +110,7 @@ class ProductModel
     public static function getProductVariant($productId, $productColor, $productSize): self
     {
         $queryResult = Db::fetchAll(
-            "SELECT
+            'SELECT
                 p.*, 
                 pi.image_name,
                 c.name AS color,
@@ -125,7 +136,7 @@ class ProductModel
             WHERE 
                 p.id = :product_id AND
                 c.name = :product_color AND
-                (s.name = :product_size OR :product_size IS NULL)",
+                (s.name = :product_size OR :product_size IS NULL)',
             [
                 'product_id' => $productId,
                 'product_color' => $productColor,
@@ -138,25 +149,25 @@ class ProductModel
 
     public static function getProductVariantById($productVariantId): self
     {
-        $result = Db::fetchAll(
-            "SELECT
+        $queryResult = Db::fetchAll(
+            'SELECT
                 pv.*
             FROM 
                 products_variants pv
             WHERE 
-                pv.id = :product_variant_id",
+                pv.id = :product_variant_id',
             [
                 'product_variant_id' => $productVariantId,
             ]
         )[0];
 
-
+        return self::createProduct($queryResult);
     }
 
     public function getAvailableColors($productSize): bool|array
     {
         return Db::fetchAll(
-            "SELECT DISTINCT 
+            'SELECT DISTINCT 
                 c.*
             FROM
                 products p
@@ -168,7 +179,7 @@ class ProductModel
                 sizes s ON pv.size_id = s.id
             WHERE
                 p.id = :product_id AND
-                (s.name = :product_size OR :product_size IS NULL )",
+                (s.name = :product_size OR :product_size IS NULL )',
             [
                 'product_id' => $this->id,
                 'product_size' => $productSize,
@@ -179,7 +190,7 @@ class ProductModel
     public function getAvailableSizes($productColor): bool|array
     {
         return Db::fetchAll(
-            "SELECT DISTINCT 
+            'SELECT DISTINCT 
                 s.name
             FROM
                 products p
@@ -191,7 +202,7 @@ class ProductModel
                 colors c ON pv.color_id = c.id
             WHERE
                 p.id = :product_id AND
-                (c.name = :product_color OR c.id = p.default_color_id)",
+                (c.name = :product_color OR c.id = p.default_color_id)',
             [
                 'product_id' => $this->id,
                 'product_color' => $productColor,
@@ -199,17 +210,17 @@ class ProductModel
         );
     }
 
-    public static function getDefaultProductColor($productId)
+    public static function getDefaultProductColor(int $productId)
     {
         return Db::fetchAll(
-            "SELECT 
+            'SELECT 
                 c.name
             FROM 
                 products p
             JOIN 
                 colors c ON p.default_color_id = c.id
             WHERE 
-                p.id = :product_id",
+                p.id = :product_id',
             [
                 'product_id' => $productId,
             ]
@@ -220,7 +231,7 @@ class ProductModel
     {
         $ids = implode(',', array_keys($ids));
 
-        return Db::fetchAll(
+        $queryResult = Db::fetchAll(
             "SELECT 
                     p.*,
                     p.id AS product_id,
@@ -241,6 +252,13 @@ class ProductModel
                 WHERE 
                     pv.id IN ($ids)"
         );
+
+        $productArray = [];
+        foreach ($queryResult as $row) {
+            $productArray[] = self::createProduct($row);
+        }
+
+        return $productArray;
     }
 
     private static function createProduct(array $productRow): self

@@ -2,7 +2,6 @@
 
 namespace jiggle\app\Controllers;
 
-use http\Client\Curl\User;
 use JetBrains\PhpStorm\NoReturn;
 use jiggle\app\Core\Controller;
 use jiggle\app\Core\View;

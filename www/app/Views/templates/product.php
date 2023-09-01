@@ -71,7 +71,7 @@ use jiggle\app\Models\ProductModel;
         <?php if ($quantityOfProductInStock > 0) : ?>
             <?php if ($isProductInBasket) : ?>
                 <form class="change-quantity product__change-quantity" method="post" action="/change-product-variant-quantity-in-basket">
-                    <input type="hidden" name="product_id" value="<?= $product->getId() ?>">
+                    <input type="hidden" name="product_id" value="<?= $product->getProductId() ?>">
                     <input type="hidden" name="variant_id" value="<?= $product->getVariantId() ?>">
                     <input type="hidden" name="product_color" value="<?= $product->getColor() ?>">
                     <input type="hidden" name="product_size" value="<?= $product->getSize() ?>">
@@ -89,7 +89,7 @@ use jiggle\app\Models\ProductModel;
                 <p><?= $quantityLimitError ?></p>
             <?php else : ?>
                 <form method="post" action="/change-product-variant-quantity-in-basket">
-                    <input type="hidden" name="product_id" value="<?= $product->getId() ?>">
+                    <input type="hidden" name="product_id" value="<?= $product->getProductId() ?>">
                     <input type="hidden" name="variant_id" value="<?= $product->getVariantId() ?>">
                     <input type="hidden" name="product_color" value="<?= $product->getColor() ?>">
                     <input type="hidden" name="product_size" value="<?= $product->getSize() ?>">

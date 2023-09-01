@@ -4,13 +4,13 @@
     <?php foreach ($products as $product): ?>
         <li>
             <div class="products-list__product">
-                <a class="products-list__img-link" href="/product/<?= $product->getId() ?>">
+                <a class="products-list__img-link" href="/product/<?= $product->getProductId() ?>">
                     <img class="products-list__img"
                          src="/img/<?= $product->getImageName() ?>"
                          alt="">
                 </a>
 
-                <a class="products-list__title-link" href="/product/<?= $product->getId() ?>">
+                <a class="products-list__title-link" href="/product/<?= $product->getProductId() ?>">
                     <h2 class="products-list__product-title">
                         <?= $product->getTitle() ?>
                     </h2>
