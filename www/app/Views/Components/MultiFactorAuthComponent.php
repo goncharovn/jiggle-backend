@@ -7,13 +7,20 @@ use jiggle\app\Views\Component;
 
 class MultiFactorAuthComponent extends Component
 {
-    public function __construct()
-    {
+    private string $formError;
 
+    public function __construct(string $formError)
+    {
+        $this->formError = $formError;
     }
 
     public function render(): string
     {
-        return View::make('multi_factor');
+        return View::make(
+            'multi_factor',
+            [
+                'formError' => $this->formError
+            ]
+        );
     }
 }

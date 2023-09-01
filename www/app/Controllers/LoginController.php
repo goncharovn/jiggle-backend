@@ -68,7 +68,7 @@ class LoginController extends Controller
 
         echo new AuthLayoutComponent(
             'Multi-Factor Auth',
-            new MultiFactorAuthComponent()
+            new MultiFactorAuthComponent(NotificationMessagesController::getMessage('formError'))
         );
 
         exit();
@@ -100,7 +100,9 @@ class LoginController extends Controller
         }
 
         $this->user = UserModel::getUserById($_SESSION['user_id']);
-        $this->user->toggleMultifactorAuth();
+        $this->user->toggleMultiFactorAuth();
+
+        AccessController::redirectToUrl('/my-account/my-details');
     }
 
     #[NoReturn]
@@ -131,7 +133,7 @@ class LoginController extends Controller
 
     private function isMultiFactorAuthCodeMatch(string $multiFactorAuthCode): string
     {
-        return password_verify($this->user->getMultiFactorAuthCode(), $multiFactorAuthCode);
+        return password_verify($multiFactorAuthCode, $this->user->getMultiFactorAuthCode());
     }
 
     private function generateAndSendMultiFactorAuthCode(): void
