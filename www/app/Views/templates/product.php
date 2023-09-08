@@ -1,14 +1,10 @@
 <?php
 /**
  * @var ProductModel $product
- * @var array $availableColors
- * @var array $availableSizes
- * @var int $quantityOfProductInBasket
- * @var int $quantityOfProductInStock
+ * @var string $message
+ * @var int $sizeSelected
  * @var string $unselectedSizeError
  * @var string $quantityLimitError
- * @var string $message
- * @var bool $isProductInBasket
  */
 
 use jiggle\app\Models\ProductModel;
@@ -25,7 +21,7 @@ use jiggle\app\Models\ProductModel;
         <div class="product__color">Color: <?= $product->getColor() ?></div>
         <form method="get" action="">
             <div class="product__colors">
-                <?php foreach ($availableColors as $color): ?>
+                <?php foreach ($product->getAvailableColors() as $color): ?>
                     <a
                         <?php if ($color['name'] === $product->getColor()): ?>
                             class="select-color-button select-color-button_selected"
@@ -47,7 +43,7 @@ use jiggle\app\Models\ProductModel;
             </div>
 
             <div class="product__sizes">
-                <?php foreach ($availableSizes as $size): ?>
+                <?php foreach ($product->getAvailableSizes() as $size): ?>
                     <a
                         <?php if ($size['name'] === $product->getSize()): ?>
                             class="select-size-button select-size-button_selected"
@@ -68,38 +64,34 @@ use jiggle\app\Models\ProductModel;
 
         <p class="product__price">£<?= $product->getPrice() ?></p>
 
-        <?php if ($quantityOfProductInStock > 0) : ?>
-            <?php if ($isProductInBasket) : ?>
-                <form class="change-quantity product__change-quantity" method="post" action="/change-product-variant-quantity-in-basket">
-                    <input type="hidden" name="product_id" value="<?= $product->getProductId() ?>">
-                    <input type="hidden" name="variant_id" value="<?= $product->getVariantId() ?>">
-                    <input type="hidden" name="product_color" value="<?= $product->getColor() ?>">
-                    <input type="hidden" name="product_size" value="<?= $product->getSize() ?>">
-                    <button class="change-quantity__button" type="submit" name="action" value="increase">
-                        +
-                    </button>
-                    <span class="change-quantity__value"><?= $quantityOfProductInBasket ?></span>
-                    <button class="change-quantity__button" type="submit" name="action" value="decrease">
-                        -
-                    </button>
-                </form>
+        <?php if ($product->getBasketQuantity() > 0) : ?>
+            <form class="change-quantity product__change-quantity" method="post"
+                  action="/change-product-variant-quantity-in-basket">
+                <input type="hidden" name="variant_id" value="<?= $product->getVariantId() ?>">
+                <button class="change-quantity__button" type="submit" name="action" value="increase">
+                    +
+                </button>
+                <span class="change-quantity__value"><?= $product->getBasketQuantity() ?></span>
+                <button class="change-quantity__button" type="submit" name="action" value="decrease">
+                    -
+                </button>
+            </form>
 
-                <p><?= $quantityOfProductInBasket ?> <?= $message ?> in your <a href="/basket">basket</a>.</p>
+            <p><?= $product->getBasketQuantity() ?> <?= $message ?> in your <a href="/basket">basket</a>.</p>
 
-                <p><?= $quantityLimitError ?></p>
+            <p><?= $quantityLimitError ?></p>
+        <?php else : ?>
+            <?php if ($product->getQuantity() === 0 && $sizeSelected) : ?>
+                <p>Out of stock.</p>
             <?php else : ?>
                 <form method="post" action="/change-product-variant-quantity-in-basket">
-                    <input type="hidden" name="product_id" value="<?= $product->getProductId() ?>">
                     <input type="hidden" name="variant_id" value="<?= $product->getVariantId() ?>">
-                    <input type="hidden" name="product_color" value="<?= $product->getColor() ?>">
-                    <input type="hidden" name="product_size" value="<?= $product->getSize() ?>">
+                    <input type="hidden" name="size_selected" value="<?= $sizeSelected ?>">
                     <button class="button product__add-button" type="submit" name="action" value="increase">
                         Add to basket
                     </button>
                 </form>
             <?php endif; ?>
-        <?php else : ?>
-            <p>Out of stock.</p>
         <?php endif; ?>
     </section>
 

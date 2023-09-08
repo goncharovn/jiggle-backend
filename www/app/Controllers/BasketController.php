@@ -24,25 +24,32 @@ class BasketController extends Controller
     #[NoReturn]
     public static function changeProductVariantQuantityInBasket(): void
     {
-        $productId = $_POST['product_id'] ?? null;
+        $variantId = $_POST['variant_id'] ?? null;
         $action = $_POST['action'] ?? null;
-        $productColor = $_POST['product_color'] ?? null;
-        $productSize = $_POST['product_size'] ?? null;
 
-        if (empty($productSize) && empty($_GET['size_error'])) {
-            $refererUrl = strtok($_SERVER['HTTP_REFERER'], '?');
-            $redirectUrl = $refererUrl . '?sizeError=1';
+        $sizeSelected = $_POST['size_selected'];
+
+        $httpRefererParts = explode('?', $_SERVER['HTTP_REFERER'], 2);
+        $queryString = $httpRefererParts[1];
+        parse_str($queryString, $parameters);
+
+        if (!empty($queryString)) {
+            $queryString = '&' . $queryString;
+        }
+
+        if ($sizeSelected === "0" && empty($parameters['sizeError'])) {
+            $redirectUrl = $httpRefererParts[0] . '?sizeError=1' . $queryString;
 
             header('Location: ' . $redirectUrl);
             exit();
         }
 
-        if (!$productId || !$action || !$productColor || !$productSize) {
+        if (!$variantId || !$action) {
             header('Location: ' . $_SERVER['HTTP_REFERER']);
             exit();
         }
 
-        $product = ProductModel::getProductVariant($productId, $productColor, $productSize);
+        $product = ProductModel::getProductVariant($variantId);
 
         $quantityOfProductInStock = $product->getQuantity();
         $quantityChange = 0;
@@ -91,9 +98,9 @@ class BasketController extends Controller
     {
         $orderTotal = 0;
 
-        foreach (static::getProductsVariantsInBasket() as $productVariant) {
-            $quantityOfProductInBasket = $_SESSION['basket'][$productVariant->getVariantId()]['basket_quantity'];
-            $orderTotal += $productVariant->getPrice() * $quantityOfProductInBasket;
+        foreach ($_SESSION['basket'] as $localVariant) {
+            $quantityOfProductInBasket = $localVariant['basket_quantity'];
+            $orderTotal += ProductModel::getProductVariant($localVariant['variant_id'])->getPrice() * $quantityOfProductInBasket;
         }
 
         return $orderTotal;
@@ -101,19 +108,16 @@ class BasketController extends Controller
 
     private static function getProductsVariantsInBasket(): array
     {
-        if (!empty($_SESSION['basket'])) {
-            $productsVariantsIdsInBasket = $_SESSION['basket'];
-            $productsVariantsInBasket = ProductModel::getProductsVariantsByIds($productsVariantsIdsInBasket);
+        $variantsInBasket = [];
 
-            foreach ($productsVariantsInBasket as &$productVariant) {
-                if (isset($_SESSION['basket'][$productVariant->getVariantId()]['basket_quantity'])) {
-                    $productVariant->setBasketQuantity($_SESSION['basket'][$productVariant->getVariantId()]['basket_quantity']);
-                }
+        if (!empty($_SESSION['basket'])) {
+            foreach ($_SESSION['basket'] as $localVariant) {
+                $dbVariant = ProductModel::getProductVariant($localVariant['variant_id']);
+                $dbVariant->setBasketQuantity($localVariant['basket_quantity']);
+                $variantsInBasket[] = $dbVariant;
             }
-        } else {
-            return [];
         }
 
-        return $productsVariantsInBasket;
+        return $variantsInBasket;
     }
 }

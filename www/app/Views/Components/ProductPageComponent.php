@@ -10,32 +10,20 @@ use jiggle\app\Views\Component;
 class ProductPageComponent extends Component
 {
     private ProductModel $product;
-    private array $availableColors;
-    private array $availableSizes;
-    private bool $isProductInBasket;
-    private int $quantityOfProductInBasket;
-    private int $quantityOfProductInStock;
     private string $message;
     private string $quantityLimitError;
     private string $unselectedSizeError;
+    private int $sizeSelected;
 
     public function __construct(
         ProductModel $product,
-        array $availableColors,
-        array $availableSizes,
-        bool $isProductInBasket,
-        int $quantityOfProductInBasket,
-        int $quantityOfProductInStock,
-        string $message
+        string       $message,
+        int          $sizeSelected
     )
     {
         $this->product = $product;
-        $this->availableColors = $availableColors;
-        $this->availableSizes = $availableSizes;
-        $this->isProductInBasket = $isProductInBasket;
-        $this->quantityOfProductInBasket = $quantityOfProductInBasket;
-        $this->quantityOfProductInStock = $quantityOfProductInStock;
         $this->message = $message;
+        $this->sizeSelected = $sizeSelected;
         $this->quantityLimitError = NotificationMessagesController::getMessage('quantityLimitError') ?? '';
         $this->unselectedSizeError = NotificationMessagesController::getMessage('unselectedSizeError') ?? '';
     }
@@ -46,12 +34,8 @@ class ProductPageComponent extends Component
             'product',
             [
                 'product' => $this->product,
-                'availableColors' => $this->availableColors,
-                'availableSizes' => $this->availableSizes,
-                'isProductInBasket' => $this->isProductInBasket,
-                'quantityOfProductInBasket' => $this->quantityOfProductInBasket,
-                'quantityOfProductInStock' => $this->quantityOfProductInStock,
                 'message' => $this->message,
+                'sizeSelected' => $this->sizeSelected,
                 'quantityLimitError' => $this->quantityLimitError,
                 'unselectedSizeError' => $this->unselectedSizeError
             ]

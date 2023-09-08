@@ -14,7 +14,7 @@
                     <div class="basket__product">
                         <a
                                 class="basket__img-link"
-                                href="p/<?= $productVariant->getProductId(); ?>?color=<?= $productVariant->getColor() ?>&size=<?= $productVariant->getSize() ?>"
+                                href="product/<?= $productVariant->getProductId(); ?>?color=<?= $productVariant->getColor() ?>&size=<?= $productVariant->getSize() ?>"
                         >
                             <img class="basket__img"
                                  src="/img/<?= $productVariant->getImageName(); ?>"
@@ -24,7 +24,7 @@
 
                         <div>
                             <a class="basket__title-link"
-                               href="p/<?= $productVariant->getProductId(); ?>?color=<?= $productVariant->getColor() ?>&size=<?= $productVariant->getSize() ?>">
+                               href="product/<?= $productVariant->getProductId(); ?>?color=<?= $productVariant->getColor() ?>&size=<?= $productVariant->getSize() ?>">
                                 <h2 class="basket__title"><?= $productVariant->getTitle(); ?></h2>
                             </a>
 
@@ -32,9 +32,7 @@
                         </div>
 
                         <form class="change-quantity" method="post" action="/change-product-variant-quantity-in-basket">
-                            <input type="hidden" name="product_color" value="<?= $productVariant->getColor() ?>">
-                            <input type="hidden" name="product_size" value="<?= $productVariant->getSize() ?>">
-                            <input type="hidden" name="product_id" value="<?= $productVariant->getProductId() ?>">
+                            <input type="hidden" name="variant_id" value="<?= $productVariant->getVariantId() ?>">
                             <button class="change-quantity__button" type="submit" name="action" value="increase">
                                 +
                             </button>

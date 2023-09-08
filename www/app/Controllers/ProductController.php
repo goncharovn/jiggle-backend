@@ -10,16 +10,12 @@ use jiggle\app\Views\Components\ProductPageComponent;
 class ProductController extends Controller
 {
     private ProductModel $product;
-    private array $availableColors;
-    private array $availableSizes;
-    private bool $isProductInBasket;
-    private int $quantityOfProductInBasket;
-    private int $quantityOfProductInStock;
     private string $message;
 
     public function __construct(array $requestParams)
     {
         parent::__construct($requestParams);
+        $this->message = '';
     }
 
     public function showProductPage(): void
@@ -30,55 +26,34 @@ class ProductController extends Controller
 
     private function prepareProductData(): void
     {
-        $productId = $this->requestParams['product_id'];
-        $productSize = $_GET['size'] ?? null;
-        $productColor = $_GET['color'] ?? ProductModel::getDefaultProductColor($productId);
+        $this->product = ProductModel::getProductById($this->requestParams['product_id']);
 
-        $this->product = $this->getProductVariant($productId, $productColor, $productSize);
-        $this->availableColors = $this->getAvailableColors($productSize);
-        $this->availableSizes = $this->getAvailableSizes($productColor);
-        $this->isProductInBasket = $this->isProductInBasket();
-        $this->quantityOfProductInBasket = $this->getQuantityInBasket();
-        $this->quantityOfProductInStock = $this->product->getQuantity();
-        $this->message = ($this->quantityOfProductInBasket > 1) ? 'items' : 'item';
+        $availableColors = $this->product->getAvailableColors();
+        $this->product->setColor($_GET['color'] ?? $availableColors[0]['name']);
+        $availableSizesByColor = $this->product->getAvailableSizesByColor();
+        $this->product->setSize($_GET['size'] ?? '');
+        $this->product->setImageName($this->product->fetchImageName());
 
-        $this->checkQuantityLimitError();
+        $namesOfAvailableSizesByColor = array_column($availableSizesByColor, 'name');
+        if (!empty($this->product->getSize()) && in_array($this->product->getSize(), $namesOfAvailableSizesByColor)) {
+            $this->product->setQuantity($this->product->fetchQuantity());
+            $this->product->setVariantId($this->product->fetchVariantId());
+            $this->product->setBasketQuantity($_SESSION['basket'][$this->product->getVariantId()]['basket_quantity'] ?? 0);
+            $this->message = ($this->product->getBasketQuantity() > 1) ? 'items' : 'item';
+            $this->checkQuantityLimitError();
+        } else {
+            $this->product->setQuantity(0);
+        }
+
         $this->checkUnselectedSizeError();
-    }
-
-    private function getProductVariant(int $productId, string $productColor, ?string $productSize): ProductModel
-    {
-        return ProductModel::getProductVariant($productId, $productColor, $productSize);
-    }
-
-    private function getAvailableColors(?string $productSize): array
-    {
-        return $this->product->getAvailableColors($productSize);
-    }
-
-    private function getAvailableSizes(string $productColor): array
-    {
-        return $this->product->getAvailableSizes($productColor);
-    }
-
-    private function isProductInBasket(): bool
-    {
-        $variantId = $this->product->getVariantId();
-        return BasketController::isProductVariantInBasket($variantId);
-    }
-
-    private function getQuantityInBasket(): int
-    {
-        $variantId = $this->product->getVariantId();
-        return $_SESSION['basket'][$variantId]['basket_quantity'] ?? 0;
     }
 
     private function checkQuantityLimitError(): void
     {
-        if ($this->quantityOfProductInBasket >= $this->quantityOfProductInStock) {
+        if ($this->product->getBasketQuantity() >= $this->product->getQuantity()) {
             NotificationMessagesController::setMessage(
                 'quantityLimitError',
-                "Only $this->quantityOfProductInStock item" . ($this->quantityOfProductInStock > 1 ? 's' : '') . " available."
+                "Only {$this->product->getQuantity()} item" . ($this->product->getQuantity() > 1 ? 's' : '') . " available."
             );
         }
     }
@@ -93,18 +68,19 @@ class ProductController extends Controller
         }
     }
 
+    private function isSizeSelected(): bool
+    {
+        return (int)isset($_GET['size']);
+    }
+
     private function renderProductPage(): void
     {
         echo new DefaultLayoutComponent(
             $this->product->getTitle(),
             new ProductPageComponent(
                 $this->product,
-                $this->availableColors,
-                $this->availableSizes,
-                $this->isProductInBasket,
-                $this->quantityOfProductInBasket,
-                $this->quantityOfProductInStock,
-                $this->message
+                $this->message,
+                $this->isSizeSelected()
             )
         );
     }
